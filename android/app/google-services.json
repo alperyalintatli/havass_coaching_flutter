@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "101401866128",
+    "project_id": "havass-coaching",
+    "storage_bucket": "havass-coaching.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101401866128:android:9f63139fe6060c5d83cd15",
+        "android_client_info": {
+          "package_name": "com.havass.havass_coaching_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101401866128-n4fhb219edvrh0ashlug2ebc7sdkaq8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.havass.havass_coaching_flutter",
+            "certificate_hash": "058b382e8801b7a408e50d4f4e6b1fe8a77753ac"
+          }
+        },
+        {
+          "client_id": "101401866128-k8ourkcs86rd5i6jcp0seoi6kmb4l3p2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvS4ohlasg4eBoaimAcuKr69FzmIvc1gg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101401866128-k8ourkcs86rd5i6jcp0seoi6kmb4l3p2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
