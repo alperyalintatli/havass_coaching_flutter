@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
 import 'package:havass_coaching_flutter/newScreen.dart';
+
 import 'Business/Concrete/login_operations.dart';
 import 'loginPage.dart';
 import 'login_screen.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Demo2',
       theme: ThemeData(
         // is not restarted.
         primarySwatch: Colors.red,
