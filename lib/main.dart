@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/newScreen.dart';
 import 'package:havass_coaching_flutter/welcomePage.dart';
-
 import 'Business/Concrete/login_operations.dart';
 
 void main() {
