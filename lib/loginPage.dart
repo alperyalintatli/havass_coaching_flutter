@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/signupPage.dart';
+import 'package:havass_coaching_flutter/Widget/bezierContainer.dart';
+import 'package:havass_coaching_flutter/registerPage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -238,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned(
               top: -height * .15,
               right: -MediaQuery.of(context).size.width * .4,
-              child: Container()),
+              child: BezierContainer()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(

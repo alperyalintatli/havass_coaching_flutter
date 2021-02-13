@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
 import 'package:havass_coaching_flutter/login_screen.dart';
+import '../../loginPage.dart';
 import '../../newScreen.dart';
 
 class LoginOperations implements ILoginOperations {
@@ -38,7 +39,7 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  void signIn() async {
+  void signUp(BuildContext context) async {
     String email = "alicanerderin@gmail.com";
     String password = "password";
     try {
@@ -50,7 +51,11 @@ class LoginOperations implements ILoginOperations {
                   print("Hata oluştu");
                 })
               })
-          .whenComplete(() => signOut());
+          .whenComplete(() {
+        signOut();
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginPage()));
+      });
     } catch (e) {
       print(e.toString());
     }

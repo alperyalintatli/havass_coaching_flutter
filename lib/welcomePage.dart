@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/signupPage.dart';
+import 'package:havass_coaching_flutter/registerPage.dart';
 
 import 'loginPage.dart';
 
@@ -27,7 +27,7 @@ class _WelcomePageState extends State<WelcomePage> {
             borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: Color(0xffdf8e33).withAlpha(100),
+                  color: Color(0xffdf8e33).withAlpha(0),
                   offset: Offset(2, 4),
                   blurRadius: 8,
                   spreadRadius: 2)
@@ -62,8 +62,6 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
     );
   }
-
-
 
   Widget _title() {
     return RichText(
@@ -107,7 +105,10 @@ class _WelcomePageState extends State<WelcomePage> {
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+                  colors: [
+                    Color.fromRGBO(164, 233, 232, 1),
+                    Color.fromARGB(0, 121, 250, 0)
+                  ])),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

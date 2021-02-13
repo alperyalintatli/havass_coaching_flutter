@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/Widget/bezierContainer.dart';
+import 'Business/Concrete/login_operations.dart';
 import 'loginPage.dart';
+
+LoginOperations _loginOperation = LoginOperations.getInstance();
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -58,27 +62,34 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _submitButton() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
-        'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
-      ),
-    );
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Color.fromARGB(0, 121, 250, 0),
+                  Color.fromRGBO(164, 233, 232, 1),
+                ])),
+        child: TextButton(
+          child: Text(
+            'Register Now',
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+          onPressed: () {
+            _signUpUser();
+          },
+        ));
   }
 
   Widget _loginAccountLabel() {
@@ -88,7 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
+        margin: EdgeInsets.symmetric(vertical: 0),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
         child: Row(
@@ -158,7 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Positioned(
               top: -MediaQuery.of(context).size.height * .15,
               right: -MediaQuery.of(context).size.width * .4,
-              child: Container(),
+              child: BezierContainer(),
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -167,17 +178,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: height * .2),
+                    SizedBox(height: height * .25),
                     _title(),
                     SizedBox(
-                      height: 50,
+                      height: 20,
                     ),
                     _emailPasswordWidget(),
                     SizedBox(
                       height: 20,
                     ),
                     _submitButton(),
-                    SizedBox(height: height * .14),
+                    SizedBox(height: height * .10),
                     _loginAccountLabel(),
                   ],
                 ),
@@ -188,5 +199,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void _signUpUser() async {
+    _loginOperation.signUp(context);
   }
 }

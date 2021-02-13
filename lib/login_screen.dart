@@ -11,13 +11,11 @@ class LoginOperation extends StatefulWidget {
 class _LoginOperationState extends State<LoginOperation> {
   @override
   void initState() {
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Login İslemleri"),
@@ -54,12 +52,10 @@ class _LoginOperationState extends State<LoginOperation> {
   }
 
   void _createUser() async {
-    _loginOperation.signIn();
+    _loginOperation.signUp(context);
   }
 
   void _login() {
     _loginOperation.login(context);
   }
-
-
 }
