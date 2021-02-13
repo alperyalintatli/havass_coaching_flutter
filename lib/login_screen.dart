@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'Business/Concrete/login_operations.dart';
-import 'newScreen.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
 

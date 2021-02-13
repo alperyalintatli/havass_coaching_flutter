@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
 import 'package:havass_coaching_flutter/newScreen.dart';
+import 'package:havass_coaching_flutter/welcomePage.dart';
 
 import 'Business/Concrete/login_operations.dart';
-import 'loginPage.dart';
-import 'login_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo23',
+      title: 'Flutter Demo',
       theme: ThemeData(
         // is not restarted.
         primarySwatch: Colors.red,
@@ -49,7 +47,7 @@ class FirebaseInitialize extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           LoginOperations _loginOperation = LoginOperations.getInstance();
-          return _loginOperation.isLoggedIn() ? NewScreen() : LoginPage();
+          return _loginOperation.isLoggedIn() ? NewScreen() : WelcomePage();
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
