@@ -13,6 +13,8 @@
     "register_page_validation_email_field":"Wrong email type.",
     "register_page_validation_password_field":"Password must be more than 4 character.",
     "register_to_login_notification":"Login after confirming your mail.",
-    "register_success_notification":"Register Success"
+    "register_success_notification":"Register Success",
+    "login_mailVerified_notification_title":"Verify email.",
+    "login_mailVerified_notification_subtitle":"Please verify your email."
 
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'business/concrete/login_operations.dart';
+
+LoginOperations _loginOperation = LoginOperations.getInstance();
 
 class NewScreen extends StatefulWidget {
   @override
@@ -13,7 +16,10 @@ class _NewScreenState extends State<NewScreen> {
         title: Text("New Screen"),
       ),
       body: Container(
-        child: Text("New Screen"),
+        child: TextButton(
+          child: Text("LogOut"),
+          onPressed: () => _loginOperation.signOut(context),
+        ),
       ),
     );
   }

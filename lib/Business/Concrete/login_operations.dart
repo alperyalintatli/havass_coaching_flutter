@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
-import 'package:havass_coaching_flutter/login_screen.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
-import '../../pages/login_page.dart';
+import 'package:havass_coaching_flutter/pages/login_page.dart';
+import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import '../../newScreen.dart';
 
 class LoginOperations implements ILoginOperations {
@@ -22,13 +22,17 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  void login(BuildContext context) async {
+  void login(BuildContext context, HvsUser _hvsUser) async {
     try {
       var user = await _auth.signInWithEmailAndPassword(
-          email: "alicanerderin@gmail.com", password: "password");
+          email: _hvsUser.email, password: _hvsUser.password);
       if (!user.user.emailVerified) {
+        signOut(context);
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => LoginPage(
+                  isUserEmailVerified: true,
+                )));
         print("Emailinizi onaylayınız.");
-        signOut();
       } else {
         print("giriş yapıldı.");
         Navigator.of(context)
@@ -52,7 +56,7 @@ class LoginOperations implements ILoginOperations {
                 })
               })
           .whenComplete(() {
-        signOut();
+        signOut(context);
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => LoginPage(
                   isRouteOfRegisterPage: true,
@@ -64,10 +68,13 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  void signOut() async {
+  void signOut(BuildContext context) async {
     User _loginUser = _auth.currentUser;
     if (_loginUser != null) {
       await _auth.signOut();
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => WelcomePage()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -77,23 +84,5 @@ class LoginOperations implements ILoginOperations {
       return false;
     }
     return user.emailVerified;
-  }
-
-  @override
-  Widget controlOfSignIn(BuildContext context) {
-    _auth.authStateChanges().listen((User user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        if (user.emailVerified) {
-          print('User is signed in!');
-          return NewScreen();
-        } else {
-          print('Email doğrulayınız!');
-          return LoginOperation();
-        }
-      }
-    });
-    return LoginOperation();
   }
 }
