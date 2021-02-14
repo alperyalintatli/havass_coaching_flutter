@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/pages/register_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/bezier_container.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.isRouteOfRegisterPage = false})
@@ -243,9 +244,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     if (widget.isRouteOfRegisterPage) {
-      _showDialog();
+      Future.delayed(Duration.zero, () => _showAlert(context));
     }
+
     return Scaffold(
         body: Container(
       height: height,
@@ -277,7 +280,6 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                   _divider(),
-                  _showDialog(),
                   // _facebookButton(),
                   SizedBox(height: height * .055),
                   _createAccountLabel(),
@@ -291,17 +293,19 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-  Widget _showDialog() {
-    if (widget.isRouteOfRegisterPage) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Deneme"),
-              content: Text("content"),
-            );
-          });
-    }
-    return null;
+  void _showAlert(BuildContext context) {
+    showSimpleNotification(
+      Text("Subscribe to FilledStacks"),
+      background: Colors.purple,
+      autoDismiss: false,
+      trailing: Builder(builder: (context) {
+        return FlatButton(
+            textColor: Colors.yellow,
+            onPressed: () {
+              OverlaySupportEntry.of(context).dismiss();
+            },
+            child: Text('Dismiss'));
+      }),
+    );
   }
 }

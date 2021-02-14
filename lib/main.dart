@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:havass_coaching_flutter/newScreen.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'Business/Concrete/login_operations.dart';
 import 'pages/splash_page.dart';
 import 'plugins/bloc/bloc_localization.dart';
@@ -23,7 +24,8 @@ class _MyAppState extends State<MyApp> {
       create: (_) => BlocLocalization(),
       child: BlocBuilder<BlocLocalization, Locale>(
         builder: (context, locale) {
-          return MaterialApp(
+          return OverlaySupport(
+              child: MaterialApp(
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -33,7 +35,7 @@ class _MyAppState extends State<MyApp> {
             home: FirebaseInitialize(),
             locale: locale,
             supportedLocales: [Locale("en"), Locale("de")],
-          );
+          ));
         },
       ),
     );
