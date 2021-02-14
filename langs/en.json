@@ -11,6 +11,8 @@
     "already_have_an_account":"Already have an account",
     "register_page_validation_empty_field":"Fields cannot be left empty.",
     "register_page_validation_email_field":"Wrong email type.",
-    "register_page_validation_password_field":"Password must be more than 4 character."
+    "register_page_validation_password_field":"Password must be more than 4 character.",
+    "register_to_login_notification":"Login after confirming your mail.",
+    "register_success_notification":"Register Success"
 
 }

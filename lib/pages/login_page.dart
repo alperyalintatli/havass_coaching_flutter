@@ -7,7 +7,7 @@ import 'package:overlay_support/overlay_support.dart';
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.isRouteOfRegisterPage = false})
       : super(key: key);
-  final bool isRouteOfRegisterPage;
+  bool isRouteOfRegisterPage = false;
   final String title;
 
   @override
@@ -294,18 +294,37 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showAlert(BuildContext context) {
-    showSimpleNotification(
-      Text("Subscribe to FilledStacks"),
-      background: Colors.purple,
-      autoDismiss: false,
-      trailing: Builder(builder: (context) {
-        return FlatButton(
-            textColor: Colors.yellow,
-            onPressed: () {
-              OverlaySupportEntry.of(context).dismiss();
-            },
-            child: Text('Dismiss'));
-      }),
-    );
+    showOverlayNotification((context) {
+      widget.isRouteOfRegisterPage = false;
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: SafeArea(
+          child: ListTile(
+            leading: SizedBox.fromSize(
+              size: const Size(40, 40),
+              child: ClipOval(
+                child: Container(
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.green.shade200,
+                    size: 40.0,
+                  ),
+                ),
+              ),
+            ),
+            title: Text(
+                AppLocalizations.getString("register_success_notification")),
+            subtitle: Text(
+                AppLocalizations.getString("register_to_login_notification")),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                OverlaySupportEntry.of(context).dismiss();
+              },
+            ),
+          ),
+        ),
+      );
+    }, duration: Duration(milliseconds: 6000));
   }
 }

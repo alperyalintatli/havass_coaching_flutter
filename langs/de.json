@@ -11,6 +11,8 @@
     "already_have_an_account":"Sie haben bereits ein Konto",
     "register_page_validation_empty_field":"almanca bişeyler.",
     "register_page_validation_email_field":"almanca.",
-    "register_page_validation_password_field":"Password must be more than 4 character."
+    "register_page_validation_password_field":"Password must be more than 4 character.",
+    "register_to_login_notification":"Login after confirming your mail.almanca",
+    "register_success_notification":"Register Success"
 
 }
