@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/model/users.dart';
 import 'Business/Concrete/login_operations.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
@@ -52,7 +53,8 @@ class _LoginOperationState extends State<LoginOperation> {
   }
 
   void _createUser() async {
-    _loginOperation.signUp(context);
+    HvsUser _user = HvsUser();
+    _loginOperation.signUp(context, _user);
   }
 
   void _login() {

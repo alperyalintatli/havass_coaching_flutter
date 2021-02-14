@@ -4,8 +4,9 @@ import 'package:havass_coaching_flutter/plugins/localization/app_localizations.d
 import 'package:havass_coaching_flutter/widget/bezier_container.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-
+  LoginPage({Key key, this.title, this.isRouteOfRegisterPage = false})
+      : super(key: key);
+  final bool isRouteOfRegisterPage;
   final String title;
 
   @override
@@ -13,6 +14,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -75,10 +81,13 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+              colors: [
+                Color.fromARGB(0, 121, 250, 0),
+                Color.fromRGBO(164, 233, 232, 1),
+              ])),
       child: Text(
         AppLocalizations.getString("login"),
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        style: TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
       ),
     );
   }
@@ -178,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Don\'t have an account ?',
+              AppLocalizations.getString("dont_have_an _account") + ' ?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
@@ -187,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
             Text(
               AppLocalizations.getString("register_now"),
               style: TextStyle(
-                  color: Color(0xfff79c4f),
+                  color: Color.fromRGBO(164, 233, 232, 1),
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -201,20 +210,22 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'd',
+          text: 'Ha',
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
+            color: Color.fromRGBO(164, 233, 232, 1),
           ),
           children: [
             TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
+              text: 'va',
+              style:
+                  TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
             ),
             TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+              text: 'ss',
+              style: TextStyle(
+                  color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
             ),
           ]),
     );
@@ -223,8 +234,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email"),
-        _entryField("Password", isPassword: true),
+        _entryField(AppLocalizations.getString("email")),
+        _entryField(AppLocalizations.getString("password"), isPassword: true),
       ],
     );
   }
@@ -232,6 +243,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    if (widget.isRouteOfRegisterPage) {
+      _showDialog();
+    }
     return Scaffold(
         body: Container(
       height: height,
@@ -263,6 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                   _divider(),
+                  _showDialog(),
                   // _facebookButton(),
                   SizedBox(height: height * .055),
                   _createAccountLabel(),
@@ -274,5 +289,19 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     ));
+  }
+
+  Widget _showDialog() {
+    if (widget.isRouteOfRegisterPage) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Deneme"),
+              content: Text("content"),
+            );
+          });
+    }
+    return null;
   }
 }

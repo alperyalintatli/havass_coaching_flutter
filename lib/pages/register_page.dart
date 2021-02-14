@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/model/users.dart';
+import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/bezier_container.dart';
 import '../Business/Concrete/login_operations.dart';
 import 'login_page.dart';
@@ -15,6 +17,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _hvsUser = HvsUser();
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -28,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-            Text('Back',
+            Text(AppLocalizations.getString("back"),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
           ],
         ),
@@ -36,7 +41,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title,
+      {bool isPassword = false, bool isEmail = false, bool isName = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -52,12 +58,49 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(
             height: 10,
           ),
-          TextField(
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
+          TextFormField(
+            obscureText: isPassword,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff3f3f4),
+                filled: true),
+            onSaved: (value) {
+              if (isName) {
+                _hvsUser.name = value;
+              } else if (isPassword) {
+                _hvsUser.password = value;
+              } else if (isEmail) {
+                _hvsUser.email = value;
+              }
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return '*' +
+                    AppLocalizations.getString(
+                        "register_page_validation_empty_field");
+              }
+
+              if (isEmail == true) {
+                bool emailValid = RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(value);
+
+                if (!emailValid) {
+                  return '*' +
+                      AppLocalizations.getString(
+                          "register_page_validation_email_field");
+                }
+              }
+              if (isPassword == true) {
+                if (value.length < 4) {
+                  return '*' +
+                      AppLocalizations.getString(
+                          "register_page_validation_password_field");
+                }
+              }
+              return null;
+            },
+          )
         ],
       ),
     );
@@ -86,12 +129,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 ])),
         child: TextButton(
           child: Text(
-            'Register Now',
+            AppLocalizations.getString("register_now"),
             style:
                 TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
           ),
           onPressed: () {
-            _signUpUser();
+            if (_formKey.currentState.validate()) {
+              setState(() {
+                _formKey.currentState.save();
+                _signUpUser(_hvsUser);
+              });
+            }
           },
         ));
   }
@@ -110,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Already have an account ?',
+              AppLocalizations.getString("already_have_an_account") + '?',
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -120,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
               width: 10,
             ),
             Text(
-              'Login',
+              AppLocalizations.getString("login"),
               style: TextStyle(
                   color: Color.fromRGBO(164, 233, 232, 1),
                   fontSize: 13,
@@ -158,13 +206,17 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Name/Surname"),
-        _entryField("Email"),
-        _entryField("Password", isPassword: true),
-      ],
-    );
+    return Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            _entryField(AppLocalizations.getString("name_surname"),
+                isName: true),
+            _entryField(AppLocalizations.getString("email"), isEmail: true),
+            _entryField(AppLocalizations.getString("password"),
+                isPassword: true),
+          ],
+        ));
   }
 
   @override
@@ -210,7 +262,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void _signUpUser() async {
-    _loginOperation.signUp(context);
+  void _signUpUser(HvsUser _hvsuser) async {
+    _loginOperation.signUp(context, _hvsuser);
   }
 }

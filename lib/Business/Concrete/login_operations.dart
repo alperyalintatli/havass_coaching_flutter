@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
 import 'package:havass_coaching_flutter/login_screen.dart';
-import '../../loginPage.dart';
+import 'package:havass_coaching_flutter/model/users.dart';
+import '../../pages/login_page.dart';
 import '../../newScreen.dart';
 
 class LoginOperations implements ILoginOperations {
@@ -39,12 +40,11 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  void signUp(BuildContext context) async {
-    String email = "alicanerderin@gmail.com";
-    String password = "password";
+  void signUp(BuildContext context, HvsUser hvsuser) async {
     try {
       await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
+          .createUserWithEmailAndPassword(
+              email: hvsuser.email, password: hvsuser.password)
           .then((result) => {
                 result.user.sendEmailVerification().catchError((onError) {
                   print(onError.toString());
@@ -53,8 +53,10 @@ class LoginOperations implements ILoginOperations {
               })
           .whenComplete(() {
         signOut();
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => LoginPage(
+                  isRouteOfRegisterPage: true,
+                )));
       });
     } catch (e) {
       print(e.toString());

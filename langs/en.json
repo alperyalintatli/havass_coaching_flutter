@@ -2,5 +2,15 @@
     "login": "Login",
     "register_now": "Register now",
     "back":"Back",
-    "or":"or"
+    "or":"or",
+    "forgot_password":"Forgot Password",
+    "email":"Email",
+    "password":"Password",
+    "dont_have_an _account":"Don't have an account",
+    "name_surname":"Name/Surname",
+    "already_have_an_account":"Already have an account",
+    "register_page_validation_empty_field":"Fields cannot be left empty.",
+    "register_page_validation_email_field":"Wrong email type.",
+    "register_page_validation_password_field":"Password must be more than 4 character."
+
 }

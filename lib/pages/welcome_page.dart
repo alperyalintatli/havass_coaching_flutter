@@ -37,7 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
             color: Colors.white),
         child: Text(
           AppLocalizations.getString("login"),
-          style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
+          style: TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
         ),
       ),
     );

@@ -3,5 +3,14 @@
     "register_now": "Jetzt Registrieren",
     "back":"Zurück",
     "or":"oder",
-    "forgot_password":"Passwort Vergessen"
+    "forgot_password":"Passwort Vergessen",
+    "email":"Email",
+    "password":"Passwort",
+    "dont_have_an _account":"Ich habe kein Konto",
+    "name_surname":"Name/Surname",
+    "already_have_an_account":"Sie haben bereits ein Konto",
+    "register_page_validation_empty_field":"almanca bişeyler.",
+    "register_page_validation_email_field":"almanca.",
+    "register_page_validation_password_field":"Password must be more than 4 character."
+
 }
