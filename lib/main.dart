@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:havass_coaching_flutter/newScreen.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'Business/Concrete/login_operations.dart';
 import 'pages/splash_page.dart';
 import 'plugins/bloc/bloc_localization.dart';
 
@@ -25,17 +23,18 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<BlocLocalization, Locale>(
         builder: (context, locale) {
           return OverlaySupport(
-              child: MaterialApp(
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            debugShowCheckedModeBanner: false,
-            home: FirebaseInitialize(),
-            locale: locale,
-            supportedLocales: [Locale("en"), Locale("de")],
-          ));
+            child: MaterialApp(
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              debugShowCheckedModeBanner: false,
+              home: FirebaseInitialize(),
+              locale: locale,
+              supportedLocales: [Locale("en"), Locale("de")],
+            ),
+          );
         },
       ),
     );
@@ -63,8 +62,7 @@ class FirebaseInitialize extends StatelessWidget {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          LoginOperations _loginOperation = LoginOperations.getInstance();
-          return _loginOperation.isLoggedIn() ? NewScreen() : PageSplash();
+          return PageSplash();
         }
 
         // Otherwise, show something whilst waiting for initialization to complete

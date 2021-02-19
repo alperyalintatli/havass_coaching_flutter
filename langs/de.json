@@ -14,7 +14,14 @@
     "register_page_validation_password_field":"Password must be more than 4 character.",
     "register_to_login_notification":"Login after confirming your mail.almanca",
     "register_success_notification":"Register Success",
-    "login_mailVerified_notification_title":"Verify email.",
-    "login_mailVerified_notification_subtitle":"Please verify your email."
+    "login_mailVerified_notification_title":"Please verify your email.",
+    "login_findUser_notification_title":"User not found. Please check your email and password.",
+    "register_error_notification_title":"An error has been encountered. Please try to register again.",
+    "forgot_password_sendEmail_button":"Send Email for Forgot Password",
+    "forgot_pasword_notification_succcess" : "Please, check your email.",
+    "forgot_pasword_notification_error":"An error has been encountered. Please check your mail and try again.",
+    "login_gmail_button":"Log in with Gmail",
+    "login_gmail_notification_success_title":"Successfully logged in with your Gmail account.",
+    "login_gmail_notification_error_title":"An error has been encountered. Please try again."
 
 }

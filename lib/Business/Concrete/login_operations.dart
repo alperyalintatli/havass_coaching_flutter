@@ -1,13 +1,43 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/Business/Abstract/I_login_operations.dart';
+import 'package:flutter/services.dart';
+import 'package:havass_coaching_flutter/business/abstract/ilogin_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
-import 'package:havass_coaching_flutter/pages/login_page.dart';
-import 'package:havass_coaching_flutter/pages/welcome_page.dart';
-import '../../newScreen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+class IsLogin {
+  bool isLoginSuccess;
+  bool isEmailVerify;
+  bool isFindUser;
+  String message;
+  IsLogin(
+      {this.message,
+      this.isFindUser = false,
+      this.isLoginSuccess = false,
+      this.isEmailVerify = false});
+}
+
+class IsForgotPassword {
+  bool isSendPasswordSuccess;
+  bool isError;
+  String message;
+  IsForgotPassword(
+      {this.message, this.isSendPasswordSuccess = false, this.isError = false});
+}
+
+class IsSignUp {
+  bool isSignUpSuccess;
+  bool isError;
+  bool isSendEmailVerification;
+  String message;
+  IsSignUp(
+      {this.message,
+      this.isSignUpSuccess = false,
+      this.isError = false,
+      this.isSendEmailVerification = false});
+}
 
 class LoginOperations implements ILoginOperations {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static LoginOperations _instance;
 
@@ -22,67 +52,103 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  void login(BuildContext context, HvsUser _hvsUser) async {
+  Future<IsLogin> login(HvsUser _hvsUser) async {
+    IsLogin isLogin = IsLogin();
     try {
       var user = await _auth.signInWithEmailAndPassword(
           email: _hvsUser.email, password: _hvsUser.password);
       if (!user.user.emailVerified) {
-        signOut(context);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => LoginPage(
-                  isUserEmailVerified: true,
-                )));
-        print("Emailinizi onaylayınız.");
+        _auth.signOut();
+        isLogin.isEmailVerify = true;
+        return isLogin;
       } else {
-        print("giriş yapıldı.");
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => NewScreen()));
+        isLogin.isLoginSuccess = true;
+        return isLogin;
       }
     } catch (e) {
-      print(e.toString());
+      isLogin.message = e.toString();
+      isLogin.isFindUser = true;
+      return isLogin;
     }
   }
 
   @override
-  void signUp(BuildContext context, HvsUser hvsuser) async {
+  Future<IsSignUp> signUp(HvsUser hvsuser) async {
+    IsSignUp isSignUp = IsSignUp();
     try {
-      await _auth
-          .createUserWithEmailAndPassword(
-              email: hvsuser.email, password: hvsuser.password)
-          .then((result) => {
-                result.user.sendEmailVerification().catchError((onError) {
-                  print(onError.toString());
-                  print("Hata oluştu");
-                })
-              })
-          .whenComplete(() {
-        signOut(context);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => LoginPage(
-                  isRouteOfRegisterPage: true,
-                )));
-      });
-    } catch (e) {
-      print(e.toString());
+      var newUser = await _auth.createUserWithEmailAndPassword(
+          email: hvsuser.email, password: hvsuser.password);
+      if (newUser != null) {
+        await newUser.user.sendEmailVerification().catchError((onError) {
+          isSignUp.isSendEmailVerification = true;
+          isSignUp.message = onError.toString();
+        });
+        await _auth.signOut();
+        isSignUp.isSignUpSuccess = true;
+      }
+      return isSignUp;
+    } catch (err) {
+      isSignUp.isError = true;
+      isSignUp.message = err.toString();
+      return isSignUp;
     }
   }
 
   @override
-  void signOut(BuildContext context) async {
+  Future<void> signOut() async {
     User _loginUser = _auth.currentUser;
     if (_loginUser != null) {
       await _auth.signOut();
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => WelcomePage()),
-          (Route<dynamic> route) => false);
     }
   }
 
+  @override
   bool isLoggedIn() {
     var user = _auth.currentUser;
     if (user == null) {
       return false;
     }
     return user.emailVerified;
+  }
+
+  @override
+  Future<IsForgotPassword> forgotPassword(String email) async {
+    IsForgotPassword isForgotPassword = IsForgotPassword();
+    try {
+      if (email.isNotEmpty) {
+        await _auth
+            .sendPasswordResetEmail(email: email)
+            .whenComplete(() => isForgotPassword.isSendPasswordSuccess = true)
+            .catchError((onError) {
+          isForgotPassword.isSendPasswordSuccess = false;
+          isForgotPassword.isError = true;
+          isForgotPassword.message = onError.toString();
+        });
+      }
+      return isForgotPassword;
+    } catch (err) {
+      isForgotPassword.isError = true;
+      isForgotPassword.message = err.toString();
+      return isForgotPassword;
+    }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn()
+          .signIn()
+          .catchError((onError) => print("hata ile karşılaşıdı"));
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      return await _auth.signInWithCredential(credential);
+    } on PlatformException catch (err) {
+      print("platform hatası" + err.toString());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

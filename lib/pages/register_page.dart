@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/business/concrete/login_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/bezier_container.dart';
-import '../Business/Concrete/login_operations.dart';
+import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'login_page.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
@@ -107,40 +108,40 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color.fromARGB(0, 121, 250, 0),
-                  Color.fromRGBO(164, 233, 232, 1),
-                ])),
-        child: TextButton(
+    return TextButton(
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            setState(() {
+              _formKey.currentState.save();
+              _signUpUser(_hvsUser);
+            });
+          }
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(vertical: 15),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2)
+              ],
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color.fromARGB(0, 121, 250, 0),
+                    Color.fromRGBO(164, 233, 232, 1),
+                  ])),
           child: Text(
             AppLocalizations.getString("register_now"),
             style:
                 TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
           ),
-          onPressed: () {
-            if (_formKey.currentState.validate()) {
-              setState(() {
-                _formKey.currentState.save();
-                _signUpUser(_hvsUser);
-              });
-            }
-          },
         ));
   }
 
@@ -263,6 +264,17 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signUpUser(HvsUser _hvsuser) async {
-    _loginOperation.signUp(context, _hvsuser);
+    var result = await _loginOperation.signUp(_hvsuser);
+    if (result.isSendEmailVerification) {}
+    if (result.isSignUpSuccess) {
+      NotificationWidget.showNotification(
+          context, AppLocalizations.getString("register_success_notification"));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginPage()));
+    }
+    if (result.isError) {
+      NotificationWidget.showNotification(context,
+          AppLocalizations.getString("register_error_notification_title"));
+    }
   }
 }

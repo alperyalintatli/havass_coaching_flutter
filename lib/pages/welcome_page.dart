@@ -7,7 +7,6 @@ import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
-
   final String title;
 
   @override
@@ -134,14 +133,18 @@ class _WelcomePageState extends State<WelcomePage> {
                   IconButton(
                       icon: Image.asset('images/english-flag-icon.png'),
                       onPressed: () {
-                        BlocProvider.of<BlocLocalization>(context)
-                            .add(LocaleEvent.EN);
+                        setState(() {
+                          BlocProvider.of<BlocLocalization>(context)
+                              .add(LocaleEvent.EN);
+                        });
                       }),
                   IconButton(
                       icon: Image.asset('images/german-flag-icon.png'),
                       onPressed: () {
-                        BlocProvider.of<BlocLocalization>(context)
-                            .add(LocaleEvent.DE);
+                        setState(() {
+                          BlocProvider.of<BlocLocalization>(context)
+                              .add(LocaleEvent.DE);
+                        });
                       }),
                 ],
               ),

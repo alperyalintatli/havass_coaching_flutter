@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:havass_coaching_flutter/business/concrete/login_operations.dart';
 import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
+import 'package:splash_screen_view/SplashScreenView.dart';
+
+import '../newScreen.dart';
 
 class PageSplash extends StatefulWidget {
   @override
@@ -10,8 +14,10 @@ class PageSplash extends StatefulWidget {
 }
 
 class _PageSplashState extends State<PageSplash> {
+  LoginOperations _loginOperation;
   @override
   void initState() {
+    _loginOperation = LoginOperations.getInstance();
     super.initState();
     initLanguage();
   }
@@ -21,9 +27,17 @@ class _PageSplashState extends State<PageSplash> {
     BlocProvider.of<BlocLocalization>(context).add(
       language == "de" ? LocaleEvent.DE : LocaleEvent.EN,
     );
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => WelcomePage(),
-    ));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => SplashScreenView(
+            home: _loginOperation.isLoggedIn() ? NewScreen() : WelcomePage(),
+            duration: 1000,
+            imageSize: 300,
+            imageSrc: "images/havass_logo.jpeg",
+            backgroundColor: Colors.white,
+          ),
+        ),
+        (Route<dynamic> route) => false);
   }
 
   @override

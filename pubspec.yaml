@@ -25,11 +25,16 @@ dependencies:
     sdk: flutter
   firebase_core: "0.7.0"
   firebase_auth: "^0.20.0+1"
+  google_sign_in: ^4.4.4
   flutter_bloc: ^6.1.2
   shared_preferences: ^0.5.12+4
   flutter_localizations: 
     sdk: flutter 
   overlay_support: ^1.0.0
+  splash_screen_view: ^1.0.1
+  stripe_payment: ^1.0.10
+  http: ^0.11.3+17
+  credit_card_input_form: ^2.1.6
 
 
   # The following adds the Cupertino Icons font to your application.
