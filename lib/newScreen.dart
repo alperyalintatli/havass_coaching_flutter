@@ -31,6 +31,7 @@ final cardDecoration = BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(15)));
 
 class _NewScreenState extends State<NewScreen> {
+  CardInfo card;
   @override
   void initState() {
     StripePayment.setOptions(StripeOptions(
@@ -80,22 +81,8 @@ class _NewScreenState extends State<NewScreen> {
                 showResetButton: true,
                 onStateChange: (currentState, cardInfo) async {
                   if (currentState.toString() == "InputState.DONE") {
-                    CardInfo card = CardInfo();
                     card = cardInfo;
-                    int _expYear = int.parse(card.validate.split('/')[1]);
-                    int _expMonth = int.parse(card.validate.split('/')[0]);
-                    CreditCardWithStripe creditCard = CreditCardWithStripe(
-                        card.name,
-                        card.cardNumber,
-                        _expYear,
-                        _expMonth,
-                        card.cvv);
-                    var response = await StripeService.payWithNewCard(
-                        amount: '150', currency: 'eur', creditCard: creditCard);
-                    if (response.success) {
-                      NotificationWidget.showNotification(
-                          context, response.message);
-                    }
+                    _paymentWithStripe();
                   }
                 },
                 frontCardDecoration: cardDecoration,
@@ -145,5 +132,18 @@ class _NewScreenState extends State<NewScreen> {
 //     ]
 // """,
 //               ),
+  }
+
+  void _paymentWithStripe() async {
+    card = CardInfo();
+    int _expMonth = int.parse(card.validate.split('/')[0]);
+    int _expYear = int.parse(card.validate.split('/')[1]);
+    CreditCardWithStripe creditCard = CreditCardWithStripe(
+        card.name, card.cardNumber, _expYear, _expMonth, card.cvv);
+    var response = await StripeService.payWithNewCard(
+        amount: '150', currency: 'eur', creditCard: creditCard);
+    if (response.success) {
+      NotificationWidget.showNotification(context, response.message);
+    }
   }
 }
