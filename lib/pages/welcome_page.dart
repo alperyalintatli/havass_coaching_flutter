@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:havass_coaching_flutter/pages/register_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
-import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {

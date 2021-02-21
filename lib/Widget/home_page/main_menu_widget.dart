@@ -1,10 +1,7 @@
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
-import 'package:credit_card_input_form/constants/constanst.dart';
-import 'package:credit_card_input_form/credit_card_input_form.dart';
 import 'package:credit_card_input_form/model/card_info.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/business/concrete/login_operations.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/stripe_services.dart';
 import 'package:stripe_payment/stripe_payment.dart';

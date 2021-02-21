@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 
 enum LocaleEvent { EN, DE }

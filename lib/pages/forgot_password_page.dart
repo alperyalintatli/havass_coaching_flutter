@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/business/concrete/login_operations.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
-import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
-import 'package:havass_coaching_flutter/widget/bezier_container.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
+import 'package:havass_coaching_flutter/widget/back_button_widget.dart';
+import 'package:havass_coaching_flutter/widget/login_register_page/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
-
 import 'login_page.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
@@ -24,27 +24,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text(AppLocalizations.getString("back"),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _entryField(String title,
@@ -208,7 +187,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
           ),
-          Positioned(top: 40, left: 0, child: _backButton()),
+          Positioned(
+              top: 40,
+              left: 0,
+              child: BackButtonWidget(
+                context: context,
+              )),
         ],
       ),
     ));

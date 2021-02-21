@@ -5,7 +5,11 @@ class NavBottombarProvider with ChangeNotifier {
 
   int get index => _index;
 
-  set index(int value) => _index = value;
+  set index(int value) {
+    if (value != null) {
+      _index = value;
+    }
+  }
 
   NavBottombarProvider(this._index);
 

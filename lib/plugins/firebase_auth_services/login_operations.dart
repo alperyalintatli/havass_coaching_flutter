@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:havass_coaching_flutter/business/abstract/ilogin_operations.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_auth_services/ILogin_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -151,8 +151,10 @@ class LoginOperations implements ILoginOperations {
       return await _auth.signInWithCredential(credential);
     } on PlatformException catch (err) {
       print("platform hatası" + err.toString());
+      return null;
     } catch (e) {
       print(e.toString());
+      return null;
     }
   }
 }

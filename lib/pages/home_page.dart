@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
-import 'package:havass_coaching_flutter/widget/main_page/bottom_navigation_bar_widget.dart';
-import 'package:havass_coaching_flutter/widget/main_page/course_menu_widget.dart';
-import 'package:havass_coaching_flutter/widget/main_page/main_menu_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/bottom_navigation_bar_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/course_menu_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/main_menu_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
