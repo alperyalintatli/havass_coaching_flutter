@@ -67,10 +67,10 @@ class FirebaseInitialize extends StatelessWidget {
 
         // Otherwise, show something whilst waiting for initialization to complete
         return Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+            body: Container(
+          child: Text("Havass App"),
+          color: Colors.white,
+        ));
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:credit_card_input_form/model/card_info.dart';
 import 'package:havass_coaching_flutter/model/credit_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:stripe_payment/stripe_payment.dart';
@@ -25,7 +26,7 @@ class StripeService {
       var _paymentMethod = await StripePayment.createPaymentMethod(
           PaymentMethodRequest(card: creditCard));
       var _paymentIntent =
-          await StripeService.createPaymentIntent(amount, currency);
+          await StripeService._createPaymentIntent(amount, currency);
       var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: _paymentIntent['client_secret'],
           paymentMethodId: _paymentMethod.id));
@@ -38,7 +39,7 @@ class StripeService {
     }
   }
 
-  static Future<Map<String, dynamic>> createPaymentIntent(
+  static Future<Map<String, dynamic>> _createPaymentIntent(
       String amount, String currency) async {
     try {
       Map<String, dynamic> body = {
@@ -53,5 +54,14 @@ class StripeService {
       print("err charing user:${err.toString()}");
     }
     return null;
+  }
+
+  static CreditCardWithStripe createCreditCard(CardInfo cardInfo) {
+    int _expMonth = int.parse(cardInfo.validate.split('/')[0]);
+    int _expYear = int.parse(cardInfo.validate.split('/')[1]);
+    CreditCardWithStripe creditCard = CreditCardWithStripe(
+        cardInfo.name, cardInfo.cardNumber, _expYear, _expMonth, cardInfo.cvv);
+
+    return creditCard;
   }
 }

@@ -96,9 +96,13 @@ class LoginOperations implements ILoginOperations {
 
   @override
   Future<void> signOut() async {
-    User _loginUser = _auth.currentUser;
-    if (_loginUser != null) {
-      await _auth.signOut();
+    try {
+      User _loginUser = _auth.currentUser;
+      if (_loginUser != null) {
+        await _auth.signOut();
+      }
+    } catch (err) {
+      print(err.toString());
     }
   }
 
