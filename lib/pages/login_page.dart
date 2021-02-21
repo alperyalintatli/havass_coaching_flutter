@@ -6,7 +6,7 @@ import 'package:havass_coaching_flutter/pages/register_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
-import '../newScreen.dart';
+import 'home_page.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
 
@@ -331,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
       NotificationWidget.showNotification(context,
           AppLocalizations.getString("login_gmail_notification_success_title"));
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => NewScreen()),
+          MaterialPageRoute(builder: (context) => HomePage()),
           (Route<dynamic> route) => false);
     } else {
       NotificationWidget.showNotification(context,
@@ -343,7 +343,7 @@ class _LoginPageState extends State<LoginPage> {
     var isLogin = await _loginOperation.login(_hvsuser);
     if (isLogin.isLoginSuccess) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => NewScreen()),
+          MaterialPageRoute(builder: (context) => HomePage()),
           (Route<dynamic> route) => false);
     } else if (isLogin.isEmailVerify) {
       setState(() {

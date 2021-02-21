@@ -6,7 +6,7 @@ import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 
-import '../newScreen.dart';
+import 'home_page.dart';
 
 class PageSplash extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _PageSplashState extends State<PageSplash> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => SplashScreenView(
-            home: _loginOperation.isLoggedIn() ? NewScreen() : WelcomePage(),
+            home: _loginOperation.isLoggedIn() ? HomePage() : WelcomePage(),
             duration: 1000,
             imageSize: 300,
             imageSrc: "images/havass_logo.jpeg",
