@@ -1,6 +1,6 @@
+import 'package:credit_card_input_form/constants/constanst.dart';
 import 'package:credit_card_input_form/model/card_info.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/model/credit_card.dart';
 import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/stripe_services.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
@@ -16,22 +16,24 @@ class NewScreen extends StatefulWidget {
 }
 
 final cardDecoration = BoxDecoration(
+    image: DecorationImage(
+        image: AssetImage('images/credit_card_backgorund_image.jpg')),
     boxShadow: <BoxShadow>[
       BoxShadow(color: Colors.black54, blurRadius: 15.0, offset: Offset(0, 8))
     ],
-    gradient: LinearGradient(
-        colors: [
-          Colors.red,
-          Colors.blue,
-        ],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(1.0, 0.0),
-        stops: [0.0, 1.0],
-        tileMode: TileMode.clamp),
+    color: Colors.black,
+    // gradient:LinearGradient(
+    //     colors: [
+    //       Colors.red,
+    //       Colors.blue,
+    //     ],
+    //     begin: const FractionalOffset(0.0, 0.0),
+    //     end: const FractionalOffset(1.0, 0.0),
+    //     stops: [0.0, 1.0],
+    //     tileMode: TileMode.clamp),
     borderRadius: BorderRadius.all(Radius.circular(15)));
 
 class _NewScreenState extends State<NewScreen> {
-  CardInfo card;
   @override
   void initState() {
     StripePayment.setOptions(StripeOptions(
@@ -73,16 +75,28 @@ class _NewScreenState extends State<NewScreen> {
                 child: Text("Date"),
                 onPressed: () async {
                   var now = new DateTime.now();
-                  print(now);
+                  Map<String, dynamic> map = Map<String, dynamic>();
+                  for (var i = 1; i < 12; i++) {
+                    now = now.add(Duration(days: 1));
+                    map[now.day.toString() +
+                        "/" +
+                        now.month.toString() +
+                        "/" +
+                        now.year.toString() +
+                        "/" +
+                        now.hour.toString()] = i.toString() + "Page";
+                  }
+                  print(map);
                 },
               ),
               CreditCardInputForm(
-                cardHeight: 170,
+                cardHeight: 230,
                 showResetButton: true,
                 onStateChange: (currentState, cardInfo) async {
-                  if (currentState.toString() == "InputState.DONE") {
-                    card = cardInfo;
-                    _paymentWithStripe();
+                  if (currentState == InputState.DONE) {
+                    // CardInfo infCard = CardInfo();
+                    // infCard = cardInfo;
+                    // _paymentWithStripe(infCard);
                   }
                 },
                 frontCardDecoration: cardDecoration,
@@ -93,53 +107,10 @@ class _NewScreenState extends State<NewScreen> {
         ),
       ),
     );
-
-//               FlutterSummernote(
-//                 hint: "Your text here...",
-//                 key: _keyEditor,
-//                 showBottomToolbar: true,
-//                 hasAttachment: true,
-//                 customToolbar: """
-//     [
-//       ['style', ['bold', 'italic', 'underline', 'clear']],
-//       ['font', ['strikethrough', 'superscript', 'subscript']],
-//       ['font', ['fontsize', 'fontname']],
-//       ['color', ['forecolor', 'backcolor']],
-//       ['para', ['ul', 'ol', 'paragraph']],
-//       ['height', ['height']],
-//       ['view', ['fullscreen']]
-//     ]
-//   """,
-//                 customPopover: """
-//     image: [
-//       ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
-//       ['float', ['floatLeft', 'floatRight', 'floatNone']],
-//       ['remove', ['removeMedia']]
-//     ],
-//     link: [
-//       ['link', ['linkDialogShow', 'unlink']]
-//     ],
-//     table: [
-//       ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
-//       ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
-//     ],
-//     air: [
-//       ['color', ['color']],
-//       ['font', ['bold', 'underline', 'clear']],
-//       ['para', ['ul', 'paragraph']],
-//       ['table', ['table']],
-//       ['insert', ['link', 'picture']]
-//     ]
-// """,
-//               ),
   }
 
-  void _paymentWithStripe() async {
-    card = CardInfo();
-    int _expMonth = int.parse(card.validate.split('/')[0]);
-    int _expYear = int.parse(card.validate.split('/')[1]);
-    CreditCardWithStripe creditCard = CreditCardWithStripe(
-        card.name, card.cardNumber, _expYear, _expMonth, card.cvv);
+  void _paymentWithStripe(CardInfo cardInfo) async {
+    var creditCard = StripeService.createCreditCard(cardInfo);
     var response = await StripeService.payWithNewCard(
         amount: '150', currency: 'eur', creditCard: creditCard);
     if (response.success) {
