@@ -1,130 +1,116 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
-import 'package:credit_card_input_form/model/card_info.dart';
+import 'dart:async';
+import 'dart:math';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
-import 'package:havass_coaching_flutter/pages/welcome_page.dart';
-import 'package:havass_coaching_flutter/plugins/stripe_services.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
+import 'package:havass_coaching_flutter/widget/credit_card_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/about_me_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/aims_widget.dart';
+import 'package:havass_coaching_flutter/widget/home_page/home_page_course_button_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
-import '../notification_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
 }
 
+FireStoreOperation store = FireStoreOperation.getInstance();
+
 class _HomeWidgetState extends State<HomeWidget> {
-  LoginOperations _loginOperation = LoginOperations.getInstance();
-  var _selectedDate = DateTime.now();
-  var cardDecoration = BoxDecoration(
-      image: DecorationImage(
-          image: AssetImage('images/credit_card_backgorund_image.jpg')),
-      boxShadow: <BoxShadow>[
-        BoxShadow(color: Colors.black54, blurRadius: 15.0, offset: Offset(0, 8))
-      ],
-      color: Colors.black,
-      // gradient:LinearGradient(
-      //     colors: [
-      //       Colors.red,
-      //       Colors.blue,
-      //     ],
-      //     begin: const FractionalOffset(0.0, 0.0),
-      //     end: const FractionalOffset(1.0, 0.0),
-      //     stops: [0.0, 1.0],
-      //     tileMode: TileMode.clamp),
-      borderRadius: BorderRadius.all(Radius.circular(15)));
+  HvsUserProvider _hvsUserProvider;
+  FirestoreProvider _fireStoreProvider;
+
+  Widget userText() {
+    return _hvsUserProvider == null
+        ? CircularProgressIndicator()
+        : Container(
+            child: Center(
+                child: Text(
+              AppLocalizations.getString("welcome_title") +
+                  " ," +
+                  _hvsUserProvider.getHvsUser.name.toString(),
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            )),
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            color: Color.fromRGBO(154, 206, 207, 1));
+  }
 
   @override
   void initState() {
-    StripePayment.setOptions(StripeOptions(
-        publishableKey:
-            "pk_test_51IMH5EGSjSaX6w4pG6yIc0YrmpryVSYwiZxF8juGdBY5tGeahVJ3YKhp8xluADB3gn8nR4NKnP4SldDhN1MSqDW300mtOnDxQ3",
-        merchantId: "Test",
-        androidPayMode: 'test'));
     super.initState();
+  }
+
+  List<Widget> _listHomeSlider() {
+    _fireStoreProvider.homeSliderWidgetList(context);
+    return _fireStoreProvider.homeSliderList;
+  }
+
+  Widget _homeSlider;
+  Timer _timerOfSlider;
+  void _getListSlider() {
+    _timerOfSlider = Timer(Duration(seconds: Random().nextInt(3)), () {
+      _homeSlider = Container(
+        width: MediaQuery.of(context).size.width,
+        height: 250,
+        child: CarouselSlider(
+          options: CarouselOptions(
+              viewportFraction: 1,
+              autoPlay: true,
+              height: MediaQuery.of(context).size.height / 2),
+          items: _listHomeSlider(),
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _fireStoreProvider = Provider.of<FirestoreProvider>(context);
+    _hvsUserProvider = Provider.of<HvsUserProvider>(context);
+    _getListSlider();
     return Container(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            TextButton(
-                child: Text("LogOut"),
-                onPressed: () async {
-                  await _loginOperation.signOut().whenComplete(() =>
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => WelcomePage()),
-                          (Route<dynamic> route) => false));
-                }),
-            TextButton(
-              child: Text("Date"),
-              onPressed: () async {
-                var now = new DateTime.now();
-                Map<String, dynamic> map = Map<String, dynamic>();
-                for (var i = 1; i < 12; i++) {
-                  now = now.add(Duration(days: 1));
-                  map[now.day.toString() +
-                      "/" +
-                      now.month.toString() +
-                      "/" +
-                      now.year.toString() +
-                      "/" +
-                      now.hour.toString()] = i.toString() + "Page";
-                }
-                print(map);
-              },
+            userText(),
+            _homeSlider == null
+                ? Container(
+                    margin: EdgeInsets.only(top: 125, bottom: 125),
+                    child: CircularProgressIndicator(),
+                  )
+                : _homeSlider,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CourseButtonWidget("16gunluk kurs"),
+                CourseButtonWidget("21gunluk kurs")
+              ],
             ),
-            // CreditCardInputForm(
-            //   cardHeight: 230,
-            //   showResetButton: true,
-            //   onStateChange: (currentState, cardInfo) async {
-            //     if (currentState == InputState.DONE) {
-            //       CardInfo infCard = CardInfo();
-            //       infCard = cardInfo;
-            //       _paymentWithStripe(infCard);
-            //     }
-            //   },
-            //   frontCardDecoration: cardDecoration,
-            //   backCardDecoration: cardDecoration,
-            // ),
             Container(
-              margin: EdgeInsets.all(5),
-              child: CalendarTimeline(
-                initialDate: _selectedDate,
-                firstDate: DateTime(2021, 02, 10),
-                lastDate: DateTime(2021, 02, 10).add(Duration(days: 30)),
-                onDateSelected: (date) {
-                  setState(() {
-                    _selectedDate = date;
-                    print(date.day);
-                  });
-                },
-                leftMargin: 20,
-                monthColor: Colors.white,
-                dayColor: Colors.teal[200],
-                dayNameColor: Color(0xFF333A47),
-                activeDayColor: Colors.white,
-                activeBackgroundDayColor: Colors.redAccent[100],
-                dotsColor: Color(0xFF333A47),
-                // selectableDayPredicate: (date) => date.day != 23,
-                locale: 'en',
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                AppLocalizations.getString("aims_vision"),
+                style: TextStyle(fontSize: 20),
               ),
-              color: Colors.red,
             ),
+            AimsListWidget(),
+            AboutMeWidget("ben kimim_", "hakkımda"),
           ],
         ),
       ),
     );
   }
 
-  void _paymentWithStripe(CardInfo cardInfo) async {
-    var creditCard = StripeService.createCreditCard(cardInfo);
-    var response = await StripeService.payWithNewCard(
-        amount: '150', currency: 'eur', creditCard: creditCard);
-    if (response.success) {
-      NotificationWidget.showNotification(context, response.message);
-    }
+  @override
+  void dispose() {
+    _timerOfSlider.cancel();
+    super.dispose();
   }
 }

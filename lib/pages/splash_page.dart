@@ -5,7 +5,6 @@ import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
-
 import 'home_page.dart';
 
 class PageSplash extends StatefulWidget {
@@ -31,7 +30,7 @@ class _PageSplashState extends State<PageSplash> {
         MaterialPageRoute(
           builder: (_) => SplashScreenView(
             home: _loginOperation.isLoggedIn() ? HomePage() : WelcomePage(),
-            duration: 1000,
+            duration: _loginOperation.isLoggedIn() ? 3000 : 1000,
             imageSize: 300,
             imageSrc: "images/havass_logo.jpeg",
             backgroundColor: Colors.white,

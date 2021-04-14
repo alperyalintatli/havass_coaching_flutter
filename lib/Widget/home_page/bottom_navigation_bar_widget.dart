@@ -1,6 +1,7 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
@@ -15,55 +16,58 @@ class BottomNavigationBarWidget extends StatelessWidget {
         onTap: _setNavbarIndexProvider.setIndex,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
-        // fabLocation: BubbleBottomBarFabLocation.center,
+        fabLocation: BubbleBottomBarFabLocation.end,
         hasNotch: true, //new
         hasInk: true, //new, gives a cute ink effect
         inkColor: Colors.black12, //optional, uses theme color if not specified
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
-              backgroundColor: Colors.red,
+              backgroundColor: Color.fromRGBO(154, 206, 207, 1),
               icon: Icon(
-                Icons.dashboard,
-                color: Colors.black,
+                Icons.home,
+                color: Colors.grey.shade600,
               ),
               activeIcon: Icon(
-                Icons.dashboard,
-                color: Colors.red,
+                Icons.home,
+                color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Home")),
+              title: Text(
+                "Home",
+                style: TextStyle(),
+              )),
           BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Color.fromRGBO(154, 206, 207, 1),
               icon: Icon(
-                Icons.access_time,
-                color: Colors.black,
+                Icons.eco_sharp,
+                color: Colors.grey.shade600,
               ),
               activeIcon: Icon(
-                Icons.access_time,
-                color: Colors.deepPurple,
+                Icons.eco_sharp,
+                color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Logs")),
+              title: Text("Quat of Day")),
           BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
+              backgroundColor: Color.fromRGBO(154, 206, 207, 1),
               icon: Icon(
-                Icons.folder_open,
-                color: Colors.black,
+                Icons.golf_course,
+                color: Colors.grey.shade600,
               ),
               activeIcon: Icon(
-                Icons.folder_open,
-                color: Colors.indigo,
+                Icons.golf_course,
+                color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Folders")),
+              title: Text("Courses")),
           BubbleBottomBarItem(
-              backgroundColor: Colors.green,
+              backgroundColor: Color.fromRGBO(154, 206, 207, 1),
               icon: Icon(
-                Icons.menu,
-                color: Colors.black,
+                Icons.video_collection,
+                color: Colors.grey.shade600,
               ),
               activeIcon: Icon(
-                Icons.menu,
-                color: Colors.green,
+                Icons.video_collection,
+                color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Menu"))
+              title: Text("About Course"))
         ],
       ),
     );

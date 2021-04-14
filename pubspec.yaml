@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: "0.7.0"
+  cloud_firestore: "^0.16.0+1"
+  firebase_storage: "^7.0.0"
   firebase_auth: "^0.20.0+1"
   provider: ^4.3.3
   google_sign_in: ^4.4.4
@@ -34,15 +36,31 @@ dependencies:
   overlay_support: ^1.0.0
   splash_screen_view: ^1.0.1
   stripe_payment: ^1.0.10
-  http: ^0.11.3+17
+  http: ^0.12.1
   credit_card_input_form: ^2.1.6
   calendar_timeline: ^0.7.0
   bubble_bottom_bar: ^1.2.0
+  zefyr: ^0.12.0
+  notustohtml: ^0.0.8
+  flutter_html: ^1.2.0
+  path_provider: ^1.6.27
+  advance_pdf_viewer: ^1.2.2
+  carousel_slider: ^3.0.0
+  intl: ^0.16.1
+  ext_storage: ^1.0.3
+  flutter_html_to_pdf: ^0.5.2
+  flutter_windowmanager: ^0.0.2
+  scratcher: ^1.4.0
+  share: 0.6.5+4
+  video_player: ^1.0.1
+  badges: ^1.2.0
+ 
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +81,11 @@ flutter:
   assets:
     - langs/
     - images/
+    - images/mandala_images/
   #   - images/a_dot_ham.jpeg
+
+  
+ 
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

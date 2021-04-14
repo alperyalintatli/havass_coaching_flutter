@@ -66,7 +66,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   }
                 }
                 if (isPassword) {
-                  if (value.length < 4) {
+                  if (value.length < 6) {
                     return '*' +
                         AppLocalizations.getString(
                             "register_page_validation_password_field");

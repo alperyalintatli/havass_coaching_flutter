@@ -38,6 +38,22 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
       ],
       color: Colors.black,
       borderRadius: BorderRadius.all(Radius.circular(15)));
+
+  final _buttonDecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(30.0),
+    gradient: LinearGradient(
+        colors: [
+          const Color.fromRGBO(154, 206, 207, 1),
+          const Color.fromRGBO(24, 231, 239, 1),
+        ],
+        begin: const FractionalOffset(0.0, 0.0),
+        end: const FractionalOffset(1.0, 0.0),
+        stops: [0.0, 1.0],
+        tileMode: TileMode.clamp),
+  );
+
+  final _buttonTextStyle =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18);
   @override
   Widget build(BuildContext context) {
     _cartProvider = Provider.of<CartProvider>(context);
@@ -46,6 +62,10 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
     return CreditCardInputForm(
       cardHeight: 230,
       showResetButton: true,
+      nextButtonDecoration: _buttonDecoration,
+      nextButtonTextStyle: _buttonTextStyle,
+      prevButtonDecoration: _buttonDecoration,
+      prevButtonTextStyle: _buttonTextStyle,
       onStateChange: (currentState, cardInfo) async {
         if (currentState == InputState.DONE) {
           CardInfo infCard = CardInfo();
@@ -61,9 +81,10 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
   void _paymentWithStripe(CardInfo cardInfo) async {
     var creditCard = StripeService.createCreditCard(cardInfo);
     var response = await StripeService.payWithNewCard(
-        amount: (_cartProvider.totalAmount * 100).toString(),
+        amount: (_cartProvider.totalAmount * 1000).toString(),
         currency: 'eur',
         creditCard: creditCard);
+
     if (response.success) {
       await _hvsUserProvider.getUser();
       Course course1 = Course();

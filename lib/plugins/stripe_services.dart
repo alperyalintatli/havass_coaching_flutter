@@ -14,28 +14,34 @@ class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
   static String paymentApiUrl = '${StripeService.apiBase}/payment_intents';
   static String secret =
-      'sk_test_51IMH5EGSjSaX6w4pgZ7CXn7xnAY19lhvVa8Sxelaiiyaq42yZqqBOeNg2cdCuXdPI07S7XCnemSTeCH2YFzWHlPa00d1WWous5';
+      'sk_test_51IDE6aBqOxVQ2IQTBndyrEFbaGXFTnVdvDfNUFpSqlvBpCPG33CMhViDOtiKGi97cIz86hhhGOdWE4NebP0VPVLR00CeMst1EE';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
   };
   static init() {}
+
   static Future<StripeTransactionResponse> payWithNewCard(
       {String amount, String currency, CreditCardWithStripe creditCard}) async {
+    var response;
     try {
+      BillingAddress billingAddress = BillingAddress();
+      billingAddress.name = creditCard.name;
       var _paymentMethod = await StripePayment.createPaymentMethod(
-          PaymentMethodRequest(card: creditCard));
+          PaymentMethodRequest(
+              card: creditCard, billingAddress: billingAddress));
       var _paymentIntent =
           await StripeService._createPaymentIntent(amount, currency);
-      var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
+      response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: _paymentIntent['client_secret'],
           paymentMethodId: _paymentMethod.id));
       print(response);
       return new StripeTransactionResponse(
           message: "Transaction success", success: true);
     } catch (e) {
+      print(response);
       return new StripeTransactionResponse(
-          message: "Transaction failed:${e.toString()}", success: true);
+          message: "Transaction failed:${e.toString()}", success: false);
     }
   }
 

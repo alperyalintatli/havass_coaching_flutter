@@ -3,7 +3,10 @@ import 'package:overlay_support/overlay_support.dart';
 
 class NotificationWidget {
   static showNotification(BuildContext context, String title,
-      {Icon icon, String subtitle, int duration = 6000}) {
+      {Icon icon,
+      String subtitle,
+      int duration = 6000,
+      NotificationPosition position = NotificationPosition.top}) {
     showOverlayNotification((context) {
       return Card(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -34,6 +37,6 @@ class NotificationWidget {
           ),
         ),
       );
-    }, duration: Duration(milliseconds: duration));
+    }, duration: Duration(milliseconds: duration), position: position);
   }
 }

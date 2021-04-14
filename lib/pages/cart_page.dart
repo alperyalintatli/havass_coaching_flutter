@@ -107,9 +107,21 @@ class _OrderButtonState extends State<OrderButton> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
-                  "Toplam: " + _cartProvider.totalAmount.toString() + "€",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Price: " + _cartProvider.totalAmount.toString() + "€",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () => Navigator.of(context).pop(),
+                      color: Colors.red,
+                      iconSize: 30,
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 15,
@@ -117,17 +129,6 @@ class _OrderButtonState extends State<OrderButton> {
                 CreditCardWidget(),
                 SizedBox(
                   height: 22,
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "Vazgeç",
-                        style: TextStyle(fontSize: 18),
-                      )),
                 ),
               ],
             ),

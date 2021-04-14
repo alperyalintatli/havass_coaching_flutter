@@ -7,41 +7,67 @@ class QuatOfDayProvider extends ChangeNotifier {
   FireStoreOperation _fireStoreOperation;
   QuatOfDayProvider() {
     _fireStoreOperation = FireStoreOperation.getInstance();
-    _getQuatOfNumbers();
   }
   bool _isScratchQuat;
-  bool get isScratchQuat => this._isScratchQuat;
+  bool get isScratchQuat {
+    notifyListeners();
+    return this._isScratchQuat;
+  }
 
   set isScratchQuat(bool value) => this._isScratchQuat = value;
+
   Map<String, dynamic> _quatMap;
-  Map<String, dynamic> get getQuatMap => this._quatMap;
+  Map<String, dynamic> get getQuatMap {
+    notifyListeners();
+    return this._quatMap;
+  }
 
   set setQuatMap(Map<String, dynamic> quatMap) => this._quatMap = quatMap;
 
-  Map<String, String> _mapOfQuatOfDayNumbers;
-  Map<String, String> get mapOfQuatOfDayNumbers => this._mapOfQuatOfDayNumbers;
+  Map<String, dynamic> _mapOfQuatOfDayNumbers;
+  Map<String, dynamic> get mapOfQuatOfDayNumbers {
+    notifyListeners();
+    return this._mapOfQuatOfDayNumbers;
+  }
 
-  set mapOfQuatOfDayNumbers(Map<String, String> value) =>
+  set mapOfQuatOfDayNumbers(Map<String, dynamic> value) =>
       this._mapOfQuatOfDayNumbers = value;
 
-  void _getQuatOfNumbers() async {
+  void getQuatOfNumbers() async {
     try {
-      _isScratchQuat = true;
       _mapOfQuatOfDayNumbers = await PrefUtils.getQuatOfDayNumbers();
+      _isScratchQuat = _mapOfQuatOfDayNumbers[PrefUtils.PREFS_ISSCRACTHQUAT];
       _quatMap = await _fireStoreOperation.imgQuatList();
-      int day = int.parse(_mapOfQuatOfDayNumbers["quatOfDay"]);
+      int day = int.parse(_mapOfQuatOfDayNumbers[PrefUtils.PREFS_QUATOFDAY]);
       if (day != DateTime.now().day) {
-        _mapOfQuatOfDayNumbers["quatOfDay"] = DateTime.now().day.toString();
-        _mapOfQuatOfDayNumbers["numberOfMandala"] = _createRandomNumber(
-                5, int.parse(_mapOfQuatOfDayNumbers["numberOfMandala"]))
+        _mapOfQuatOfDayNumbers[PrefUtils.PREFS_QUATOFDAY] =
+            DateTime.now().day.toString();
+        _mapOfQuatOfDayNumbers[
+            PrefUtils.PREFS_NUMBEROFMANDALA] = _createRandomNumber(
+                5,
+                int.parse(
+                    _mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFMANDALA]))
             .toString();
-        _mapOfQuatOfDayNumbers["numberOfQuat"] = _createRandomNumber(
-                _quatMap.values.length,
-                int.parse(_mapOfQuatOfDayNumbers["numberOfQuat"]))
-            .toString();
+        _mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFQUAT] =
+            _createRandomNumber(
+                    _quatMap.values.length,
+                    int.parse(
+                        _mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFQUAT]))
+                .toString();
+        _mapOfQuatOfDayNumbers[PrefUtils.PREFS_ISSCRACTHQUAT] = false;
         _isScratchQuat = false;
         PrefUtils.saveQuatOfDayNumbers(_mapOfQuatOfDayNumbers);
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void saveIsScracthQuat() async {
+    try {
+      _isScratchQuat = true;
+      _mapOfQuatOfDayNumbers[PrefUtils.PREFS_ISSCRACTHQUAT] = true;
+      PrefUtils.saveQuatOfDayNumbers(_mapOfQuatOfDayNumbers);
     } catch (e) {
       print(e);
     }

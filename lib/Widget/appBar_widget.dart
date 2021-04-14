@@ -1,4 +1,8 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/pages/cart_page.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
   @override
@@ -16,10 +20,11 @@ class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
 class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
+    final _cartProvider = Provider.of<CartProvider>(context);
     return AppBar(
       leading: widget.isPopup
           ? IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+              icon: Icon(Icons.arrow_back_ios, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             )
           : null,
@@ -40,20 +45,42 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Havass"),
+              Text(
+                "Havass",
+              ),
               Text(
                 "App",
                 style: TextStyle(fontSize: 10),
               ),
             ],
           ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.person,
-          //     color: Colors.white,
-          //   ),
-          //   iconSize: 32,
-          // )
+          _cartProvider.items.length > 0
+              ? Badge(
+                  position: BadgePosition.topEnd(top: 0, end: 0),
+                  animationType: BadgeAnimationType.slide,
+                  badgeContent: Text(
+                    _cartProvider.items.length.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => CartPage())),
+                    icon: Icon(
+                      Icons.shopping_cart_sharp,
+                      color: Colors.white,
+                    ),
+                    iconSize: 32,
+                  ),
+                )
+              : IconButton(
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => CartPage())),
+                  icon: Icon(
+                    Icons.shopping_cart_sharp,
+                    color: Colors.white,
+                  ),
+                  iconSize: 32,
+                ),
         ],
       ),
     );

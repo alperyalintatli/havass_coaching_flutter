@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FirestoreProvider with ChangeNotifier {
   FireStoreOperation fireStoreOperation = FireStoreOperation.getInstance();
-  List<String> _homeSliderList;
-  List<String> get getHomeSliderList => this._homeSliderList;
+  Map<String, dynamic> _homeSliderList;
+  Map<String, dynamic> get getHomeSliderList => this._homeSliderList;
 
-  set setHomeSliderList(List<String> homeSliderList) =>
+  set setHomeSliderList(Map<String, dynamic> homeSliderList) =>
       this._homeSliderList = _homeSliderList;
 
   void getHomeSlider() async {
@@ -14,28 +15,52 @@ class FirestoreProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Widget> homeSliderWidgetList(BuildContext context) {
-    // _getHomeSlider();
+  List<Widget> homeSliderList;
+  void homeSliderWidgetList(BuildContext context) {
+    // List<Widget> _list = List<Widget>();
+    // _homeSliderList.forEach((element) {
+    //   var widget = Stack(
+    //     children: [
+    //       InkResponse(
+    //           child: Image.network(
+    //         element,
+    //         fit: BoxFit.cover,
+    //         width: MediaQuery.of(context).size.width,
+    //       ))
+    //     ],
+    //   );
+    //   _list.add(widget);
+    // });
+    // if (_list.length != 0) {
+    //   notifyListeners();
+    //   homeSliderList = _list;
+    // }
     List<Widget> _list = List<Widget>();
-    _homeSliderList.forEach((element) {
+    _homeSliderList.forEach((key, value) {
       var widget = Stack(
         children: [
-          InkResponse(
-              child: Image.network(
-            element,
-            fit: BoxFit.cover,
-            width: MediaQuery.of(context).size.width,
-          ))
+          GestureDetector(
+            onTap: () async {
+              if (await canLaunch(value)) {
+                await launch(value);
+              } else {
+                Navigator.pushNamed(context, value);
+              }
+            },
+            child: InkResponse(
+                child: Image.network(
+              key.toString(),
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width,
+            )),
+          )
         ],
       );
       _list.add(widget);
     });
-    if (_list.length == 0) {
+    if (_list.length != 0) {
       notifyListeners();
-      return List<CircularProgressIndicator>();
-    } else {
-      notifyListeners();
-      return _list;
+      homeSliderList = _list;
     }
   }
 }

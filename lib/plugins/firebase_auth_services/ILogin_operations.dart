@@ -7,5 +7,7 @@ abstract class ILoginOperations {
   void signOut();
   bool isLoggedIn();
   void forgotPassword(String email);
+  void changePassword(String oldPassword, String newPassword);
   Future<UserCredential> signInWithGoogle();
+  String getLoginUserEmail();
 }

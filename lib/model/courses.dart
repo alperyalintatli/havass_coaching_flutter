@@ -1,8 +1,11 @@
-import 'dart:convert';
 import 'dart:ffi';
 
 class Course {
-  Course({String courseName, String courseComment, Map<String, String> dates}) {
+  Course({
+    String courseName,
+    String courseComment,
+    List<DatesToPdf> dates,
+  }) {
     this._courseName = courseName;
     this._courseComment = courseComment;
     this._dates = dates;
@@ -45,19 +48,56 @@ class Course {
   Double get coursePrice => this._coursePrice;
   set coursePrice(Double value) => this._coursePrice = value;
 
-  Map<String, dynamic> _dates;
-  Map<String, dynamic> get getDates => this._dates;
-
-  set setDates(Map<String, dynamic> dates) => this._dates = dates;
+  List<DatesToPdf> _dates;
+  List<DatesToPdf> get dates => this._dates;
+  set dates(List<DatesToPdf> value) => this._dates = value;
 
   factory Course.fromMap(Map<String, dynamic> data) => Course(
-      courseName: data["courseName"],
-      courseComment: data["courseComment"],
-      dates: data["dates"]);
+        courseName: data["courseName"],
+        courseComment: data["courseComment"],
+        dates: data['dates'] != null
+            ? (data['dates'] as List)
+                .map((data) => DatesToPdf.fromMap(data))
+                .toList()
+            : null,
+      );
 
   Map<String, dynamic> toMap() => {
         "courseName": this._courseName,
         "courseComment": this._courseComment,
-        "dates": this._dates,
+        "dates": this._dates != null
+            ? this._dates.map((e) {
+                return {
+                  "date": e.date,
+                  "pdfName": e.pdfName,
+                };
+              }).toList()
+            : null
+      };
+}
+
+class DatesToPdf {
+  DatesToPdf({String date, String pdfName}) {
+    this._date = date;
+    this._pdfName = pdfName;
+  }
+  String _date;
+  String get date => this._date;
+
+  set date(String value) => this._date = value;
+
+  String _pdfName;
+  String get pdfName => this._pdfName;
+
+  set pdfName(String value) => this._pdfName = value;
+
+  factory DatesToPdf.fromMap(Map<String, dynamic> data) => DatesToPdf(
+        date: data["date"],
+        pdfName: data["pdfName"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "date": this._date,
+        "pdfName": this._pdfName,
       };
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quill_delta/quill_delta.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:zefyr/zefyr.dart';
 
 class NotePage extends StatefulWidget {
@@ -8,44 +9,47 @@ class NotePage extends StatefulWidget {
 }
 
 class NotePageState extends State<NotePage> {
-  /// Allows to control the editor and the document.
-  ZefyrController _controller;
-
-  /// Zefyr editor like any other input field requires a focus node.
-  FocusNode _focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    // Here we must load the document and pass it to Zefyr controller.
-    final document = _loadDocument();
-    _controller = ZefyrController(document);
-    _focusNode = FocusNode();
-  }
+  DateAndNoteProvider _noteProvider;
+  int value = 0;
 
   @override
   Widget build(BuildContext context) {
-    // Note that the editor requires special `ZefyrScaffold` widget to be
-    // one of its parents.
+    _noteProvider = Provider.of<DateAndNoteProvider>(context);
+    setZefryController();
+    final Widget zefryEditor = (_noteProvider.zefryController == null)
+        ? Center(child: CircularProgressIndicator())
+        : ZefyrScaffold(
+            child: ZefyrEditor(
+              padding: EdgeInsets.all(16),
+              autofocus: false,
+              controller: _noteProvider.zefryController,
+              focusNode: _noteProvider.setZefryFocusNode(),
+            ),
+          );
     return Scaffold(
-      appBar: AppBar(title: Text("Editor page")),
-      body: ZefyrScaffold(
-        child: ZefyrEditor(
-          autofocus: true,
-          padding: EdgeInsets.all(16),
-          controller: _controller,
-          focusNode: _focusNode,
-        ),
+      appBar: AppBar(
+        title: Text("Editor page"),
+        actions: <Widget>[
+          Builder(
+            builder: (context) => IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () {
+                  _noteProvider.saveNote(
+                      context, _noteProvider.zefryController);
+                  _noteProvider.setStringHtmlFromNote();
+                  Navigator.pop(context);
+                }),
+          )
+        ],
       ),
+      body: zefryEditor,
     );
   }
 
-  /// Loads the document to be edited in Zefyr.
-  NotusDocument _loadDocument() {
-    // For simplicity we hardcode a simple document with one line of text
-    // saying "Zefyr Quick Start".
-    // (Note that delta must always end with newline.)
-    final Delta delta = Delta()..insert("Zefyr Quick Start\n");
-    return NotusDocument.fromDelta(delta);
+  void setZefryController() {
+    if (value == 0) {
+      _noteProvider.setZefryController();
+      value++;
+    }
   }
 }

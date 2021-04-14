@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/pages/splash_page.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:havass_coaching_flutter/pages/forgot_password_page.dart';
 import 'package:havass_coaching_flutter/pages/register_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/back_button_widget.dart';
 import 'package:havass_coaching_flutter/widget/login_register_page/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
+import 'package:provider/provider.dart';
 import 'home_page.dart';
 
 LoginOperations _loginOperation = LoginOperations.getInstance();
@@ -21,6 +25,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  HvsUserProvider _userProvider;
+  FirestoreProvider _firestoreProvider;
   final _formKey = GlobalKey<FormState>();
   final _hvsUser = HvsUser();
   bool isUserEmailVerified = false;
@@ -70,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 }
                 if (isPassword) {
-                  if (value.length < 4) {
+                  if (value.length < 6) {
                     return '*' +
                         AppLocalizations.getString(
                             "register_page_validation_password_field");
@@ -252,8 +258,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    _userProvider = Provider.of<HvsUserProvider>(context);
+    _firestoreProvider = Provider.of<FirestoreProvider>(context);
     final height = MediaQuery.of(context).size.height;
-
     return Scaffold(
         body: Container(
       height: height,
@@ -323,8 +330,10 @@ class _LoginPageState extends State<LoginPage> {
   void _loginUser(HvsUser _hvsuser) async {
     var isLogin = await _loginOperation.login(_hvsuser);
     if (isLogin.isLoginSuccess) {
+      _userProvider.getUser(hvsUser: _hvsUser);
+      _firestoreProvider.getHomeSlider();
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => PageSplash()),
           (Route<dynamic> route) => false);
     } else if (isLogin.isEmailVerify) {
       setState(() {

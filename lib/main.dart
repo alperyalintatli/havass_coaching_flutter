@@ -2,9 +2,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:havass_coaching_flutter/pages/login_page.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'pages/splash_page.dart';
 import 'plugins/bloc/bloc_localization.dart';
+import 'plugins/provider_services/quat_of_day_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,13 +28,39 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    secureScreen();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<BlocLocalization>(
-      create: (_) => BlocLocalization(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BlocLocalization>(
+          create: (_) => BlocLocalization(),
+        )
+      ],
       child: BlocBuilder<BlocLocalization, Locale>(
         builder: (context, locale) {
           return OverlaySupport(
+              child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                  create: (context) => NavBottombarProvider(0)),
+              ChangeNotifierProvider(
+                  create: (context) => DateAndNoteProvider(DateTime.now())),
+              ChangeNotifierProvider(create: (context) => HvsUserProvider()),
+              ChangeNotifierProvider(create: (context) => FirestoreProvider()),
+              ChangeNotifierProvider(create: (context) => QuatOfDayProvider()),
+              ChangeNotifierProvider(create: (context) => AimsProvider()),
+              ChangeNotifierProvider(create: (context) => CartProvider()),
+            ],
             child: MaterialApp(
+              routes: {
+                // When navigating to the "/second" route, build the SecondScreen widget.
+                '/loginPage': (context) => LoginPage(),
+              },
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
@@ -34,10 +71,14 @@ class _MyAppState extends State<MyApp> {
               locale: locale,
               supportedLocales: [Locale("en"), Locale("de")],
             ),
-          );
+          ));
         },
       ),
     );
+  }
+
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 }
 
@@ -62,6 +103,21 @@ class FirebaseInitialize extends StatelessWidget {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+          HvsUserProvider _userProvider = Provider.of<HvsUserProvider>(context);
+          QuatOfDayProvider _quatOfDayProvider =
+              Provider.of<QuatOfDayProvider>(context);
+          AimsProvider _aimsProvider = Provider.of<AimsProvider>(context);
+          FirestoreProvider _firestoreProvider =
+              Provider.of<FirestoreProvider>(context);
+          LoginOperations _loginOperation = LoginOperations.getInstance();
+          _firestoreProvider.getHomeSlider();
+          _quatOfDayProvider.getQuatOfNumbers();
+          _aimsProvider.getLang();
+          if (_loginOperation.isLoggedIn()) {
+            _userProvider.getUser();
+          }
+          // _userProvider.getUser();
+          // _firestoreProvider.getHomeSlider();
           return PageSplash();
         }
 

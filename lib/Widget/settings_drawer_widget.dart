@@ -4,6 +4,7 @@ import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,9 @@ class SettingsDrawerWidget extends StatefulWidget {
 }
 
 class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
-  HvsUserProvider _userProvider;
   LoginOperations _loginOperation = LoginOperations.getInstance();
+  HvsUserProvider _userProvider;
+  AimsProvider _aimsProvider;
 
   final _passwordChangeFormKey = GlobalKey<FormState>();
   final _userNameChangeFormKey = GlobalKey<FormState>();
@@ -77,6 +79,7 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
   @override
   Widget build(BuildContext context) {
     _userProvider = Provider.of<HvsUserProvider>(context);
+    _aimsProvider = Provider.of<AimsProvider>(context);
     double height = MediaQuery.of(context).size.height;
     return Drawer(
       child: Container(
@@ -216,6 +219,8 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                                     setState(() {
                                       BlocProvider.of<BlocLocalization>(context)
                                           .add(LocaleEvent.EN);
+                                      Future.delayed(Duration(seconds: 1),
+                                          () => _aimsProvider.getLang());
                                     });
                                   }),
                               IconButton(
@@ -225,6 +230,8 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                                     setState(() {
                                       BlocProvider.of<BlocLocalization>(context)
                                           .add(LocaleEvent.DE);
+                                      Future.delayed(Duration(seconds: 4),
+                                          () => _aimsProvider.getLang());
                                     });
                                   }),
                             ],

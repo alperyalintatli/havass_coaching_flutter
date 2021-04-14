@@ -1,12 +1,19 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
+import 'package:havass_coaching_flutter/widget/notification_widget.dart';
+import 'package:provider/provider.dart';
 
 class CoursePdf extends StatefulWidget {
+  final String pdfName;
+  CoursePdf(this.pdfName);
   @override
-  _CoursePdfState createState() => _CoursePdfState();
+  _CoursePdfState createState() => _CoursePdfState(pdfName);
 }
 
 class _CoursePdfState extends State<CoursePdf> {
+  final String pdfName;
+  _CoursePdfState(this.pdfName);
   var itemsToBody = [
     FloatingActionButton(
       backgroundColor: Colors.greenAccent,
@@ -30,13 +37,22 @@ class _CoursePdfState extends State<CoursePdf> {
   @override
   void initState() {
     super.initState();
+
     loadDocument();
   }
 
+  HvsUserProvider _hvsUserProvider;
   loadDocument() async {
-    document = await PDFDocument.fromAsset('images/sample.pdf');
-
-    setState(() => _isLoading = false);
+    try {
+      document = await PDFDocument.fromAsset('images/$pdfName');
+      setState(() => _isLoading = false);
+    } catch (e) {
+      NotificationWidget.showNotification(
+          context, "Bir sorun oluştu. Lütfen tekrar deneyin.");
+      await _hvsUserProvider.getUser();
+      Navigator.pop(context);
+      print(e.toString());
+    }
   }
 
   changePDF(value) async {
@@ -62,8 +78,22 @@ class _CoursePdfState extends State<CoursePdf> {
 
   @override
   Widget build(BuildContext context) {
+    _hvsUserProvider = Provider.of<HvsUserProvider>(context);
     return Scaffold(
-      // drawer: Drawer(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(24, 231, 239, 1),
+        toolbarHeight: 35,
+        title: IconButton(
+          icon: Icon(
+            Icons.download_sharp,
+            color: Colors.white,
+          ),
+          onPressed: null,
+        ),
+        titleSpacing: MediaQuery.of(context).size.width * 0.75,
+      ),
+
+      // Drawer(
       //   child: Column(
       //     children: <Widget>[
       //       SizedBox(height: 36),
@@ -94,7 +124,7 @@ class _CoursePdfState extends State<CoursePdf> {
             ? Center(child: CircularProgressIndicator())
             : PDFViewer(
                 document: document,
-                zoomSteps: 1,
+                zoomSteps: 4,
                 //uncomment below line to preload all pages
                 // lazyLoad: false,
                 // uncomment below line to scroll vertically
@@ -104,39 +134,39 @@ class _CoursePdfState extends State<CoursePdf> {
                 showPicker: false,
 
                 //uncomment below code to replace bottom navigation with your own
-                navigationBuilder:
-                    (context, page, totalPages, jumpToPage, animateToPage) {
-                  return ButtonBar(
-                    buttonAlignedDropdown: true,
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.first_page),
-                        onPressed: () {
-                          jumpToPage(page: 0);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          animateToPage(page: page - 2);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          animateToPage(page: page);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.last_page),
-                        onPressed: () {
-                          jumpToPage(page: totalPages - 1);
-                        },
-                      ),
-                    ],
-                  );
-                },
+                // navigationBuilder:
+                //     (context, page, totalPages, jumpToPage, animateToPage) {
+                //   return ButtonBar(
+                //     buttonAlignedDropdown: true,
+                //     alignment: MainAxisAlignment.spaceEvenly,
+                //     children: <Widget>[
+                //       IconButton(
+                //         icon: Icon(Icons.first_page),
+                //         onPressed: () {
+                //           jumpToPage(page: 0);
+                //         },
+                //       ),
+                //       IconButton(
+                //         icon: Icon(Icons.arrow_back),
+                //         onPressed: () {
+                //           animateToPage(page: page - 2);
+                //         },
+                //       ),
+                //       IconButton(
+                //         icon: Icon(Icons.arrow_forward),
+                //         onPressed: () {
+                //           animateToPage(page: page);
+                //         },
+                //       ),
+                //       IconButton(
+                //         icon: Icon(Icons.last_page),
+                //         onPressed: () {
+                //           jumpToPage(page: totalPages - 1);
+                //         },
+                //       ),
+                //     ],
+                //   );
+                // },
               ),
       ),
     );

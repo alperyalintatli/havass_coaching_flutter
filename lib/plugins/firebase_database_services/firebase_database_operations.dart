@@ -24,6 +24,17 @@ class DatabaseOperation extends IDatabaseOperation {
     }
   }
 
+  Future<void> saveCourseCreate(HvsUser hvsUser) async {
+    try {
+      await _firestore
+          .collection("users")
+          .doc(hvsUser.email)
+          .set(hvsUser.toMap(), SetOptions(merge: true));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<bool> changeUserName(String userName) async {
     LoginOperations _loginOperation = LoginOperations.getInstance();
     Map<String, dynamic> map = Map<String, dynamic>();
@@ -64,6 +75,50 @@ class DatabaseOperation extends IDatabaseOperation {
       return _hvs;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<bool> isAdmin() async {
+    try {
+      LoginOperations _loginOperation = LoginOperations.getInstance();
+      if (_loginOperation.isLoggedIn()) {
+        var _loginUser = _loginOperation.getLoginUserEmail();
+        var result = await _firestore.collection("roles").doc("admin").get();
+        Map<String, dynamic> map = Map<String, dynamic>();
+        map = result.data();
+        map.containsValue(_loginUser);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> getSliderListWithDb() async {
+    Map<String, dynamic> map = Map<String, dynamic>();
+    try {
+      var result =
+          await _firestore.collection("slider_images").doc("home_slider").get();
+
+      map = result.data();
+      return map;
+    } catch (e) {
+      print(e);
+      return map;
+    }
+  }
+
+  Future<Map<String, dynamic>> getQuatOfImage() async {
+    Map<String, dynamic> map = Map<String, dynamic>();
+    try {
+      var result =
+          await _firestore.collection("quat_of_images").doc("images").get();
+      map = result.data();
+      return map;
+    } catch (e) {
+      print(e);
+      return map;
     }
   }
 }

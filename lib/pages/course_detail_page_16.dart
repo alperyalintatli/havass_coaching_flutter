@@ -210,8 +210,8 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                           "productId16", 150, "product16");
                                       NotificationWidget.showNotification(
                                           context, "Ürün sepete eklendi.",
-                                          position:
-                                              NotificationPosition.bottom);
+                                          position: NotificationPosition.bottom,
+                                          duration: 2000);
                                     },
                                     child: Container(
                                       height: 48,

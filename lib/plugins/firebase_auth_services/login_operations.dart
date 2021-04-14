@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/ILogin_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_database_services/firebase_database_operations.dart';
 
 class IsLogin {
   bool isLoginSuccess;
@@ -24,10 +25,23 @@ class IsForgotPassword {
       {this.message, this.isSendPasswordSuccess = false, this.isError = false});
 }
 
+class IsChangePassword {
+  bool isChangePasswordSuccess;
+  bool isError;
+  String message;
+  bool isValidatePassword;
+  IsChangePassword(
+      {this.message,
+      this.isChangePasswordSuccess = false,
+      this.isError = false,
+      this.isValidatePassword = false});
+}
+
 class IsSignUp {
   bool isSignUpSuccess;
   bool isError;
   bool isSendEmailVerification;
+
   String message;
   IsSignUp(
       {this.message,
@@ -40,16 +54,10 @@ class LoginOperations implements ILoginOperations {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static LoginOperations _instance;
-
+  LoginOperations();
   LoginOperations._internal();
-
-  static LoginOperations getInstance() {
-    if (_instance == null) {
-      _instance = LoginOperations._internal();
-    }
-
-    return _instance;
-  }
+  static LoginOperations getInstance() =>
+      _instance == null ? _instance = LoginOperations._internal() : _instance;
 
   @override
   Future<IsLogin> login(HvsUser _hvsUser) async {
@@ -73,11 +81,11 @@ class LoginOperations implements ILoginOperations {
   }
 
   @override
-  Future<IsSignUp> signUp(HvsUser hvsuser) async {
+  Future<IsSignUp> signUp(HvsUser hvsUser) async {
     IsSignUp isSignUp = IsSignUp();
     try {
       var newUser = await _auth.createUserWithEmailAndPassword(
-          email: hvsuser.email, password: hvsuser.password);
+          email: hvsUser.email, password: hvsUser.password);
       if (newUser != null) {
         await newUser.user.sendEmailVerification().catchError((onError) {
           isSignUp.isSendEmailVerification = true;
@@ -85,6 +93,9 @@ class LoginOperations implements ILoginOperations {
         });
         await _auth.signOut();
         isSignUp.isSignUpSuccess = true;
+        DatabaseOperation _databaseOperation = DatabaseOperation.getInstance();
+        hvsUser.role = "Student";
+        _databaseOperation.saveUserCreate(hvsUser);
       }
       return isSignUp;
     } catch (err) {
@@ -137,6 +148,43 @@ class LoginOperations implements ILoginOperations {
     }
   }
 
+  @override
+  Future<IsChangePassword> changePassword(
+      String oldPassword, String newPassword) async {
+    IsChangePassword isChangePassword = IsChangePassword();
+    try {
+      var result = await _validatePassword(oldPassword);
+      if (result) {
+        if (newPassword.isNotEmpty) {
+          await _auth.currentUser.updatePassword(newPassword).then((value) {
+            isChangePassword.isChangePasswordSuccess = true;
+          });
+          // }
+          return isChangePassword;
+        }
+      } else {
+        isChangePassword.isValidatePassword = true;
+      }
+      return isChangePassword;
+    } catch (err) {
+      isChangePassword.isValidatePassword = true;
+      isChangePassword.isError = true;
+      isChangePassword.message = err.toString();
+      return isChangePassword;
+    }
+  }
+
+  Future<bool> _validatePassword(String password) async {
+    var credential = EmailAuthProvider.credential(
+        email: _auth.currentUser.email, password: password);
+    var userCredential =
+        await _auth.currentUser.reauthenticateWithCredential(credential);
+    if (userCredential != null) {
+      return true;
+    }
+    return false;
+  }
+
   Future<UserCredential> signInWithGoogle() async {
     try {
       final GoogleSignInAccount googleUser = await GoogleSignIn()
@@ -156,5 +204,9 @@ class LoginOperations implements ILoginOperations {
       print(e.toString());
       return null;
     }
+  }
+
+  String getLoginUserEmail() {
+    return _auth.currentUser.email;
   }
 }
