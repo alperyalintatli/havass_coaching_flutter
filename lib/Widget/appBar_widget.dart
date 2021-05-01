@@ -18,9 +18,10 @@ class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _AppBarWidgetState extends State<AppBarWidget> {
+  CartProvider _cartProvider;
   @override
   Widget build(BuildContext context) {
-    final _cartProvider = Provider.of<CartProvider>(context);
+    _cartProvider = Provider.of<CartProvider>(context);
     return AppBar(
       leading: widget.isPopup
           ? IconButton(
@@ -46,7 +47,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Havass",
+                "Havass Me",
               ),
               Text(
                 "App",
@@ -59,7 +60,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   position: BadgePosition.topEnd(top: 0, end: 0),
                   animationType: BadgeAnimationType.slide,
                   badgeContent: Text(
-                    _cartProvider.items.length.toString(),
+                    cartItemCount(),
                     style: TextStyle(color: Colors.white),
                   ),
                   child: IconButton(
@@ -84,5 +85,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         ],
       ),
     );
+  }
+
+  String cartItemCount() {
+    int count = 0;
+    _cartProvider.items.forEach((key, value) async {
+      count += value.quantity;
+    });
+    return count.toString();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ntp/ntp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtils {
@@ -32,11 +33,15 @@ class PrefUtils {
   }
 
   static Future<Map<String, dynamic>> getQuatOfDayNumbers() async {
+    DateTime _myTime = DateTime.now();
+    final int offset = await NTP.getNtpOffset(
+        localTime: _myTime, lookUpAddress: 'time.google.com');
+    var _ntpTime = _myTime.add(Duration(milliseconds: offset));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var map = Map<String, dynamic>();
     if (!prefs.containsKey(PREFS_QUATOFDAY) ||
         prefs.getString(PREFS_QUATOFDAY) == "null") {
-      prefs.setString(PREFS_QUATOFDAY, DateTime.now().day.toString());
+      prefs.setString(PREFS_QUATOFDAY, _ntpTime.day.toString());
     }
     if (!prefs.containsKey(PREFS_NUMBEROFMANDALA) ||
         prefs.getString(PREFS_NUMBEROFMANDALA) == "null") {

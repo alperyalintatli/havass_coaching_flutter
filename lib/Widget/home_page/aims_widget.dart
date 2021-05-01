@@ -5,9 +5,8 @@ import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.
 import 'package:provider/provider.dart';
 
 class AimsListWidget extends StatelessWidget {
-  AimsProvider _aimsProvider;
-
-  List<Widget> aimList() {
+  List<Widget> aimList(BuildContext context) {
+    AimsProvider _aimsProvider = Provider.of<AimsProvider>(context);
     List<Widget> _widgetlist = List<Widget>();
     int aimsLength = (_aimsProvider.lang == 'en')
         ? Constants.aimsEN.length
@@ -23,7 +22,8 @@ class AimsListWidget extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5))
           ],
           image: DecorationImage(
-              image: AssetImage("images/back_0.png"), fit: BoxFit.fill),
+              image: AssetImage("images/aims_visions_fon.png"),
+              fit: BoxFit.fill),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -53,7 +53,6 @@ class AimsListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _aimsProvider = Provider.of<AimsProvider>(context);
     return CarouselSlider(
       options: CarouselOptions(
         height: 150.0,
@@ -62,7 +61,7 @@ class AimsListWidget extends StatelessWidget {
         pauseAutoPlayOnTouch: true,
         aspectRatio: 2.0,
       ),
-      items: aimList().map((card) {
+      items: aimList(context).map((card) {
         return Builder(builder: (BuildContext context) {
           return Container(
             height: MediaQuery.of(context).size.height * 0.30,

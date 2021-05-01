@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/pages/cart_page.dart';
+import 'package:havass_coaching_flutter/pages/courses_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
+import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
-import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 class CourseInfoScreen16 extends StatefulWidget {
@@ -49,9 +51,16 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
   }
 
   CartProvider _cartProvider;
+  HvsUserProvider _hvsUserProvider;
+  DateAndNoteProvider _dateAndNoteProvider;
+  bool _isCourse = false;
   @override
   Widget build(BuildContext context) {
     _cartProvider = Provider.of<CartProvider>(context);
+    _hvsUserProvider = Provider.of<HvsUserProvider>(context);
+    _dateAndNoteProvider = Provider.of<DateAndNoteProvider>(context);
+
+    isGetCourse();
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width) +
         100.0;
@@ -67,7 +76,9 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
               children: <Widget>[
                 AspectRatio(
                   aspectRatio: 1.4,
-                  child: Image.asset('images/person.png'),
+                  child: Image.asset('images/' +
+                      _hvsUserProvider.course16.courseIdName +
+                      '_photo.jpg'),
                 ),
               ],
             ),
@@ -106,7 +117,8 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                             padding: const EdgeInsets.only(
                                 top: 32.0, left: 18, right: 16),
                             child: Text(
-                              'Web Design Course',
+                              AppLocalizations.getString(
+                                  _hvsUserProvider.course16.courseIdName),
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -124,7 +136,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '\$28.99',
+                                  '€ ' + _hvsUserProvider.course16.coursePrice,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -165,8 +177,8 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                               child: Row(
                                 children: <Widget>[
                                   getTimeBoxUI(
-                                      '16', AppLocalizations.getString("days")),
-                                  getTimeBoxUI('2hours', 'Time'),
+                                      _hvsUserProvider.course16.courseDay,
+                                      AppLocalizations.getString("days")),
                                 ],
                               ),
                             ),
@@ -194,7 +206,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                             ),
                           ),
                           AnimatedOpacity(
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 2500),
                             opacity: opacity3,
                             child: Padding(
                               padding: const EdgeInsets.only(
@@ -205,43 +217,126 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                 children: <Widget>[
                                   Expanded(
                                       child: GestureDetector(
-                                    onTap: () {
-                                      _cartProvider.addItem(
-                                          "productId16", 150, "product16");
-                                      NotificationWidget.showNotification(
-                                          context, "Ürün sepete eklendi.",
-                                          position: NotificationPosition.bottom,
-                                          duration: 2000);
-                                    },
-                                    child: Container(
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromRGBO(154, 206, 207, 1),
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(16.0),
-                                        ),
-                                        boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Color.fromRGBO(
-                                                  154, 206, 207, 1),
-                                              offset: const Offset(1.1, 1.1),
-                                              blurRadius: 10.0),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'Join Course',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 18,
-                                            letterSpacing: 0.0,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ))
+                                          onTap: () async {
+                                            if (_isCourse) {
+                                              var realDateNow =
+                                                  await _dateAndNoteProvider
+                                                      .getRealTime();
+                                              String nowDate = realDateNow.day
+                                                      .toString() +
+                                                  "." +
+                                                  realDateNow.month.toString() +
+                                                  "." +
+                                                  realDateNow.year.toString();
+                                              await _hvsUserProvider.getUser();
+                                              var courseList = _hvsUserProvider
+                                                  .getHvsUser.course
+                                                  .where((element) =>
+                                                      element.courseIdName ==
+                                                      Constants.COURSE_OF_16)
+                                                  .toList();
+                                              courseList.forEach((course) {
+                                                course.dates.forEach((date) {
+                                                  if (date.date == nowDate) {
+                                                    _hvsUserProvider
+                                                        .getUserCourse(course);
+                                                    var startDate =
+                                                        _hvsUserProvider
+                                                            .selectedUserCourse
+                                                            .getRegisterDate
+                                                            .split(".");
+                                                    var finishDate =
+                                                        _hvsUserProvider
+                                                            .selectedUserCourse
+                                                            .getTerminationDate
+                                                            .split(".");
+                                                    _dateAndNoteProvider.setCourseDate(
+                                                        DateTime(
+                                                            int.parse(startDate[
+                                                                    2]
+                                                                .toString()),
+                                                            int.parse(
+                                                                startDate[1]
+                                                                    .toString()),
+                                                            int.parse(startDate[
+                                                                    0]
+                                                                .toString())),
+                                                        DateTime(
+                                                            int.parse(
+                                                                finishDate[2]
+                                                                    .toString()),
+                                                            int.parse(
+                                                                finishDate[1]
+                                                                    .toString()),
+                                                            int.parse(finishDate[
+                                                                    0]
+                                                                .toString())));
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CoursesPage()));
+                                                  }
+                                                });
+                                              });
+                                            } else {
+                                              _cartProvider.addItem(
+                                                  _hvsUserProvider
+                                                      .course16.courseIdName,
+                                                  int.parse(_hvsUserProvider
+                                                      .course16.coursePrice),
+                                                  AppLocalizations.getString(
+                                                      _hvsUserProvider.course16
+                                                          .courseIdName),
+                                                  "images/" +
+                                                      _hvsUserProvider.course16
+                                                          .courseIdName +
+                                                      "_photo.jpg");
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CartPage()));
+                                            }
+                                          },
+                                          child: AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            opacity: opacity2,
+                                            child: Container(
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromRGBO(
+                                                    154, 206, 207, 1),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(16.0),
+                                                ),
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Color.fromRGBO(
+                                                          154, 206, 207, 1),
+                                                      offset: const Offset(
+                                                          1.1, 1.1),
+                                                      blurRadius: 10.0),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  _isCourse
+                                                      ? AppLocalizations.getString(
+                                                          "join_course_button_text")
+                                                      : AppLocalizations.getString(
+                                                          "get_course_button_text"),
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18,
+                                                    letterSpacing: 0.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )))
                                 ],
                               ),
                             ),
@@ -260,6 +355,31 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
         ),
       ),
     );
+  }
+
+  void isGetCourse() async {
+    _hvsUserProvider.getCourse16();
+    await _hvsUserProvider.getUser();
+    var realDateNow = await _dateAndNoteProvider.getRealTime();
+    String dateNow = realDateNow.day.toString() +
+        "." +
+        realDateNow.month.toString() +
+        "." +
+        realDateNow.year.toString();
+    if (_hvsUserProvider.getHvsUser.course.length > 0) {
+      var courseList = _hvsUserProvider.getHvsUser.course
+          .where((element) => element.courseId == "2")
+          .toList();
+      if (courseList.length > 0) {
+        courseList.forEach((course) {
+          course.dates.forEach((date) {
+            if (date.date == dateNow) {
+              _isCourse = true;
+            }
+          });
+        });
+      }
+    }
   }
 
   Widget getTimeBoxUI(String text1, String txt2) {

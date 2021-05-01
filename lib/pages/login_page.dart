@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/pages/splash_page.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
@@ -53,9 +55,9 @@ class _LoginPageState extends State<LoginPage> {
           TextFormField(
               onSaved: (value) {
                 if (isPassword) {
-                  _hvsUser.password = value;
+                  _hvsUser.password = value.trim();
                 } else if (isEmail) {
-                  _hvsUser.email = value;
+                  _hvsUser.email = value.trim();
                 }
               },
               validator: (value) {
@@ -94,16 +96,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  bool _isOnTapSubmitButton = false;
   Widget _submitButton() {
     return TextButton(
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            setState(() {
-              _formKey.currentState.save();
-              _loginUser(_hvsUser);
-            });
-          }
-        },
+        onPressed: !_isOnTapSubmitButton
+            ? () {
+                if (_formKey.currentState.validate()) {
+                  setState(() {
+                    _formKey.currentState.save();
+                    _loginUser(_hvsUser);
+                    _isOnTapSubmitButton = true;
+                  });
+                }
+              }
+            : null,
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -124,11 +130,13 @@ class _LoginPageState extends State<LoginPage> {
                     Color.fromARGB(0, 121, 250, 0),
                     Color.fromRGBO(164, 233, 232, 1),
                   ])),
-          child: Text(
-            AppLocalizations.getString("login"),
-            style:
-                TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
-          ),
+          child: !_isOnTapSubmitButton
+              ? Text(
+                  AppLocalizations.getString("login"),
+                  style: TextStyle(
+                      fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
+                )
+              : CircularProgressIndicator(),
         ));
   }
 
@@ -176,13 +184,18 @@ class _LoginPageState extends State<LoginPage> {
                 height: 150,
                 width: 150,
               ),
-              onPressed: () {}),
+              onPressed: !_isOnTapSubmitButton
+                  ? () {
+                      setState(() {
+                        _loginGmail();
+                        _isOnTapSubmitButton = true;
+                      });
+                    }
+                  : null),
         ],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
-      onPressed: () {
-        _loginGmail();
-      },
+      onPressed: null,
     );
   }
 
@@ -316,12 +329,24 @@ class _LoginPageState extends State<LoginPage> {
   void _loginGmail() async {
     var result = await _loginOperation.signInWithGoogle();
     if (result != null) {
-      NotificationWidget.showNotification(context,
-          AppLocalizations.getString("login_gmail_notification_success_title"));
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomePage()),
-          (Route<dynamic> route) => false);
+      Timer(Duration(seconds: 3), () {
+        NotificationWidget.showNotification(
+            context,
+            AppLocalizations.getString(
+                "login_gmail_notification_success_title"));
+        _userProvider.getUser();
+        setState(() {
+          _isOnTapSubmitButton = false;
+        });
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (Route<dynamic> route) => false);
+      });
     } else {
+      setState(() {
+        _isOnTapSubmitButton = false;
+      });
+
       NotificationWidget.showNotification(context,
           AppLocalizations.getString("login_gmail_notification_error_title"));
     }
@@ -337,6 +362,7 @@ class _LoginPageState extends State<LoginPage> {
           (Route<dynamic> route) => false);
     } else if (isLogin.isEmailVerify) {
       setState(() {
+        _isOnTapSubmitButton = false;
         NotificationWidget.showNotification(
             context,
             AppLocalizations.getString(
@@ -344,6 +370,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     } else if (isLogin.isFindUser) {
       setState(() {
+        _isOnTapSubmitButton = false;
         NotificationWidget.showNotification(context,
             AppLocalizations.getString("login_findUser_notification_title"));
       });

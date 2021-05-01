@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
+import 'package:ntp/ntp.dart';
 
 class QuatOfDayProvider extends ChangeNotifier {
   FireStoreOperation _fireStoreOperation;
@@ -10,7 +11,6 @@ class QuatOfDayProvider extends ChangeNotifier {
   }
   bool _isScratchQuat;
   bool get isScratchQuat {
-    notifyListeners();
     return this._isScratchQuat;
   }
 
@@ -18,7 +18,6 @@ class QuatOfDayProvider extends ChangeNotifier {
 
   Map<String, dynamic> _quatMap;
   Map<String, dynamic> get getQuatMap {
-    notifyListeners();
     return this._quatMap;
   }
 
@@ -26,7 +25,6 @@ class QuatOfDayProvider extends ChangeNotifier {
 
   Map<String, dynamic> _mapOfQuatOfDayNumbers;
   Map<String, dynamic> get mapOfQuatOfDayNumbers {
-    notifyListeners();
     return this._mapOfQuatOfDayNumbers;
   }
 
@@ -35,16 +33,20 @@ class QuatOfDayProvider extends ChangeNotifier {
 
   void getQuatOfNumbers() async {
     try {
+      DateTime _myTime = DateTime.now();
+      final int offset = await NTP.getNtpOffset(
+          localTime: _myTime, lookUpAddress: 'time.google.com');
+      var _ntpTime = _myTime.add(Duration(milliseconds: offset));
       _mapOfQuatOfDayNumbers = await PrefUtils.getQuatOfDayNumbers();
       _isScratchQuat = _mapOfQuatOfDayNumbers[PrefUtils.PREFS_ISSCRACTHQUAT];
       _quatMap = await _fireStoreOperation.imgQuatList();
       int day = int.parse(_mapOfQuatOfDayNumbers[PrefUtils.PREFS_QUATOFDAY]);
-      if (day != DateTime.now().day) {
+      if (day != _ntpTime.day) {
         _mapOfQuatOfDayNumbers[PrefUtils.PREFS_QUATOFDAY] =
-            DateTime.now().day.toString();
+            _ntpTime.day.toString();
         _mapOfQuatOfDayNumbers[
             PrefUtils.PREFS_NUMBEROFMANDALA] = _createRandomNumber(
-                5,
+                15,
                 int.parse(
                     _mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFMANDALA]))
             .toString();
@@ -61,6 +63,7 @@ class QuatOfDayProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+    notifyListeners();
   }
 
   void saveIsScracthQuat() async {
@@ -68,6 +71,7 @@ class QuatOfDayProvider extends ChangeNotifier {
       _isScratchQuat = true;
       _mapOfQuatOfDayNumbers[PrefUtils.PREFS_ISSCRACTHQUAT] = true;
       PrefUtils.saveQuatOfDayNumbers(_mapOfQuatOfDayNumbers);
+      notifyListeners();
     } catch (e) {
       print(e);
     }
@@ -83,6 +87,7 @@ class QuatOfDayProvider extends ChangeNotifier {
         isSuccess = true;
       }
     }
+    notifyListeners();
     return number;
   }
 }

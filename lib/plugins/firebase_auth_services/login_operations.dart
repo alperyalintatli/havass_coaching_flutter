@@ -4,6 +4,7 @@ import 'package:havass_coaching_flutter/plugins/firebase_auth_services/ILogin_op
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_database_services/firebase_database_operations.dart';
+import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 
 class IsLogin {
   bool isLoginSuccess;
@@ -87,6 +88,7 @@ class LoginOperations implements ILoginOperations {
       var newUser = await _auth.createUserWithEmailAndPassword(
           email: hvsUser.email, password: hvsUser.password);
       if (newUser != null) {
+        await _auth.setLanguageCode(await PrefUtils.getLanguage());
         await newUser.user.sendEmailVerification().catchError((onError) {
           isSignUp.isSendEmailVerification = true;
           isSignUp.message = onError.toString();
@@ -95,6 +97,7 @@ class LoginOperations implements ILoginOperations {
         isSignUp.isSignUpSuccess = true;
         DatabaseOperation _databaseOperation = DatabaseOperation.getInstance();
         hvsUser.role = "Student";
+        hvsUser.course = [];
         _databaseOperation.saveUserCreate(hvsUser);
       }
       return isSignUp;
@@ -131,6 +134,7 @@ class LoginOperations implements ILoginOperations {
     IsForgotPassword isForgotPassword = IsForgotPassword();
     try {
       if (email.isNotEmpty) {
+        await _auth.setLanguageCode(await PrefUtils.getLanguage());
         await _auth
             .sendPasswordResetEmail(email: email)
             .whenComplete(() => isForgotPassword.isSendPasswordSuccess = true)
@@ -196,6 +200,16 @@ class LoginOperations implements ILoginOperations {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      DatabaseOperation _databaseOperation = DatabaseOperation.getInstance();
+      var user = await _databaseOperation.getUser();
+      if (user != null) {
+        HvsUser hvsUser = HvsUser();
+        hvsUser.role = "Student";
+        hvsUser.course = [];
+        hvsUser.email = googleUser.email;
+        hvsUser.name = googleUser.email.split('@')[0];
+        _databaseOperation.saveUserCreate(hvsUser);
+      }
       return await _auth.signInWithCredential(credential);
     } on PlatformException catch (err) {
       print("platform hatası" + err.toString());

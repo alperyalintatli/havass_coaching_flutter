@@ -4,6 +4,8 @@ import 'package:havass_coaching_flutter/model/credit_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:stripe_payment/stripe_payment.dart';
 
+import 'firebase_auth_services/login_operations.dart';
+
 class StripeTransactionResponse {
   String message;
   bool success;
@@ -22,19 +24,25 @@ class StripeService {
   static init() {}
 
   static Future<StripeTransactionResponse> payWithNewCard(
-      {String amount, String currency, CreditCardWithStripe creditCard}) async {
+      {String amount,
+      String currency,
+      CreditCardWithStripe creditCard,
+      String courseName}) async {
     var response;
     try {
-      BillingAddress billingAddress = BillingAddress();
-      billingAddress.name = creditCard.name;
+      LoginOperations _loginOperation = LoginOperations.getInstance();
+      BillingDetails billingDetails = BillingDetails();
+      billingDetails.name = _loginOperation.getLoginUserEmail();
       var _paymentMethod = await StripePayment.createPaymentMethod(
           PaymentMethodRequest(
-              card: creditCard, billingAddress: billingAddress));
-      var _paymentIntent =
-          await StripeService._createPaymentIntent(amount, currency);
+              card: creditCard, billingDetails: billingDetails));
+      var _paymentIntent = await StripeService._createPaymentIntent(
+          amount, currency, courseName);
+
       response = await StripePayment.confirmPaymentIntent(PaymentIntent(
-          clientSecret: _paymentIntent['client_secret'],
-          paymentMethodId: _paymentMethod.id));
+        clientSecret: _paymentIntent['client_secret'],
+        paymentMethodId: _paymentMethod.id,
+      ));
       print(response);
       return new StripeTransactionResponse(
           message: "Transaction success", success: true);
@@ -46,12 +54,13 @@ class StripeService {
   }
 
   static Future<Map<String, dynamic>> _createPaymentIntent(
-      String amount, String currency) async {
+      String amount, String currency, String description) async {
     try {
       Map<String, dynamic> body = {
         'amount': amount,
         'currency': currency,
-        'payment_method_types[]': 'card'
+        'payment_method_types[]': 'card',
+        'description': description
       };
       var response = await http.post(StripeService.paymentApiUrl,
           body: body, headers: headers);

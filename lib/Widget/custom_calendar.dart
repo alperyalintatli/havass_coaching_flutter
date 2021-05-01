@@ -27,7 +27,6 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
   DateTime currentMonthDate = DateTime.now();
   DateTime startDate;
   DateTime endDate;
-
   @override
   void initState() {
     setListOfDate(currentMonthDate);

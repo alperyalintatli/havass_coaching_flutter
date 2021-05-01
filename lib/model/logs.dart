@@ -25,6 +25,7 @@ class Logs {
                   "className": e.className,
                   "logDate": e.logDate,
                   "exception": e.exception,
+                  "userEmail": e.userEmail
                 };
               }).toList()
             : null
@@ -38,18 +39,25 @@ class Log {
       String methodName,
       String className,
       DateTime logDate,
-      String exception}) {
+      String exception,
+      String userEmail}) {
     this._logId = logId;
     this._logStatus = logStatus;
     this._methodName = methodName;
     this._className = className;
     this._logDate = logDate;
     this._exception = exception;
+    this._userEmail = userEmail;
   }
   String _logId;
   String get logId => this._logId;
 
   set logId(String value) => this._logId = value;
+
+  String _userEmail;
+  String get userEmail => this._userEmail;
+
+  set userEmail(String value) => this._userEmail = value;
 
   String _logStatus;
   String get logStatus => this._logStatus;
@@ -81,8 +89,9 @@ class Log {
       logStatus: data["logStatus"],
       methodName: data["methodName"],
       className: data["className"],
-      logDate: data["logDate"],
-      exception: data["exception"]);
+      logDate: data["logDate"].toDate(),
+      exception: data["exception"],
+      userEmail: data["userEmail"]);
 
   Map<String, dynamic> toMap() => {
         "logId": this._logId,
@@ -91,6 +100,7 @@ class Log {
         "className": this._className,
         "logDate": this._logDate,
         "exception": this._exception,
+        "userEmail": this._userEmail
       };
 }
 

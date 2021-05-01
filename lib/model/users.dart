@@ -74,12 +74,19 @@ class HvsUser {
         "course": this._course != null
             ? this._course.map((e) {
                 return {
+                  "courseId": e.courseId,
                   "courseName": e.courseName,
                   "courseComment": e.courseComment,
+                  "registerDate": e.getRegisterDate,
+                  "terminationDate": e.getTerminationDate,
+                  "coursePrice": e.coursePrice,
+                  "courseDay": e.courseDay,
+                  "courseIdName": e.courseIdName,
                   "dates": e.dates.map((t) {
                     return {
                       "date": t.date,
-                      "pdfName": t.pdfName,
+                      "enPdfName": t.enPdfName,
+                      "dePdfName": t.dePdfName
                     };
                   }).toList()
                 };

@@ -1,19 +1,33 @@
+import 'dart:io';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:badges/badges.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:havass_coaching_flutter/model/constans/constants.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class CoursePdf extends StatefulWidget {
+class CoursePdfPage extends StatefulWidget {
   final String pdfName;
-  CoursePdf(this.pdfName);
+  final int numberofDay;
+  CoursePdfPage(this.pdfName, this.numberofDay);
   @override
-  _CoursePdfState createState() => _CoursePdfState(pdfName);
+  _CoursePdfPageState createState() =>
+      _CoursePdfPageState(pdfName, numberofDay);
 }
 
-class _CoursePdfState extends State<CoursePdf> {
+class _CoursePdfPageState extends State<CoursePdfPage> {
+  final assetsAudioPlayer = AssetsAudioPlayer();
   final String pdfName;
-  _CoursePdfState(this.pdfName);
+  final int numberofDay;
+  _CoursePdfPageState(this.pdfName, this.numberofDay);
   var itemsToBody = [
     FloatingActionButton(
       backgroundColor: Colors.greenAccent,
@@ -37,45 +51,37 @@ class _CoursePdfState extends State<CoursePdf> {
   @override
   void initState() {
     super.initState();
-
+    assetsAudioPlayer.open(
+      Audio("images/audio.mp3"),
+      autoStart: false,
+      showNotification: true,
+    );
     loadDocument();
   }
 
   HvsUserProvider _hvsUserProvider;
   loadDocument() async {
     try {
-      document = await PDFDocument.fromAsset('images/$pdfName');
+      document = await PDFDocument.fromAsset('images/$pdfName.pdf');
       setState(() => _isLoading = false);
     } catch (e) {
       NotificationWidget.showNotification(
-          context, "Bir sorun oluştu. Lütfen tekrar deneyin.");
+          context,
+          AppLocalizations.getString(
+              "userName_change_notification_error_title")); //Bir sorun oluştu lütfen tekrar deneyin hatası
       await _hvsUserProvider.getUser();
       Navigator.pop(context);
       print(e.toString());
     }
   }
 
-  changePDF(value) async {
-    setState(() => _isLoading = true);
-    if (value == 1) {
-      document = await PDFDocument.fromAsset('images/sample.pdf');
-    } else if (value == 2) {
-      document = await PDFDocument.fromURL(
-        "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf",
-        /* cacheManager: CacheManager(
-          Config(
-            "customCacheKey",
-            stalePeriod: const Duration(days: 2),
-            maxNrOfCacheObjects: 10,
-          ),
-        ), */
-      );
-    } else {
-      document = await PDFDocument.fromAsset('images/sample.pdf');
-    }
-    setState(() => _isLoading = false);
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
+  bool _isPaused = true;
   @override
   Widget build(BuildContext context) {
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
@@ -83,92 +89,108 @@ class _CoursePdfState extends State<CoursePdf> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(24, 231, 239, 1),
         toolbarHeight: 35,
-        title: IconButton(
-          icon: Icon(
-            Icons.download_sharp,
-            color: Colors.white,
-          ),
-          onPressed: null,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause_rounded),
+              onPressed: () {
+                setState(() async {
+                  _isPaused == true ? _isPaused = false : _isPaused = true;
+                  assetsAudioPlayer.playOrPause();
+                });
+              },
+            ),
+            (numberofDay == 7 || numberofDay == 14)
+                ? Badge(
+                    badgeColor: Colors.red,
+                    position: BadgePosition.topEnd(end: 10, top: 10),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.download_sharp,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        try {
+                          var permission = await Permission.storage.request();
+                          if (!permission.isDenied) {
+                            var path;
+                            if (Platform.isAndroid) {
+                              path = await ExtStorage
+                                  .getExternalStoragePublicDirectory(
+                                      ExtStorage.DIRECTORY_DOWNLOADS);
+                              path = Directory(path);
+                              //path = await getExternalStorageDirectory();
+                            } else if (Platform.isIOS) {
+                              path = await getLibraryDirectory();
+                            }
+                            if (await path.exists()) {
+                              final taskId = await FlutterDownloader.enqueue(
+                                  url: (numberofDay == 7)
+                                      ? Constants.COURSE_DAY_OF_7_PDF_URL
+                                      : Constants.COURSE_DAY_OF_14_PDF_URL,
+                                  savedDir: path.path,
+                                  showNotification:
+                                      true, // show download progress in status bar (for Android)
+                                  openFileFromNotification:
+                                      true, // click on notification to open downloaded file (for Android)
+                                  fileName: (numberofDay == 7)
+                                      ? Constants.COURSE_DAY_OF_7_PDF_NAME +
+                                          ".pdf"
+                                      : Constants.COURSE_DAY_OF_14_PDF_NAME +
+                                          ".pdf");
+                              taskId != null
+                                  ? NotificationWidget.showNotification(
+                                      context,
+                                      AppLocalizations.getString(
+                                          "pdf_download_success"))
+                                  : print(taskId);
+                            }
+                          }
+                        } catch (e) {
+                          NotificationWidget.showNotification(context,
+                              AppLocalizations.getString("pdf_download_eror"));
+                        }
+
+//FlutterDownloader.registerCallback(callback);
+
+                        // We didn't ask for permission yet or the permission has been denied before but not permanently.
+                        // final bytes =
+                        //     await rootBundle.load('images/course_of_16_en_0.pdf');
+                        // String path =
+                        //     await ExtStorage.getExternalStoragePublicDirectory(
+                        //         ExtStorage.DIRECTORY_DOWNLOADS);
+                        // var filePath = "$path/course_of_16_en_0.pdf";
+                        // await writeToFile(bytes, filePath);
+                        // NotificationWidget.showNotification(context, "deneme5");
+                      },
+                    ),
+                  )
+                : Icon(
+                    Icons.download_sharp,
+                    color: Colors.grey,
+                  ),
+          ],
         ),
-        titleSpacing: MediaQuery.of(context).size.width * 0.75,
       ),
-
-      // Drawer(
-      //   child: Column(
-      //     children: <Widget>[
-      //       SizedBox(height: 36),
-      //       ListTile(
-      //         title: Text('Load from Assets'),
-      //         onTap: () {
-      //           changePDF(1);
-      //         },
-      //       ),
-      //       ListTile(
-      //         title: Text('Load from URL'),
-      //         onTap: () {
-      //           changePDF(2);
-      //         },
-      //       ),
-      //       ListTile(
-      //         title: Text('Restore default'),
-      //         onTap: () {
-      //           changePDF(3);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-
       body: Center(
         child: _isLoading
             ? Center(child: CircularProgressIndicator())
             : PDFViewer(
                 document: document,
                 zoomSteps: 4,
-                //uncomment below line to preload all pages
-                // lazyLoad: false,
-                // uncomment below line to scroll vertically
                 scrollDirection: Axis.vertical,
                 indicatorPosition: IndicatorPosition.topRight,
                 showNavigation: true,
                 showPicker: false,
-
-                //uncomment below code to replace bottom navigation with your own
-                // navigationBuilder:
-                //     (context, page, totalPages, jumpToPage, animateToPage) {
-                //   return ButtonBar(
-                //     buttonAlignedDropdown: true,
-                //     alignment: MainAxisAlignment.spaceEvenly,
-                //     children: <Widget>[
-                //       IconButton(
-                //         icon: Icon(Icons.first_page),
-                //         onPressed: () {
-                //           jumpToPage(page: 0);
-                //         },
-                //       ),
-                //       IconButton(
-                //         icon: Icon(Icons.arrow_back),
-                //         onPressed: () {
-                //           animateToPage(page: page - 2);
-                //         },
-                //       ),
-                //       IconButton(
-                //         icon: Icon(Icons.arrow_forward),
-                //         onPressed: () {
-                //           animateToPage(page: page);
-                //         },
-                //       ),
-                //       IconButton(
-                //         icon: Icon(Icons.last_page),
-                //         onPressed: () {
-                //           jumpToPage(page: totalPages - 1);
-                //         },
-                //       ),
-                //     ],
-                //   );
-                // },
               ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    assetsAudioPlayer.dispose();
+    super.dispose();
   }
 }

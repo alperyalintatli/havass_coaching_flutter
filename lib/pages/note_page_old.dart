@@ -5,12 +5,12 @@ import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.
 import 'package:provider/provider.dart';
 import 'package:zefyr/zefyr.dart';
 
-class NotePage extends StatefulWidget {
+class NotePageOld extends StatefulWidget {
   @override
-  NotePageState createState() => NotePageState();
+  NotePageOldState createState() => NotePageOldState();
 }
 
-class NotePageState extends State<NotePage> {
+class NotePageOldState extends State<NotePageOld> {
   DateAndNoteProvider _noteProvider;
   HvsUserProvider _hvsUserProvider;
   int value = 0;
@@ -40,7 +40,8 @@ class NotePageState extends State<NotePage> {
                 onPressed: () {
                   _noteProvider.saveNote(context, _noteProvider.zefryController,
                       _hvsUserProvider.selectedUserCourse.courseIdName);
-                  _noteProvider.setStringHtmlFromNote(
+                  _noteProvider.setOldStringHtmlFromNote(
+                      _noteProvider.oldDateTime,
                       _hvsUserProvider.selectedUserCourse.courseIdName);
                   Navigator.pop(context);
                 }),

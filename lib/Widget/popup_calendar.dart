@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import 'custom_calendar.dart';
@@ -106,7 +107,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
-                                        'From',
+                                        AppLocalizations.getString('from'),
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -142,7 +143,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
-                                        'To',
+                                        AppLocalizations.getString('to'),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,

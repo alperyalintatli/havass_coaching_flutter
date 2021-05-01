@@ -2,15 +2,17 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/pages/note_page.dart';
+import 'package:havass_coaching_flutter/pages/note_page_old.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
-import 'package:havass_coaching_flutter/widget/course_page/box_of_day.dart';
+import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/popup_calendar.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,11 +23,13 @@ class PastCoursePage extends StatefulWidget {
 
 class _PastCoursePageState extends State<PastCoursePage> {
   DateAndNoteProvider _dateProvider;
+  HvsUserProvider _hvsUserProvider;
   int value = 0;
 
   void setNoteOfHtml() {
     if (value == 0) {
-      _dateProvider.setStringHtmlFromNote();
+      _dateProvider.setOldStringHtmlFromNote(_dateProvider.oldDateTime,
+          _hvsUserProvider.selectedUserCourse.courseIdName);
       value++;
     }
   }
@@ -38,10 +42,9 @@ class _PastCoursePageState extends State<PastCoursePage> {
   @override
   Widget build(BuildContext context) {
     _dateProvider = Provider.of<DateAndNoteProvider>(context);
-    HvsUserProvider _hvsUserProvider =
-        Provider.of<HvsUserProvider>(context, listen: false);
+    _hvsUserProvider = Provider.of<HvsUserProvider>(context, listen: false);
     setNoteOfHtml();
-    final Widget zefryNote = (_dateProvider.htmlNote == null)
+    final Widget zefryNote = (_dateProvider.htmlOldNote == null)
         ? SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -50,7 +53,7 @@ class _PastCoursePageState extends State<PastCoursePage> {
                   onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => NotePage())),
                   child: Text(
-                    "How are you feeling :)",
+                    AppLocalizations.getString("how_are_you_feeling"),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
@@ -68,14 +71,46 @@ class _PastCoursePageState extends State<PastCoursePage> {
         : Container(
             child: Column(
               children: [
-                Html(data: _dateProvider.htmlNote),
-                IconButton(
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => NotePage())),
-                    icon: Icon(
-                      Icons.edit,
-                      color: Color.fromRGBO(164, 233, 232, 1),
-                    ))
+                Html(data: _dateProvider.htmlOldNote),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => NotePageOld())),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Color.fromRGBO(164, 233, 232, 1),
+                        )),
+                    IconButton(
+                        onPressed: () async {
+                          var permission = await Permission.storage.request();
+                          if (!permission.isDenied) {
+                            var result =
+                                await _dateProvider.downloadOldPdfDocument(
+                                    _dateProvider.oldDateTime,
+                                    _hvsUserProvider
+                                        .selectedUserCourse.courseIdName);
+                            if (result) {
+                              NotificationWidget.showNotification(
+                                  context,
+                                  AppLocalizations.getString(
+                                      "note_download_success"));
+                            } else {
+                              NotificationWidget.showNotification(
+                                  context,
+                                  AppLocalizations.getString(
+                                      "note_download_error"));
+                            }
+                          }
+                        },
+                        icon: FaIcon(
+                          FontAwesomeIcons.download,
+                          color: Color.fromRGBO(164, 233, 232, 1),
+                        ))
+                  ],
+                )
               ],
             ),
           );
@@ -110,7 +145,8 @@ class _PastCoursePageState extends State<PastCoursePage> {
                   if (await canLaunch(url)) {
                     await launch(url);
                   } else {
-                    throw 'Could not launch $url';
+                    NotificationWidget.showNotification(
+                        context, AppLocalizations.getString("not_launch_url"));
                   }
                 },
                 child: Container(
@@ -127,7 +163,8 @@ class _PastCoursePageState extends State<PastCoursePage> {
                   if (await canLaunch(url)) {
                     await launch(url);
                   } else {
-                    throw 'Could not launch $url';
+                    NotificationWidget.showNotification(
+                        context, AppLocalizations.getString("not_launch_url"));
                   }
                 },
                 child: Container(
@@ -197,7 +234,7 @@ class _PastCoursePageState extends State<PastCoursePage> {
                             margin: EdgeInsets.only(top: 10),
                             child: Center(
                               child: Text(
-                                '${DateFormat("dd, MMM").format(_dateProvider.startDate)} - ${DateFormat("dd, MMM").format(_dateProvider.finishDate)}',
+                                '${DateFormat("dd, MMM").format(_dateProvider.oldStartDate)} - ${DateFormat("dd, MMM").format(_dateProvider.oldFinishDate)}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,
@@ -215,11 +252,12 @@ class _PastCoursePageState extends State<PastCoursePage> {
             Container(
               height: 120,
               child: CalendarTimeline(
-                initialDate: _dateProvider.startDate,
-                firstDate: _dateProvider.startDate,
-                lastDate: _dateProvider.finishDate,
+                initialDate: _dateProvider.oldDateTime,
+                firstDate: _dateProvider.oldStartDate,
+                lastDate: _dateProvider.oldFinishDate,
                 onDateSelected: (date) {
-                  _dateProvider.setDate(date);
+                  _dateProvider.setOldDate(
+                      date, _hvsUserProvider.selectedUserCourse.courseIdName);
                 },
                 leftMargin: 20,
                 monthColor: Color.fromRGBO(164, 233, 232, 1),
@@ -269,10 +307,10 @@ class _PastCoursePageState extends State<PastCoursePage> {
       context: context,
       builder: (BuildContext context) => CalendarPopupView(
         barrierDismissible: true,
-        minimumDate: _dateProvider.startDate,
-        initialEndDate: _dateProvider.finishDate,
-        initialStartDate: _dateProvider.startDate,
-        maximumDate: _dateProvider.finishDate,
+        minimumDate: _dateProvider.oldStartDate,
+        initialEndDate: _dateProvider.oldFinishDate,
+        initialStartDate: _dateProvider.oldStartDate,
+        maximumDate: _dateProvider.oldFinishDate,
         onCancelClick: () {},
       ),
     );

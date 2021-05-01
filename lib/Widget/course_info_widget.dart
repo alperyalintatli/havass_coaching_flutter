@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CourseInfoViewWidget extends StatelessWidget {
-  final String courseName, description, price, day, imagePath;
-  CourseInfoViewWidget(
-      {this.courseName,
-      this.description,
-      this.day,
-      this.price,
-      this.imagePath});
+  final String courseName, price, day, imagePath;
+  CourseInfoViewWidget({this.courseName, this.day, this.price, this.imagePath});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,28 +48,16 @@ class CourseInfoViewWidget extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                      courseName,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 22,
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          description,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Colors.grey.withOpacity(0.8)),
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 22),
+                                      child: Text(
+                                        courseName,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),

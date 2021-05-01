@@ -1,7 +1,8 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
-import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
@@ -16,9 +17,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
         onTap: _setNavbarIndexProvider.setIndex,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 8,
-        fabLocation: BubbleBottomBarFabLocation.end,
-        hasNotch: true, //new
-        hasInk: true, //new, gives a cute ink effect
+        hasNotch: false, //new
+        hasInk: false, //new, gives a cute ink effect
         inkColor: Colors.black12, //optional, uses theme color if not specified
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
@@ -32,31 +32,31 @@ class BottomNavigationBarWidget extends StatelessWidget {
                 color: Color.fromRGBO(154, 206, 207, 1),
               ),
               title: Text(
-                "Home",
+                AppLocalizations.getString("home_text"),
                 style: TextStyle(),
               )),
           BubbleBottomBarItem(
               backgroundColor: Color.fromRGBO(154, 206, 207, 1),
-              icon: Icon(
-                Icons.eco_sharp,
+              icon: FaIcon(
+                FontAwesomeIcons.atom,
                 color: Colors.grey.shade600,
               ),
               activeIcon: Icon(
-                Icons.eco_sharp,
+                FontAwesomeIcons.atom,
                 color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Quat of Day")),
+              title: Text(AppLocalizations.getString("quat_of_day_text"))),
           BubbleBottomBarItem(
               backgroundColor: Color.fromRGBO(154, 206, 207, 1),
-              icon: Icon(
-                Icons.golf_course,
+              icon: FaIcon(
+                FontAwesomeIcons.handPointer,
                 color: Colors.grey.shade600,
               ),
-              activeIcon: Icon(
-                Icons.golf_course,
+              activeIcon: FaIcon(
+                FontAwesomeIcons.handPointer,
                 color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("Courses")),
+              title: Text(AppLocalizations.getString("courses_text"))),
           BubbleBottomBarItem(
               backgroundColor: Color.fromRGBO(154, 206, 207, 1),
               icon: Icon(
@@ -67,7 +67,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
                 Icons.video_collection,
                 color: Color.fromRGBO(154, 206, 207, 1),
               ),
-              title: Text("About Course"))
+              title: Text(AppLocalizations.getString("about_course_text")))
         ],
       ),
     );

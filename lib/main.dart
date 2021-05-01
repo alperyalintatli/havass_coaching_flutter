@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:havass_coaching_flutter/pages/login_page.dart';
@@ -11,6 +13,7 @@ import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_
 import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
+import 'package:ntp/ntp.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'pages/splash_page.dart';
@@ -30,7 +33,20 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     secureScreen();
+    FirebaseMessaging messaging = FirebaseMessaging();
+    messaging.requestNotificationPermissions();
+    flutterDownloaderInitialize();
     super.initState();
+  }
+
+  DateTime _ntpTime;
+  void flutterDownloaderInitialize() async {
+    DateTime _myTime = DateTime.now();
+    final int offset = await NTP.getNtpOffset(
+        localTime: _myTime, lookUpAddress: 'time.google.com');
+    _ntpTime = _myTime.add(Duration(milliseconds: offset));
+    WidgetsFlutterBinding.ensureInitialized();
+    await FlutterDownloader.initialize(debug: true);
   }
 
   @override
@@ -49,7 +65,7 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider(
                   create: (context) => NavBottombarProvider(0)),
               ChangeNotifierProvider(
-                  create: (context) => DateAndNoteProvider(DateTime.now())),
+                  create: (context) => DateAndNoteProvider(_ntpTime)),
               ChangeNotifierProvider(create: (context) => HvsUserProvider()),
               ChangeNotifierProvider(create: (context) => FirestoreProvider()),
               ChangeNotifierProvider(create: (context) => QuatOfDayProvider()),
@@ -116,8 +132,6 @@ class FirebaseInitialize extends StatelessWidget {
           if (_loginOperation.isLoggedIn()) {
             _userProvider.getUser();
           }
-          // _userProvider.getUser();
-          // _firestoreProvider.getHomeSlider();
           return PageSplash();
         }
 

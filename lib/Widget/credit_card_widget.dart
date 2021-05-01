@@ -2,12 +2,16 @@ import 'package:credit_card_input_form/constants/constanst.dart';
 import 'package:credit_card_input_form/credit_card_input_form.dart';
 import 'package:credit_card_input_form/model/card_info.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/model/courses.dart';
+import 'package:havass_coaching_flutter/model/logs.dart';
+import 'package:havass_coaching_flutter/pages/home_page.dart';
+import 'package:havass_coaching_flutter/plugins/firebase_database_services/firebase_database_operations.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
-import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/plugins/stripe_services.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
@@ -18,7 +22,6 @@ class CreditCardWidget extends StatefulWidget {
 
 class _CreditCardWidgetState extends State<CreditCardWidget> {
   HvsUserProvider _hvsUserProvider;
-  DateAndNoteProvider _dateAndNoteProvider;
   CartProvider _cartProvider;
   @override
   void initState() {
@@ -54,78 +57,74 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
   final _buttonTextStyle =
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18);
+  bool isPaymentSuccess = false;
   @override
   Widget build(BuildContext context) {
     _cartProvider = Provider.of<CartProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
-    _dateAndNoteProvider = Provider.of<DateAndNoteProvider>(context);
-    return CreditCardInputForm(
-      cardHeight: 230,
-      showResetButton: true,
-      nextButtonDecoration: _buttonDecoration,
-      nextButtonTextStyle: _buttonTextStyle,
-      prevButtonDecoration: _buttonDecoration,
-      prevButtonTextStyle: _buttonTextStyle,
-      onStateChange: (currentState, cardInfo) async {
-        if (currentState == InputState.DONE) {
-          CardInfo infCard = CardInfo();
-          infCard = cardInfo;
-          _paymentWithStripe(infCard);
-        }
-      },
-      frontCardDecoration: cardDecoration,
-      backCardDecoration: cardDecoration,
-    );
+    return isPaymentSuccess
+        ? CircularProgressIndicator()
+        : CreditCardInputForm(
+            cardHeight: 230,
+            showResetButton: true,
+            nextButtonDecoration: _buttonDecoration,
+            nextButtonTextStyle: _buttonTextStyle,
+            prevButtonDecoration: _buttonDecoration,
+            prevButtonTextStyle: _buttonTextStyle,
+            onStateChange: (currentState, cardInfo) async {
+              if (currentState == InputState.DONE) {
+                CardInfo infCard = CardInfo();
+                infCard = cardInfo;
+                _paymentWithStripe(infCard);
+              }
+            },
+            frontCardDecoration: cardDecoration,
+            backCardDecoration: cardDecoration,
+          );
   }
 
   void _paymentWithStripe(CardInfo cardInfo) async {
-    var creditCard = StripeService.createCreditCard(cardInfo);
-    var response = await StripeService.payWithNewCard(
-        amount: (_cartProvider.totalAmount * 1000).toString(),
-        currency: 'eur',
-        creditCard: creditCard);
-
-    if (response.success) {
-      await _hvsUserProvider.getUser();
-      Course course1 = Course();
-      course1.courseName = "Havassyenikurs";
-      course1.courseComment = "idare eder";
-      List<DatesToPdf> listDates = List<DatesToPdf>();
-
-      var dateTime = DateTime.now();
-      var now = dateTime.day.toString() +
-          "." +
-          dateTime.month.toString() +
-          "." +
-          dateTime.year.toString();
-      for (var i = 0; i < 21; i++) {
-        DatesToPdf datesToPdf = DatesToPdf();
-        String date = dateTime.day.toString() +
-            "." +
-            dateTime.month.toString() +
-            "." +
-            dateTime.year.toString();
-        datesToPdf.date = date;
-        if (date == now) {
-          datesToPdf.pdfName = "sample.pdf";
-        } else {
-          datesToPdf.pdfName = "havas123.pdf";
-        }
-        listDates.add(datesToPdf);
-        dateTime = dateTime.add(Duration(days: 1));
+    try {
+      var creditCard = StripeService.createCreditCard(cardInfo);
+      _cartProvider.changeIsPayment();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+          (route) => false);
+      String coursesName = "";
+      _cartProvider.items.forEach((key, value) async {
+        coursesName = coursesName + _cartProvider.items[key].title + " ";
+      });
+      var response = await StripeService.payWithNewCard(
+          amount: (_cartProvider.totalAmount * 100).toString(),
+          currency: 'eur',
+          creditCard: creditCard,
+          courseName: coursesName);
+      if (response.success) {
+        int number = 0;
+        _cartProvider.items.forEach((key, value) async {
+          var result = await _hvsUserProvider.saveCourse(value.id);
+          number++;
+          if (_cartProvider.items.length == number) {
+            if (result) {
+              _cartProvider.clear();
+              _cartProvider.changeIsPayment();
+              NotificationWidget.showNotification(
+                  context, AppLocalizations.getString("success_payment"));
+            } else {
+              NotificationWidget.showNotification(context,
+                  AppLocalizations.getString("failed_payment_notification"));
+            }
+          }
+        });
+      } else {
+        _cartProvider.changeIsPayment();
+        NotificationWidget.showNotification(
+            context, AppLocalizations.getString("failed_payment_notification"));
       }
-      course1.dates = listDates;
-      List<Course> course = List<Course>();
-      course.add(course1);
-      _hvsUserProvider.getHvsUser.course = course;
-      await _hvsUserProvider.createCourse(_hvsUserProvider.getHvsUser);
-      var dateList =
-          _hvsUserProvider.getHvsUser.course.last.dates.first.date.split(".");
-      _dateAndNoteProvider.getStartDate(DateTime(
-          int.parse(dateList[2].toString()),
-          int.parse(dateList[1].toString()),
-          int.parse(dateList[0].toString())));
-      NotificationWidget.showNotification(context, response.message);
+    } catch (e) {
+      NotificationWidget.showNotification(context,
+          AppLocalizations.getString("failed_credit_card_notification"));
     }
   }
 }

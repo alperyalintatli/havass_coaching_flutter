@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/credit_card_widget.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Ödeme aDIMI"),
+        title: Text(AppLocalizations.getString("payment_text")),
       ),
       body: Container(
         child: Column(

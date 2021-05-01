@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class FirestoreProvider with ChangeNotifier {
   FireStoreOperation fireStoreOperation = FireStoreOperation.getInstance();
@@ -40,13 +39,14 @@ class FirestoreProvider with ChangeNotifier {
       var widget = Stack(
         children: [
           GestureDetector(
-            onTap: () async {
-              if (await canLaunch(value)) {
-                await launch(value);
-              } else {
-                Navigator.pushNamed(context, value);
-              }
-            },
+            onTap: null,
+            // () async {
+            //   if (await canLaunch(value)) {
+            //     await launch(value);
+            //   } else {
+            //     Navigator.pushNamed(context, value);
+            //   }
+            // },
             child: InkResponse(
                 child: Image.network(
               key.toString(),

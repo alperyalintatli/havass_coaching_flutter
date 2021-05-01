@@ -47,11 +47,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 filled: true),
             onSaved: (value) {
               if (isName) {
-                _hvsUser.name = value;
+                _hvsUser.name = value.trim();
               } else if (isPassword) {
-                _hvsUser.password = value;
+                _hvsUser.password = value.trim();
               } else if (isEmail) {
-                _hvsUser.email = value;
+                _hvsUser.email = value.trim();
               }
             },
             validator: (value) {
@@ -87,16 +87,20 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  bool _isOnTapButton = false;
   Widget _submitButton() {
     return TextButton(
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            setState(() {
-              _formKey.currentState.save();
-              _signUpUser(_hvsUser);
-            });
-          }
-        },
+        onPressed: !_isOnTapButton
+            ? () {
+                if (_formKey.currentState.validate()) {
+                  setState(() {
+                    _formKey.currentState.save();
+                    _signUpUser(_hvsUser);
+                    _isOnTapButton = true;
+                  });
+                }
+              }
+            : null,
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -117,11 +121,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     Color.fromARGB(0, 121, 250, 0),
                     Color.fromRGBO(164, 233, 232, 1),
                   ])),
-          child: Text(
-            AppLocalizations.getString("register_now"),
-            style:
-                TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
-          ),
+          child: !_isOnTapButton
+              ? Text(
+                  AppLocalizations.getString("register_now"),
+                  style: TextStyle(
+                      fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
+                )
+              : CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ),
         ));
   }
 
@@ -195,7 +203,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 isName: true),
             _entryField(AppLocalizations.getString("email"), isEmail: true),
             _entryField(AppLocalizations.getString("password"),
-                isPassword: true),
+                isPassword: true)
           ],
         ));
   }
@@ -252,12 +260,18 @@ class _SignUpPageState extends State<SignUpPage> {
     var result = await _loginOperation.signUp(_hvsuser);
     if (result.isSendEmailVerification) {}
     if (result.isSignUpSuccess) {
+      setState(() {
+        _isOnTapButton = false;
+      });
       NotificationWidget.showNotification(
           context, AppLocalizations.getString("register_success_notification"));
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginPage()));
     }
     if (result.isError) {
+      setState(() {
+        _isOnTapButton = false;
+      });
       NotificationWidget.showNotification(context,
           AppLocalizations.getString("register_error_notification_title"));
     }

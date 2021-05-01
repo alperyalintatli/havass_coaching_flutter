@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
-import 'package:havass_coaching_flutter/widget/credit_card_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/about_me_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/aims_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/home_page_course_button_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -32,13 +30,13 @@ class _HomeWidgetState extends State<HomeWidget> {
             child: Center(
                 child: Text(
               AppLocalizations.getString("welcome_title") +
-                  " ," +
+                  ", " +
                   _hvsUserProvider.getHvsUser.name.toString(),
               style: TextStyle(fontSize: 18, color: Colors.white),
             )),
             width: MediaQuery.of(context).size.width,
             height: 50,
-            color: Color.fromRGBO(154, 206, 207, 1));
+            color: Colors.blueGrey.shade500);
   }
 
   @override
@@ -88,8 +86,15 @@ class _HomeWidgetState extends State<HomeWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CourseButtonWidget("16gunluk kurs"),
-                CourseButtonWidget("21gunluk kurs")
+                CourseButtonWidget(
+                    AppLocalizations.getString(Constants.COURSE_OF_16)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CourseButtonWidget(
+                    AppLocalizations.getString(Constants.COURSE_OF_28))
               ],
             ),
             Container(
@@ -101,7 +106,8 @@ class _HomeWidgetState extends State<HomeWidget> {
               ),
             ),
             AimsListWidget(),
-            AboutMeWidget("ben kimim_", "hakkımda"),
+            AboutMeWidget(
+                AppLocalizations.getString("main_menu_about_app_description")),
           ],
         ),
       ),

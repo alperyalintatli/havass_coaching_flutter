@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationWidget {
@@ -18,16 +19,12 @@ class NotificationWidget {
                 child: Container(
                   child: icon != null
                       ? icon
-                      : Icon(
-                          Icons.check_circle,
-                          color: Colors.green.shade200,
-                          size: 40.0,
-                        ),
+                      : Image.asset("images/havass_logo_1.png"),
                 ),
               ),
             ),
-            title: Text(title),
-            subtitle: Text(subtitle != null ? subtitle : ""),
+            title: Text(AppLocalizations.getString('havass_notification_text')),
+            subtitle: Text(title != null ? title : ""),
             trailing: IconButton(
               icon: Icon(Icons.close),
               onPressed: () {

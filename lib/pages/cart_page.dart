@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
 import 'package:havass_coaching_flutter/widget/cart_item_widget.dart'
@@ -61,6 +62,8 @@ class _CartPageState extends State<CartPage> {
                 price: _cartProvider.items.values.toList()[i].price,
                 quantity: _cartProvider.items.values.toList()[i].quantity,
                 title: _cartProvider.items.values.toList()[i].title,
+                courseImagePath:
+                    _cartProvider.items.values.toList()[i].courseImagePath,
               ),
             ),
           ),
@@ -111,7 +114,9 @@ class _OrderButtonState extends State<OrderButton> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Price: " + _cartProvider.totalAmount.toString() + "€",
+                      AppLocalizations.getString("price") +
+                          _cartProvider.totalAmount.toString() +
+                          "€",
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                     ),
@@ -160,7 +165,7 @@ class _OrderButtonState extends State<OrderButton> {
         color: Color.fromRGBO(154, 206, 207, 1),
         child: _isLoading
             ? CircularProgressIndicator()
-            : Text('Sepeti Onayla',
+            : Text(AppLocalizations.getString("approve_cart_button_text"),
                 style: TextStyle(color: Colors.white, fontSize: 18)),
         onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
             ? null

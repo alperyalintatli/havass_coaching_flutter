@@ -7,7 +7,7 @@ class CourseButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      width: MediaQuery.of(context).size.width / 3,
+      width: MediaQuery.of(context).size.width / 1.5,
       height: 80,
       child: RaisedButton(
         elevation: 10,
