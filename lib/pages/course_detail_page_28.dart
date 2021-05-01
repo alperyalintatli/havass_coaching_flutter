@@ -7,8 +7,10 @@ import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
+import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class CourseInfoScreen21 extends StatefulWidget {
   @override
@@ -59,7 +61,7 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
     _cartProvider = Provider.of<CartProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
     _dateAndNoteProvider = Provider.of<DateAndNoteProvider>(context);
-
+    double _starValue = 1.0;
     isGetCourse();
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width) +
@@ -148,20 +150,70 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                                 Container(
                                   child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        '4.8',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 22,
-                                          letterSpacing: 0.27,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Color.fromRGBO(154, 206, 207, 1),
-                                        size: 24,
+                                      Container(
+                                        width: 70,
+                                        child: PopupMenuButton(
+                                            onCanceled: () {
+                                              NotificationWidget.showNotification(
+                                                  context,
+                                                  AppLocalizations.getString(
+                                                      "star_rating_notification"));
+                                            },
+                                            elevation: 8,
+                                            offset: Offset.lerp(Offset(30, 0),
+                                                Offset(0, 4), 8.5),
+                                            captureInheritedThemes: true,
+                                            color: Color.fromRGBO(
+                                                154, 206, 207, 1),
+                                            icon: Row(
+                                              children: [
+                                                Text(
+                                                  '4.8',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 22,
+                                                    letterSpacing: 0.27,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.star,
+                                                  color: Color.fromRGBO(
+                                                      154, 206, 207, 1),
+                                                  size: 24,
+                                                ),
+                                              ],
+                                            ),
+                                            itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                      child: Container(
+                                                          child:
+                                                              SmoothStarRating(
+                                                                  allowHalfRating:
+                                                                      true,
+                                                                  onRated: (v) {
+                                                                    setState(
+                                                                        () {
+                                                                      _starValue =
+                                                                          v;
+                                                                    });
+                                                                  },
+                                                                  starCount: 5,
+                                                                  rating:
+                                                                      _starValue,
+                                                                  size: 40.0,
+                                                                  isReadOnly:
+                                                                      false,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  borderColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  spacing:
+                                                                      0.0)),
+                                                      value: "/newchat"),
+                                                ]),
                                       ),
                                     ],
                                   ),

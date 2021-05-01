@@ -78,5 +78,6 @@
     "from": "From",
     "to": "To",
     "manuel_add_student_text": "Manuel Add Student",
-    "havass_notification_text": "Havass Notification"
+    "havass_notification_text": "Havass Notification",
+    "star_rating_notification": "Your assessment has been submitted."
 }
