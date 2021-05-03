@@ -9,6 +9,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
+import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,31 +29,16 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
   final String pdfName;
   final int numberofDay;
   _CoursePdfPageState(this.pdfName, this.numberofDay);
-  var itemsToBody = [
-    FloatingActionButton(
-      backgroundColor: Colors.greenAccent,
-      onPressed: () {},
-      child: Icon(Icons.add),
-    ),
-    FloatingActionButton(
-      backgroundColor: Colors.indigoAccent,
-      onPressed: () {},
-      child: Icon(Icons.camera),
-    ),
-    FloatingActionButton(
-      backgroundColor: Colors.orangeAccent,
-      onPressed: () {},
-      child: Icon(Icons.card_giftcard),
-    ),
-  ];
   bool _isLoading = true;
   PDFDocument document;
 
   @override
   void initState() {
     super.initState();
+    final String audioName =
+        pdfName.split("_")[2] == '16' ? "course_16" : "course_28";
     assetsAudioPlayer.open(
-      Audio("images/audio.mp3"),
+      Audio("images/$audioName.mp3"),
       autoStart: false,
       showNotification: true,
     );
@@ -82,9 +68,11 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
   }
 
   bool _isPaused = true;
+
   @override
   Widget build(BuildContext context) {
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
+    var downloadCourseName = pdfName.split("_")[2];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(24, 231, 239, 1),
@@ -101,7 +89,10 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
                 });
               },
             ),
-            (numberofDay == 7 || numberofDay == 14)
+            (numberofDay == 7 ||
+                    (numberofDay == 12 && downloadCourseName == "16") ||
+                    (numberofDay == 14 && downloadCourseName == "28") ||
+                    numberofDay == 21)
                 ? Badge(
                     badgeColor: Colors.red,
                     position: BadgePosition.topEnd(end: 10, top: 10),
@@ -125,20 +116,37 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
                               path = await getLibraryDirectory();
                             }
                             if (await path.exists()) {
+                              var locale = await PrefUtils.getLanguage();
                               final taskId = await FlutterDownloader.enqueue(
-                                  url: (numberofDay == 7)
-                                      ? Constants.COURSE_DAY_OF_7_PDF_URL
-                                      : Constants.COURSE_DAY_OF_14_PDF_URL,
+                                  url: (downloadCourseName == "16")
+                                      ? (locale == 'en')
+                                          ? Constants
+                                              .COURSE_DAY_OF_16_PDF_URL_en
+                                          : Constants
+                                              .COURSE_DAY_OF_16_PDF_URL_de
+                                      : (locale == 'en')
+                                          ? Constants
+                                              .COURSE_DAY_OF_28_PDF_URL_en
+                                          : Constants
+                                              .COURSE_DAY_OF_28_PDF_URL_de,
                                   savedDir: path.path,
                                   showNotification:
                                       true, // show download progress in status bar (for Android)
                                   openFileFromNotification:
                                       true, // click on notification to open downloaded file (for Android)
-                                  fileName: (numberofDay == 7)
-                                      ? Constants.COURSE_DAY_OF_7_PDF_NAME +
-                                          ".pdf"
-                                      : Constants.COURSE_DAY_OF_14_PDF_NAME +
-                                          ".pdf");
+                                  fileName: (downloadCourseName == "16")
+                                      ? (locale == 'en')
+                                          ? Constants
+                                              .COURSE_DAY_OF_16_PDF_NAME_en
+                                          : Constants
+                                                  .COURSE_DAY_OF_16_PDF_NAME_de +
+                                              ".pdf"
+                                      : (locale == 'en')
+                                          ? Constants
+                                              .COURSE_DAY_OF_28_PDF_NAME_en
+                                          : Constants
+                                                  .COURSE_DAY_OF_28_PDF_NAME_de +
+                                              ".pdf");
                               taskId != null
                                   ? NotificationWidget.showNotification(
                                       context,
@@ -183,7 +191,37 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
                 indicatorPosition: IndicatorPosition.topRight,
                 showNavigation: true,
                 showPicker: false,
-              ),
+                navigationBuilder:
+                    (context, page, totalPages, jumpToPage, animateToPage) {
+                  return ButtonBar(
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.first_page_outlined),
+                          onPressed: () {
+                            jumpToPage(page: 0);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.arrow_upward),
+                          onPressed: () {
+                            animateToPage(page: page - 2);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.arrow_downward),
+                          onPressed: () {
+                            animateToPage(page: page);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.last_page),
+                          onPressed: () {
+                            jumpToPage(page: totalPages - 1);
+                          },
+                        )
+                      ]);
+                }),
       ),
     );
   }

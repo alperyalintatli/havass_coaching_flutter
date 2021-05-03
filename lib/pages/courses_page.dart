@@ -41,8 +41,15 @@ class _CoursesPageState extends State<CoursesPage> {
     super.initState();
   }
 
+  String _locale;
+  void getLocale() async {
+    String res = await PrefUtils.getLanguage();
+    _locale = res.toString() + "_" + res.toString().toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getLocale();
     _dateProvider = Provider.of<DateAndNoteProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context, listen: false);
     setNoteOfHtml();
@@ -115,8 +122,7 @@ class _CoursesPageState extends State<CoursesPage> {
             ),
           );
     return Scaffold(
-      endDrawer: SettingsDrawerWidget(),
-      appBar: AppBarWidget(),
+      appBar: AppBarWidget(isCoursePage: true),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0, // this will be set when a new tab is tapped
         backgroundColor: Colors.white,
@@ -271,7 +277,7 @@ class _CoursesPageState extends State<CoursesPage> {
                             margin: EdgeInsets.only(top: 10),
                             child: Center(
                               child: Text(
-                                '${DateFormat("dd, MMM").format(_dateProvider.startDate)} - ${DateFormat("dd, MMM").format(_dateProvider.finishDate)}',
+                                '${DateFormat("dd, MMM", _locale).format(_dateProvider.startDate)} - ${DateFormat("dd, MMM", _locale).format(_dateProvider.finishDate)}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,

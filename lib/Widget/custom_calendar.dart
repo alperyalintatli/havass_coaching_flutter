@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:intl/intl.dart';
 
 class CustomCalendarView extends StatefulWidget {
@@ -62,8 +63,15 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
     // }
   }
 
+  String _locale;
+  void getLocale() async {
+    String res = await PrefUtils.getLanguage();
+    _locale = res.toString() + "_" + res.toString().toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getLocale();
     return Container(
       child: Column(
         children: <Widget>[
@@ -107,7 +115,8 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      DateFormat('MMMM, yyyy').format(currentMonthDate),
+                      DateFormat('MMMM, yyyy', _locale)
+                          .format(currentMonthDate),
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
@@ -174,7 +183,7 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
         Expanded(
           child: Center(
             child: Text(
-              DateFormat('EEE').format(dateList[i]),
+              DateFormat('EEE', _locale).format(dateList[i]),
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

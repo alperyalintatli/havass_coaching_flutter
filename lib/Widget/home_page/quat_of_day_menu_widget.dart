@@ -16,6 +16,17 @@ class QuateOfDayWidget extends StatefulWidget {
 class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
   QuatOfDayProvider _quatOfDayProvider;
   bool _isShare = false;
+
+  Widget quatImage() {
+    return CachedNetworkImage(
+      imageUrl: _quatOfDayProvider.getQuatMap[_quatOfDayProvider
+          .mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFQUAT]],
+      placeholder: (context, url) => new CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+      errorWidget: (context, url, error) => new Icon(Icons.error),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _quatOfDayProvider = Provider.of<QuatOfDayProvider>(context);
@@ -100,17 +111,7 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                     width: MediaQuery.of(context).size.width - 10,
                     color: Color.fromRGBO(153, 201, 189, 1),
                     child: Center(
-                      child: CachedNetworkImage(
-                        imageUrl: _quatOfDayProvider.getQuatMap[
-                            _quatOfDayProvider.mapOfQuatOfDayNumbers[
-                                PrefUtils.PREFS_NUMBEROFQUAT]],
-                        placeholder: (context, url) =>
-                            new CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white)),
-                        errorWidget: (context, url, error) =>
-                            new Icon(Icons.error),
-                      ),
+                      child: quatImage(),
                     ),
                   )
                 : Scratcher(
@@ -133,10 +134,10 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                       width: MediaQuery.of(context).size.width - 10,
                       color: Color.fromRGBO(153, 201, 189, 1),
                       child: Center(
-                          child: Image.network(_quatOfDayProvider.getQuatMap[
-                              _quatOfDayProvider.mapOfQuatOfDayNumbers[
-                                  PrefUtils.PREFS_NUMBEROFQUAT]])),
-                    )),
+                        child: quatImage(),
+                      ),
+                    ),
+                  ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

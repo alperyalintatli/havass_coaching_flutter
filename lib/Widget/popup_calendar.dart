@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
+import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:intl/intl.dart';
 
 import 'custom_calendar.dart';
@@ -53,8 +54,15 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
     super.dispose();
   }
 
+  String _locale;
+  void getLocale() async {
+    String res = await PrefUtils.getLanguage();
+    _locale = res.toString() + "_" + res.toString().toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getLocale();
     return Center(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -119,7 +127,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                       ),
                                       Text(
                                         startDate != null
-                                            ? DateFormat('EEE, dd MMM')
+                                            ? DateFormat('EEE, dd MMM', _locale)
                                                 .format(startDate)
                                             : '--/-- ',
                                         style: TextStyle(
@@ -154,7 +162,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                       ),
                                       Text(
                                         endDate != null
-                                            ? DateFormat('EEE, dd MMM')
+                                            ? DateFormat('EEE, dd MMM', _locale)
                                                 .format(endDate)
                                             : '--/-- ',
                                         style: TextStyle(

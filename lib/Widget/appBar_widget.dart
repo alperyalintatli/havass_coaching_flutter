@@ -8,10 +8,12 @@ class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
   final bool isPopup;
+  final bool isCoursePage;
   @override
   final Size preferredSize;
   AppBarWidget({
     this.isPopup = true,
+    this.isCoursePage = false,
     Key key,
   })  : preferredSize = Size.fromHeight(50.0),
         super(key: key);
@@ -32,13 +34,16 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       toolbarHeight: 70,
       backgroundColor: Color.fromRGBO(164, 233, 232, 1),
       actions: [
-        Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => Scaffold.of(context).openEndDrawer(),
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-        ),
+        widget.isCoursePage == false
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                ),
+              )
+            : Container(),
       ],
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
