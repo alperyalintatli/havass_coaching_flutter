@@ -37,8 +37,10 @@ class _CourseWidgetState extends State<CourseWidget>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CourseInfoScreen16())),
+                    onTap: () async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CourseInfoScreen16()));
+                    },
                     child: Container(
                       child: CourseInfoViewWidget(
                         courseName: AppLocalizations.getString(
@@ -52,8 +54,10 @@ class _CourseWidgetState extends State<CourseWidget>
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CourseInfoScreen21())),
+                    onTap: () async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CourseInfoScreen28()));
+                    },
                     child: CourseInfoViewWidget(
                       courseName: AppLocalizations.getString(
                           _hvsUserProvider.course28.courseIdName),

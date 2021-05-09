@@ -123,7 +123,15 @@ class _PastCoursePageState extends State<PastCoursePage> {
         items: [
           BottomNavigationBarItem(
               icon: GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  const url = 'https://havasscoaching.com/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    NotificationWidget.showNotification(
+                        context, AppLocalizations.getString("not_launch_url"));
+                  }
+                },
                 child: Container(
                   width: 30,
                   height: 30,

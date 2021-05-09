@@ -77,7 +77,7 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                   margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   child: PopupMenuButton(
                       elevation: 8,
-                      offset: Offset.lerp(Offset(30, 0), Offset(0, 30), 10),
+                      offset: Offset.lerp(Offset(30, 0), Offset(0, 30), 2),
                       captureInheritedThemes: true,
                       color: Color.fromRGBO(154, 206, 207, 1),
                       icon:
@@ -86,7 +86,8 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                             PopupMenuItem(
                                 child: Container(
                                   child: Text(
-                                    "Ekran Ekran Ekran Ekran Ekran EkranEkranEkranEkran Ekran EkranEkran Ekran Ekran Ekran",
+                                    AppLocalizations.getString(
+                                        "heutige_affirmationen_popup"),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

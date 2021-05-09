@@ -2,16 +2,12 @@ import 'package:credit_card_input_form/constants/constanst.dart';
 import 'package:credit_card_input_form/credit_card_input_form.dart';
 import 'package:credit_card_input_form/model/card_info.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/model/logs.dart';
 import 'package:havass_coaching_flutter/pages/home_page.dart';
-import 'package:havass_coaching_flutter/plugins/firebase_database_services/firebase_database_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/plugins/stripe_services.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 

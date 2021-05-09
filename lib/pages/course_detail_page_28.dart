@@ -11,13 +11,14 @@ import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:ntp/ntp.dart';
 
-class CourseInfoScreen21 extends StatefulWidget {
+class CourseInfoScreen28 extends StatefulWidget {
   @override
-  _CourseInfoScreen21State createState() => _CourseInfoScreen21State();
+  _CourseInfoScreen28State createState() => _CourseInfoScreen28State();
 }
 
-class _CourseInfoScreen21State extends State<CourseInfoScreen21>
+class _CourseInfoScreen28State extends State<CourseInfoScreen28>
     with TickerProviderStateMixin {
   final double infoHeight = 364.0;
   AnimationController animationController;
@@ -85,7 +86,7 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
               ],
             ),
             Positioned(
-              top: (MediaQuery.of(context).size.width / 1.4) - 24.0,
+              top: (MediaQuery.of(context).size.width / 1.4) - 75.0,
               bottom: 0,
               left: 0,
               right: 0,
@@ -112,12 +113,12 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                               ? tempHeight
                               : infoHeight),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 32.0, left: 18, right: 16),
+                                top: 16.0, left: 18, right: 16),
                             child: Text(
                               AppLocalizations.getString(
                                   _hvsUserProvider.course28.courseIdName),
@@ -132,7 +133,7 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 16, right: 16, bottom: 8, top: 16),
+                                left: 16, right: 16, bottom: 5, top: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -147,6 +148,9 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                                     color: Color.fromRGBO(154, 206, 207, 1),
                                   ),
                                 ),
+                                getTimeBoxUI(
+                                    _hvsUserProvider.course28.courseDay,
+                                    AppLocalizations.getString("days")),
                                 Container(
                                   child: Row(
                                     children: <Widget>[
@@ -221,48 +225,37 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                               ],
                             ),
                           ),
-                          AnimatedOpacity(
-                            duration: const Duration(milliseconds: 500),
-                            opacity: opacity1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: <Widget>[
-                                  getTimeBoxUI(
-                                      _hvsUserProvider.course28.courseDay,
-                                      AppLocalizations.getString("days")),
-                                ],
-                              ),
-                            ),
-                          ),
                           Expanded(
                             child: AnimatedOpacity(
                               duration: const Duration(milliseconds: 500),
                               opacity: opacity2,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 16, right: 16, top: 8, bottom: 8),
-                                child: Text(
-                                  'Lorem ipsum is simply dummy text of printing & typesetting industry, Lorem ipsum is simply dummy text of printing & typesetting industry.',
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w200,
-                                    fontSize: 14,
-                                    letterSpacing: 0.27,
-                                    color: Colors.grey,
+                                    left: 16, right: 16, top: 5, bottom: 15),
+                                child: SingleChildScrollView(
+                                  child: Container(
+                                    child: Text(
+                                      AppLocalizations.getString(
+                                          "course_28_description"),
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w200,
+                                        fontSize: 14,
+                                        letterSpacing: 0.27,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
                                   ),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
                           ),
                           AnimatedOpacity(
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 2500),
                             opacity: opacity3,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  left: 16, bottom: 16, right: 16),
+                                  left: 16, bottom: 5, right: 16),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -288,7 +281,8 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                                                       Constants.COURSE_OF_28)
                                                   .toList();
                                               courseList.forEach((course) {
-                                                course.dates.forEach((date) {
+                                                course.dates
+                                                    .forEach((date) async {
                                                   if (date.date == nowDate) {
                                                     _hvsUserProvider
                                                         .getUserCourse(course);
@@ -323,6 +317,19 @@ class _CourseInfoScreen21State extends State<CourseInfoScreen21>
                                                             int.parse(finishDate[
                                                                     0]
                                                                 .toString())));
+                                                    DateTime _myTime =
+                                                        DateTime.now();
+                                                    final int offset =
+                                                        await NTP.getNtpOffset(
+                                                            localTime: _myTime,
+                                                            lookUpAddress:
+                                                                'time.google.com');
+                                                    DateTime _ntpTime =
+                                                        _myTime.add(Duration(
+                                                            milliseconds:
+                                                                offset));
+                                                    _dateAndNoteProvider
+                                                        .dateTime = _ntpTime;
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (context) =>

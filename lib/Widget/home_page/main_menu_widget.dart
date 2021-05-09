@@ -71,6 +71,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     _fireStoreProvider = Provider.of<FirestoreProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
+
     _getListSlider();
     return Container(
       child: SingleChildScrollView(
@@ -87,25 +88,27 @@ class _HomeWidgetState extends State<HomeWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CourseButtonWidget(
-                    AppLocalizations.getString(Constants.COURSE_OF_16)),
+                    AppLocalizations.getString(Constants.COURSE_OF_16),
+                    Constants.COURSE_OF_16),
               ],
+            ),
+            AimsListWidget16(),
+            SizedBox(
+              height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CourseButtonWidget(
-                    AppLocalizations.getString(Constants.COURSE_OF_28))
+                    AppLocalizations.getString(Constants.COURSE_OF_28),
+                    Constants.COURSE_OF_28),
               ],
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Text(
-                AppLocalizations.getString("aims_vision"),
-                style: TextStyle(fontSize: 20),
-              ),
+            AimsListWidget28(),
+            AboutMeWidget(
+              AppLocalizations.getString("audio_info"),
+              isDisplay: false,
             ),
-            AimsListWidget(),
             AboutMeWidget(
                 AppLocalizations.getString("main_menu_about_app_description")),
           ],

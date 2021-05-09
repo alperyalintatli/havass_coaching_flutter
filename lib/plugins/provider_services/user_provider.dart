@@ -39,13 +39,13 @@ class HvsUserProvider with ChangeNotifier {
   }
 
   Course course16 = Course();
-  void getCourse16() async {
+  Future<void> getCourse16() async {
     course16 = await _databaseOperation.getCourse(Constants.COURSE_OF_16);
     notifyListeners();
   }
 
   Course course28 = Course();
-  void getCourse28() async {
+  Future<void> getCourse28() async {
     course28 = await _databaseOperation.getCourse(Constants.COURSE_OF_28);
     notifyListeners();
   }

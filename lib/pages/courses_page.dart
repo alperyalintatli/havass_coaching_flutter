@@ -11,7 +11,6 @@ import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
 import 'package:havass_coaching_flutter/widget/course_page/box_of_day.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/popup_calendar.dart';
-import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -129,7 +128,15 @@ class _CoursesPageState extends State<CoursesPage> {
         items: [
           BottomNavigationBarItem(
               icon: GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  const url = 'https://havasscoaching.com/';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    NotificationWidget.showNotification(
+                        context, AppLocalizations.getString("not_launch_url"));
+                  }
+                },
                 child: Container(
                   width: 30,
                   height: 30,
@@ -205,13 +212,14 @@ class _CoursesPageState extends State<CoursesPage> {
             }
           }
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => CoursePdfPage(pdfName, 7
-                  // realDateNow != null
-                  //     ? realDateNow.difference(_dateProvider.startDate).inDays
-                  //     : DateTime.now()
-                  //         .difference(_dateProvider.startDate)
-                  //         .inDays
-                  )));
+              builder: (context) => CoursePdfPage(
+                  pdfName,
+                  //7
+                  realDateNow != null
+                      ? realDateNow.difference(_dateProvider.startDate).inDays
+                      : DateTime.now()
+                          .difference(_dateProvider.startDate)
+                          .inDays)));
         },
         child: Icon(Icons.add),
         backgroundColor: Color.fromRGBO(164, 233, 232, 1),
