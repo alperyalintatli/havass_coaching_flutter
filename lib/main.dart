@@ -32,7 +32,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    secureScreen();
+    //secureScreen();
     FirebaseMessaging messaging = FirebaseMessaging();
     messaging.requestNotificationPermissions();
     flutterDownloaderInitialize();

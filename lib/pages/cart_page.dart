@@ -173,12 +173,22 @@ class _OrderButtonState extends State<OrderButton> {
                 return showDialog(
                   context: context,
                   builder: (context) => Dialog(
+                    insetPadding: EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                     elevation: 0,
                     backgroundColor: Colors.transparent,
-                    child: creditCard(),
+                    child: Stack(
+                      overflow: Overflow.visible,
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: creditCard(),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

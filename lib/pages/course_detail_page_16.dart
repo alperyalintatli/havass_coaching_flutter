@@ -79,7 +79,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
             Column(
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: 1.4,
+                  aspectRatio: 1.5,
                   child: Image.asset('images/' +
                       _hvsUserProvider.course16.courseIdName +
                       '_photo.jpg'),
@@ -240,9 +240,10 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                           "course_16_description"),
                                       textAlign: TextAlign.justify,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w200,
+                                        height: 1.4,
+                                        fontWeight: FontWeight.w300,
                                         fontSize: 14,
-                                        letterSpacing: 0.27,
+                                        letterSpacing: 0.75,
                                         color: Colors.grey,
                                       ),
                                     ),

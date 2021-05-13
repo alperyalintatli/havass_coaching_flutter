@@ -96,6 +96,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             SizedBox(
               height: 30,
             ),
+            Image.asset("images/course_of_16_photo.jpg"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

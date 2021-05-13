@@ -92,13 +92,16 @@ class LoginOperations implements ILoginOperations {
         await newUser.user.sendEmailVerification().catchError((onError) {
           isSignUp.isSendEmailVerification = true;
           isSignUp.message = onError.toString();
+        }).then((value) async {
+          isSignUp.isSignUpSuccess = true;
+          DatabaseOperation _databaseOperation =
+              DatabaseOperation.getInstance();
+          hvsUser.role = "Student";
+          hvsUser.course = [];
+          await _databaseOperation
+              .saveUserCreate(hvsUser)
+              .then((value) async => await _auth.signOut());
         });
-        await _auth.signOut();
-        isSignUp.isSignUpSuccess = true;
-        DatabaseOperation _databaseOperation = DatabaseOperation.getInstance();
-        hvsUser.role = "Student";
-        hvsUser.course = [];
-        _databaseOperation.saveUserCreate(hvsUser);
       }
       return isSignUp;
     } catch (err) {

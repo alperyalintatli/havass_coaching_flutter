@@ -17,7 +17,7 @@ class HvsUserProvider with ChangeNotifier {
   Future<void> getUser({HvsUser hvsUser}) async {
     this._hvsUser = await _databaseOperation.getUser(hvsUser: hvsUser);
     if (_hvsUser != null) {
-      _checkRole();
+      checkRole();
     }
     notifyListeners();
   }
@@ -141,11 +141,12 @@ class HvsUserProvider with ChangeNotifier {
   bool _isAdmin = false;
   bool get getIsAdmin => this._isAdmin;
   set setIsAdmin(bool isAdmin) => this._isAdmin = isAdmin;
-  void _checkRole() async {
+  void checkRole() async {
     var _isAdmin = await _databaseOperation.isAdmin();
-    var _isUserAdmin = Constants.constants().contains(_hvsUser.role);
-    if (_isAdmin == _isUserAdmin) {
+    if (_isAdmin) {
       this._isAdmin = true;
+    } else {
+      this._isAdmin = false;
     }
   }
 

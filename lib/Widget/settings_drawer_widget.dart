@@ -104,6 +104,7 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
     _navBottombarProvider =
         Provider.of<NavBottombarProvider>(context, listen: false);
     double height = MediaQuery.of(context).size.height;
+    _userProvider.checkRole();
     return Drawer(
       child: Container(
         color: Color.fromRGBO(164, 233, 232, 1),

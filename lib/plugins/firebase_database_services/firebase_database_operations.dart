@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/model/courses.dart';
 import 'package:havass_coaching_flutter/model/logs.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
@@ -17,7 +18,7 @@ class DatabaseOperation extends IDatabaseOperation {
   static DatabaseOperation getInstance() =>
       _instance == null ? _instance = DatabaseOperation._internal() : _instance;
 
-  void saveUserCreate(HvsUser hvsUser) async {
+  Future<void> saveUserCreate(HvsUser hvsUser) async {
     try {
       await _firestore
           .collection("users")
@@ -160,8 +161,13 @@ class DatabaseOperation extends IDatabaseOperation {
         var result = await _firestore.collection("roles").doc("admin").get();
         Map<String, dynamic> map = Map<String, dynamic>();
         map = result.data();
-        map.containsValue(_loginUser);
-        return true;
+        var user = await getUser();
+        if (map.containsValue(_loginUser) &&
+            Constants.constants().contains(user.role)) {
+          return true;
+        } else {
+          return false;
+        }
       }
       return false;
     } catch (e) {

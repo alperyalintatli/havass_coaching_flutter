@@ -123,7 +123,9 @@ class _CoursesPageState extends State<CoursesPage> {
     return Scaffold(
       appBar: AppBarWidget(isCoursePage: true),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // this will be set when a new tab is tapped
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         backgroundColor: Colors.white,
         items: [
           BottomNavigationBarItem(
