@@ -38,7 +38,6 @@ class AboutMeWidget extends StatelessWidget {
                     // ),
                     Text(
                       _description,
-                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     isDisplay
                         ? Row(

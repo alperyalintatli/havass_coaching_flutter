@@ -148,9 +148,9 @@ class MainPageDesign extends StatelessWidget {
       case 2:
         return CourseWidget();
         break;
-      case 3:
-        return VideoWidget();
-        break;
+      // case 3:
+      //   return VideoWidget();
+      //   break;
       default:
         return HomeWidget();
         break;

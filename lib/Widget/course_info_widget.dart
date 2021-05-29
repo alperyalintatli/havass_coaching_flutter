@@ -71,18 +71,18 @@ class CourseInfoViewWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  price,
+                                  day,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20,
-                                  ),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      color: Colors.grey.withOpacity(0.8)),
                                 ),
                                 SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  day,
+                                  price,
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.withOpacity(0.8)),

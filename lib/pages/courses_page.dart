@@ -1,7 +1,6 @@
 import 'package:flutter_html/flutter_html.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/pages/course_pdf_page.dart';
 import 'package:havass_coaching_flutter/pages/note_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
@@ -191,42 +190,42 @@ class _CoursesPageState extends State<CoursesPage> {
               label: ""),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          String pdfName;
-          var realDateNow = await _dateProvider.getRealTime();
-          for (var i = 0;
-              i < _hvsUserProvider.selectedUserCourse.dates.length;
-              i++) {
-            String date = realDateNow.day.toString() +
-                "." +
-                realDateNow.month.toString() +
-                "." +
-                realDateNow.year.toString();
-            if (_hvsUserProvider.selectedUserCourse.dates[i].date == date) {
-              if (await PrefUtils.getLanguage() == "en") {
-                pdfName =
-                    _hvsUserProvider.selectedUserCourse.dates[i].enPdfName;
-              } else {
-                pdfName =
-                    _hvsUserProvider.selectedUserCourse.dates[i].dePdfName;
-              }
-            }
-          }
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => CoursePdfPage(
-                  pdfName,
-                  //7
-                  realDateNow != null
-                      ? realDateNow.difference(_dateProvider.startDate).inDays
-                      : DateTime.now()
-                          .difference(_dateProvider.startDate)
-                          .inDays)));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Color.fromRGBO(164, 233, 232, 1),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     String pdfName;
+      //     var realDateNow = await _dateProvider.getRealTime();
+      //     for (var i = 0;
+      //         i < _hvsUserProvider.selectedUserCourse.dates.length;
+      //         i++) {
+      //       String date = realDateNow.day.toString() +
+      //           "." +
+      //           realDateNow.month.toString() +
+      //           "." +
+      //           realDateNow.year.toString();
+      //       if (_hvsUserProvider.selectedUserCourse.dates[i].date == date) {
+      //         if (await PrefUtils.getLanguage() == "en") {
+      //           pdfName =
+      //               _hvsUserProvider.selectedUserCourse.dates[i].enPdfName;
+      //         } else {
+      //           pdfName =
+      //               _hvsUserProvider.selectedUserCourse.dates[i].dePdfName;
+      //         }
+      //       }
+      //     }
+      //     Navigator.of(context).push(MaterialPageRoute(
+      //         builder: (context) => CoursePdfPage(
+      //             pdfName,
+      //             //7
+      //             realDateNow != null
+      //                 ? realDateNow.difference(_dateProvider.startDate).inDays
+      //                 : DateTime.now()
+      //                     .difference(_dateProvider.startDate)
+      //                     .inDays)));
+      //   },
+      //   child: Icon(Icons.add),
+      //   backgroundColor: Color.fromRGBO(164, 233, 232, 1),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Container(
         child: SingleChildScrollView(
             child: Column(

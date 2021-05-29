@@ -117,7 +117,8 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(AppLocalizations.getString("settings_title"),
+                    Text(_userProvider.getHvsUser.name,
+                        // AppLocalizations.getString("settings_title"),
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold)),
                     Image.asset(
@@ -352,7 +353,7 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                             )
                           : Container(),
                       SizedBox(
-                        height: 25,
+                        height: 40,
                       ),
                       _navBottombarProvider.index != 2
                           ? TextButton(
@@ -367,6 +368,31 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                               },
                             )
                           : Container(),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                            onPressed: null,
+                            child: Text(
+                              AppLocalizations.getString(
+                                  "privacy_policy_title"),
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            )),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                            onPressed: null,
+                            child: Text(
+                              AppLocalizations.getString("faq_title"),
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            )),
+                      ),
                       SizedBox(
                         height: 5,
                       ),

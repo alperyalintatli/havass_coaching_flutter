@@ -49,7 +49,7 @@ class _CourseWidgetState extends State<CourseWidget>
                             "${_hvsUserProvider.course16.courseDay} ${AppLocalizations.getString("days")}",
                         imagePath:
                             "images/${_hvsUserProvider.course16.courseIdName}_photo.jpg",
-                        price: "${_hvsUserProvider.course16.coursePrice} €",
+                        price: "",
                       ),
                     ),
                   ),
@@ -65,7 +65,7 @@ class _CourseWidgetState extends State<CourseWidget>
                           "${_hvsUserProvider.course28.courseDay} ${AppLocalizations.getString("days")}",
                       imagePath:
                           "images/${_hvsUserProvider.course28.courseIdName}_photo.jpg",
-                      price: "${_hvsUserProvider.course28.coursePrice} €",
+                      price: "",
                     ),
                   ),
                 ],

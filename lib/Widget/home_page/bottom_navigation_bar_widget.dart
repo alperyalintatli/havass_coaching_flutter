@@ -57,17 +57,17 @@ class BottomNavigationBarWidget extends StatelessWidget {
                 color: Color.fromRGBO(154, 206, 207, 1),
               ),
               title: Text(AppLocalizations.getString("courses_text"))),
-          BubbleBottomBarItem(
-              backgroundColor: Color.fromRGBO(154, 206, 207, 1),
-              icon: Icon(
-                Icons.video_collection,
-                color: Colors.grey.shade600,
-              ),
-              activeIcon: Icon(
-                Icons.video_collection,
-                color: Color.fromRGBO(154, 206, 207, 1),
-              ),
-              title: Text(AppLocalizations.getString("about_course_text")))
+          // BubbleBottomBarItem(
+          //     backgroundColor: Color.fromRGBO(154, 206, 207, 1),
+          //     icon: Icon(
+          //       Icons.video_collection,
+          //       color: Colors.grey.shade600,
+          //     ),
+          //     activeIcon: Icon(
+          //       Icons.video_collection,
+          //       color: Color.fromRGBO(154, 206, 207, 1),
+          //     ),
+          //     title: Text(AppLocalizations.getString("about_course_text")))
         ],
       ),
     );

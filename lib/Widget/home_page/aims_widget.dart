@@ -41,9 +41,9 @@ class AimsListWidget16 extends StatelessWidget {
                     ? Constants.aimsEN16[i]
                     : Constants.aimsDE16[i],
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold)),
+                  color: Colors.white,
+                  fontSize: 15.0,
+                )),
           ],
         ),
       );
@@ -115,9 +115,9 @@ class AimsListWidget28 extends StatelessWidget {
                     ? Constants.aimsEN28[i]
                     : Constants.aimsDE28[i],
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold)),
+                  color: Colors.white,
+                  fontSize: 15.0,
+                )),
           ],
         ),
       );

@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/pages/cart_page.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         widget.isCoursePage == false
             ? Builder(
                 builder: (context) => IconButton(
-                  icon: Icon(Icons.settings),
+                  icon: FaIcon(FontAwesomeIcons.bars),
                   onPressed: () => Scaffold.of(context).openEndDrawer(),
                   tooltip:
                       MaterialLocalizations.of(context).openAppDrawerTooltip,

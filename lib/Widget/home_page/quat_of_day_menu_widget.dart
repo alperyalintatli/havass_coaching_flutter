@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/quat_of_day_provider.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
@@ -78,10 +79,9 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                   child: PopupMenuButton(
                       elevation: 8,
                       offset: Offset.lerp(Offset(30, 0), Offset(0, 30), 2),
-                      captureInheritedThemes: true,
+                      //captureInheritedThemes: true,
                       color: Color.fromRGBO(154, 206, 207, 1),
-                      icon:
-                          Icon(Icons.info_outline_rounded, color: Colors.white),
+                      icon: FaIcon(FontAwesomeIcons.info, color: Colors.white),
                       itemBuilder: (context) => [
                             PopupMenuItem(
                                 child: Container(
@@ -112,12 +112,122 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                     width: MediaQuery.of(context).size.width - 10,
                     color: Color.fromRGBO(153, 201, 189, 1),
                     child: Center(
-                      child: quatImage(),
+                      child: Stack(
+                        children: [
+                          Align(
+                              alignment: Alignment.center, child: quatImage()),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        margin: EdgeInsets.all(20),
+                                        child: IconButton(
+                                          icon: !_isShare
+                                              ? Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.share_sharp,
+                                                      color: _quatOfDayProvider
+                                                              .isScratchQuat
+                                                          ? Colors.white
+                                                          : Colors
+                                                              .grey.shade500,
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        AppLocalizations.getString(
+                                                            "share_button_text"),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: _quatOfDayProvider
+                                                                    .isScratchQuat
+                                                                ? Colors.white
+                                                                : Colors.grey
+                                                                    .shade500),
+                                                      ),
+                                                      margin: EdgeInsets.only(
+                                                          left: 5),
+                                                    )
+                                                  ],
+                                                )
+                                              : CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.white)),
+                                          onPressed: _quatOfDayProvider
+                                                  .isScratchQuat
+                                              ? () async {
+                                                  try {
+                                                    setState(() {
+                                                      _isShare = true;
+                                                    });
+                                                    http.Response response =
+                                                        await http.get(
+                                                      _quatOfDayProvider
+                                                          .getQuatMap[_quatOfDayProvider
+                                                              .mapOfQuatOfDayNumbers[
+                                                          PrefUtils
+                                                              .PREFS_NUMBEROFQUAT]],
+                                                    );
+
+                                                    if (response != null) {
+                                                      await WcFlutterShare
+                                                          .share(
+                                                        sharePopupTitle:
+                                                            'Havass Me App',
+                                                        subject:
+                                                            'Havass Coaching & Academy',
+                                                        text:
+                                                            'Havass Coaching & Academy',
+                                                        fileName:
+                                                            'havassMeApp.jpg',
+                                                        mimeType: 'image/jpeg',
+                                                        bytesOfFile:
+                                                            response.bodyBytes,
+                                                      );
+
+                                                      setState(() {
+                                                        _isShare = false;
+                                                      });
+                                                    }
+                                                  } catch (e) {
+                                                    print(e);
+                                                  }
+                                                }
+                                              : null,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                _quatOfDayProvider.isScratchQuat
+                                                    ? Color.fromRGBO(
+                                                        24, 231, 239, 1)
+                                                    : Colors.grey.shade300,
+                                            shape: BoxShape.rectangle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  spreadRadius: 2,
+                                                  blurRadius: 2,
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5))
+                                            ]),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ])
+                        ],
+                      ),
                     ),
                   )
                 : Scratcher(
                     brushSize: 30,
-                    threshold: 70,
+                    threshold: 50,
                     color: Colors.white,
                     image: Image.asset(
                         'images/mandala_images/mandala_${_quatOfDayProvider.mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFMANDALA]}.jpg'),
@@ -139,85 +249,6 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                       ),
                     ),
                   ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 100,
-                  margin: EdgeInsets.all(20),
-                  child: IconButton(
-                    icon: !_isShare
-                        ? Row(
-                            children: [
-                              Icon(
-                                Icons.share_sharp,
-                                color: _quatOfDayProvider.isScratchQuat
-                                    ? Colors.white
-                                    : Colors.grey.shade500,
-                              ),
-                              Container(
-                                child: Text(
-                                  AppLocalizations.getString(
-                                      "share_button_text"),
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: _quatOfDayProvider.isScratchQuat
-                                          ? Colors.white
-                                          : Colors.grey.shade500),
-                                ),
-                                margin: EdgeInsets.only(left: 5),
-                              )
-                            ],
-                          )
-                        : CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white)),
-                    onPressed: _quatOfDayProvider.isScratchQuat
-                        ? () async {
-                            try {
-                              setState(() {
-                                _isShare = true;
-                              });
-                              http.Response response = await http.get(
-                                _quatOfDayProvider.getQuatMap[
-                                    _quatOfDayProvider.mapOfQuatOfDayNumbers[
-                                        PrefUtils.PREFS_NUMBEROFQUAT]],
-                              );
-
-                              if (response != null) {
-                                await WcFlutterShare.share(
-                                  sharePopupTitle: 'Havass Me App',
-                                  subject: 'Havass Coaching & Academy',
-                                  text: 'Havass Coaching & Academy',
-                                  fileName: 'havassMeApp.jpg',
-                                  mimeType: 'image/jpeg',
-                                  bytesOfFile: response.bodyBytes,
-                                );
-
-                                setState(() {
-                                  _isShare = false;
-                                });
-                              }
-                            } catch (e) {
-                              print(e);
-                            }
-                          }
-                        : null,
-                  ),
-                  decoration: BoxDecoration(
-                      color: _quatOfDayProvider.isScratchQuat
-                          ? Color.fromRGBO(24, 231, 239, 1)
-                          : Colors.grey.shade300,
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                            color: Colors.grey.withOpacity(0.5))
-                      ]),
-                )
-              ],
-            )
           ],
         ),
       ),

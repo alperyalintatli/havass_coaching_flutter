@@ -96,7 +96,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             SizedBox(
               height: 30,
             ),
-            Image.asset("images/course_of_16_photo.jpg"),
+            Image.asset("images/havass_main_1.jpeg"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -106,10 +106,17 @@ class _HomeWidgetState extends State<HomeWidget> {
               ],
             ),
             AimsListWidget28(),
+            SizedBox(
+              height: 30,
+            ),
             AboutMeWidget(
               AppLocalizations.getString("audio_info"),
               isDisplay: false,
             ),
+            SizedBox(
+              height: 30,
+            ),
+            Image.asset("images/havass_main_2.jpeg"),
             AboutMeWidget(
                 AppLocalizations.getString("main_menu_about_app_description")),
           ],
