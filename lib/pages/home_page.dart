@@ -95,7 +95,7 @@ class MainPageDesign extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
-                              color: Color.fromRGBO(116, 198, 226, 1)),
+                              color: Color.fromRGBO(122, 205, 223, 1)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
