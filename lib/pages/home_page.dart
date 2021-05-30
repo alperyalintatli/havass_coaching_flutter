@@ -100,7 +100,7 @@ class MainPageDesign extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                color: Color.fromRGBO(116, 198, 226, 1),
+                                color: Color.fromRGBO(122, 205, 223, 1),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

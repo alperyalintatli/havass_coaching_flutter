@@ -20,7 +20,7 @@ class DateAndNoteProvider with ChangeNotifier {
   set startDate(value) => this._startDate = value;
 
   DateTime _finishDate;
-  get finishDate => this._finishDate;
+  DateTime get finishDate => this._finishDate;
 
   set finishDate(value) => this._finishDate = value;
   void setCourseDate(DateTime courseStartDate, DateTime courseFinishDate) {

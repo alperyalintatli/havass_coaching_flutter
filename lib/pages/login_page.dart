@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/pages/splash_page.dart';
+import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:havass_coaching_flutter/pages/forgot_password_page.dart';
@@ -45,52 +49,52 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-              onSaved: (value) {
-                if (isPassword) {
-                  _hvsUser.password = value.trim();
-                } else if (isEmail) {
-                  _hvsUser.email = value.trim();
-                }
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*' +
-                      AppLocalizations.getString(
-                          "register_page_validation_empty_field");
-                }
-                if (isEmail) {
-                  bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value);
+          Theme(
+            data: ThemeData(
+                primaryColor: Color.fromARGB(255, 0, 129, 150),
+                hintColor: Colors.grey),
+            child: TextFormField(
+                cursorColor: Color.fromARGB(255, 0, 129, 150),
+                onSaved: (value) {
+                  if (isPassword) {
+                    _hvsUser.password = value.trim();
+                  } else if (isEmail) {
+                    _hvsUser.email = value.trim();
+                  }
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return '*' +
+                        AppLocalizations.getString(
+                            "register_page_validation_empty_field");
+                  }
+                  if (isEmail) {
+                    bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value);
 
-                  if (!emailValid) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_email_field");
+                    if (!emailValid) {
+                      return '*' +
+                          AppLocalizations.getString(
+                              "register_page_validation_email_field");
+                    }
                   }
-                }
-                if (isPassword) {
-                  if (value.length < 6) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_password_field");
+                  if (isPassword) {
+                    if (value.length < 6) {
+                      return '*' +
+                          AppLocalizations.getString(
+                              "register_page_validation_password_field");
+                    }
                   }
-                }
-                return null;
-              },
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true)),
+                  return null;
+                },
+                obscureText: isPassword,
+                decoration: InputDecoration(
+                    labelText: title,
+                    border: OutlineInputBorder(),
+                    fillColor: Colors.white,
+                    filled: true)),
+          ),
         ],
       ),
     );
@@ -98,7 +102,14 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isOnTapSubmitButton = false;
   Widget _submitButton() {
-    return TextButton(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: 50.0,
+      child: RaisedButton(
+        disabledColor: Color.fromARGB(255, 0, 129, 150),
+        color: Color.fromARGB(255, 0, 129, 150),
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0)),
         onPressed: !_isOnTapSubmitButton
             ? () {
                 if (_formKey.currentState.validate()) {
@@ -110,34 +121,14 @@ class _LoginPageState extends State<LoginPage> {
                 }
               }
             : null,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Color.fromARGB(0, 121, 250, 0),
-                    Color.fromRGBO(164, 233, 232, 1),
-                  ])),
-          child: !_isOnTapSubmitButton
-              ? Text(
-                  AppLocalizations.getString("login"),
-                  style: TextStyle(
-                      fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
-                )
-              : CircularProgressIndicator(),
-        ));
+        child: !_isOnTapSubmitButton
+            ? Text(
+                AppLocalizations.getString("login"),
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              )
+            : CircularProgressIndicator(),
+      ),
+    );
   }
 
   Widget _divider() {
@@ -174,28 +165,43 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _gmailButton() {
-    return TextButton(
-      child: Row(
-        children: [
-          IconButton(
-              color: Colors.red,
-              icon: Image.asset(
-                'images/logo-gmail.png',
-                height: 150,
-                width: 150,
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: 50.0,
+      child: RaisedButton(
+        color: Colors.white,
+        disabledColor: Colors.white,
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0),
+            side: BorderSide(color: Colors.black)),
+        onPressed: !_isOnTapSubmitButton
+            ? () {
+                _loginGmail();
+                _isOnTapSubmitButton = true;
+              }
+            : null,
+        child: !_isOnTapSubmitButton
+            ? Stack(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: FaIcon(FontAwesomeIcons.google)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      AppLocalizations.getString("sign_in_google"),
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade900,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              )
+            : CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
               ),
-              onPressed: !_isOnTapSubmitButton
-                  ? () {
-                      setState(() {
-                        _loginGmail();
-                        _isOnTapSubmitButton = true;
-                      });
-                    }
-                  : null),
-        ],
-        mainAxisAlignment: MainAxisAlignment.center,
       ),
-      onPressed: null,
     );
   }
 
@@ -222,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
             Text(
               AppLocalizations.getString("register_now"),
               style: TextStyle(
-                  color: Color.fromRGBO(164, 233, 232, 1),
+                  color: Color.fromARGB(255, 0, 129, 150),
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -236,24 +242,77 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'Ha',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color.fromRGBO(164, 233, 232, 1),
-          ),
-          children: [
-            TextSpan(
-              text: 'va',
-              style:
-                  TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
-            ),
-            TextSpan(
-              text: 'ss',
-              style: TextStyle(
-                  color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
-            ),
-          ]),
+        text: '"${AppLocalizations.getString("nazim_hikmet_word_text")}"',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: Colors.grey.shade800,
+        ),
+        // children: [
+        //   TextSpan(
+        //     text: 'va',
+        //     style:
+        //         TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
+        //   ),
+        //   TextSpan(
+        //     text: 'ss',
+        //     style: TextStyle(
+        //         color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
+        //   ),
+        // ]
+      ),
+    );
+  }
+
+  Widget _title2() {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        text: '- Aristotle',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w300,
+          color: Colors.grey.shade800,
+        ),
+        // children: [
+        //   TextSpan(
+        //     text: 'va',
+        //     style:
+        //         TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
+        //   ),
+        //   TextSpan(
+        //     text: 'ss',
+        //     style: TextStyle(
+        //         color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
+        //   ),
+        // ]
+      ),
+    );
+  }
+
+  Widget _title3() {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        text: AppLocalizations.getString("nothing_is_shared_text"),
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w300,
+          color: Colors.grey.shade500,
+        ),
+        // children: [
+        //   TextSpan(
+        //     text: 'va',
+        //     style:
+        //         TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
+        //   ),
+        //   TextSpan(
+        //     text: 'ss',
+        //     style: TextStyle(
+        //         color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
+        //   ),
+        // ]
+      ),
     );
   }
 
@@ -279,10 +338,10 @@ class _LoginPageState extends State<LoginPage> {
       height: height,
       child: Stack(
         children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
+          // Positioned(
+          //     top: -height * .15,
+          //     right: -MediaQuery.of(context).size.width * .4,
+          //     child: BezierContainer()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -290,30 +349,62 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: height * .20),
+                  SizedBox(height: height * .12),
                   _title(),
+                  _title2(),
                   SizedBox(height: 30),
+                  _gmailButton(),
+                  SizedBox(height: 10),
+                  _title3(),
+                  SizedBox(height: 30),
+                  _divider(),
+                  SizedBox(height: 10),
                   _emailPasswordWidget(),
                   SizedBox(height: 10),
                   _submitButton(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                          icon: Image.asset('images/english-flag-icon.png'),
+                          onPressed: () async {
+                            FirebaseMessaging _f = FirebaseMessaging();
+                            await _f.subscribeToTopic("en");
+                            await _f.unsubscribeFromTopic("de");
+                            setState(() {
+                              BlocProvider.of<BlocLocalization>(context)
+                                  .add(LocaleEvent.EN);
+                            });
+                          }),
+                      IconButton(
+                          icon: Image.asset('images/german-flag-icon.png'),
+                          onPressed: () async {
+                            FirebaseMessaging _f = FirebaseMessaging();
+                            await _f.subscribeToTopic("de");
+                            await _f.unsubscribeFromTopic("en");
+                            setState(() {
+                              BlocProvider.of<BlocLocalization>(context)
+                                  .add(LocaleEvent.DE);
+                            });
+                          }),
+                    ],
+                  ),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     child: TextButton(
                       child: Text(
                           AppLocalizations.getString("forgot_password") + ' ?',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(164, 233, 232, 1),
+                            color: Color.fromARGB(255, 0, 129, 150),
                           )),
                       onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => ForgotPasswordPage())),
                     ),
                   ),
-                  _divider(),
-                  _gmailButton(),
                   _createAccountLabel(),
                 ],
               ),

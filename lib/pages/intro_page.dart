@@ -1,88 +1,176 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:havass_coaching_flutter/pages/intro_page.dart';
 import 'package:havass_coaching_flutter/pages/register_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'login_page.dart';
 
-class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key, this.title}) : super(key: key);
+class IntroPage extends StatefulWidget {
+  IntroPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _WelcomePageState createState() => _WelcomePageState();
+  _IntroPageState createState() => _IntroPageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _IntroPageState extends State<IntroPage> {
+  final introKey = GlobalKey<IntroductionScreenState>();
+
+  void _onIntroEnd(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => SignUpPage()),
+    );
+  }
+
+  Widget _buildFullscrenImage() {
+    return Image.asset(
+      'images/back_0.png',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+    );
+  }
+
+  Widget _buildImage(String assetName, [double width = 350]) {
+    return Image.asset('assets/$assetName', width: width);
+  }
+
+  Widget checkBoxButton({@required String text, @required String imageName}) {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      child: RaisedButton(
+        textColor: Color.fromARGB(255, 131, 232, 228),
+        onPressed: () {
+          introKey.currentState.controller.page ==
+                  introKey.currentState.widget.pages.length - 1
+              ? introKey.currentState.widget.onDone()
+              : introKey.currentState.next();
+        },
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(5.0),
+            side: BorderSide(color: Colors.black)),
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Container(
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Tab(
+                    icon: Image.asset("images/$imageName.png"),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 50),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: 50,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    const bodyStyle = TextStyle(fontSize: 19.0);
+
+    const pageDecoration = const PageDecoration(
+      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+      bodyTextStyle: bodyStyle,
+      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: Colors.white,
+      imagePadding: EdgeInsets.zero,
+    );
+
     return SafeArea(
-        child: Scaffold(
-      body: Container(
-        color: Color.fromARGB(255, 131, 232, 228),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset("images/start_page.png"),
-              Text(
-                "Your Digital Coaching",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ButtonTheme(
-                        child: RaisedButton(
-                          textColor: Color.fromARGB(255, 131, 232, 228),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => IntroPage()));
-                          },
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5.0)),
-                          color: Colors.white,
-                          child: Text(
-                            "Get Started",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
-                          ),
-                        ),
-                        minWidth: MediaQuery.of(context).size.width * 0.6,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        },
-                        child: Text(
-                          "I already have an account",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
-                      )
-                    ]),
-              )
-            ]),
+      child: IntroductionScreen(
+        key: introKey,
+        globalBackgroundColor: Colors.white,
+        pages: [
+          PageViewModel(
+              title: "What main goal do you want to achieve wtih Havass MeApp",
+              body:
+                  "Optionally, you can select your preferences for a personalised experience",
+              // image: _buildImage('img1.jpg'),
+              decoration: pageDecoration,
+              footer: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  checkBoxButton(
+                      text: "Feel Happier", imageName: "feel_happier_image"),
+                  checkBoxButton(
+                      text: "Release Stress & gain inner calm",
+                      imageName: "release_stress_image"),
+                  checkBoxButton(text: "Focus", imageName: "focus_image"),
+                  checkBoxButton(
+                      text: "Lose weight & gain body confidence",
+                      imageName: "loose_weight_image"),
+                  checkBoxButton(
+                      text: "Find motivation",
+                      imageName: "find_motivation_image"),
+                  checkBoxButton(
+                      text: "Let go of depression or anxiety",
+                      imageName: "depression_anxiety_image"),
+                ],
+              )),
+          PageViewModel(
+            title: "",
+            bodyWidget: Text(
+              "I am ...",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+            // image: _buildImage('img2.jpg'),
+            footer: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 100.0,
+                ),
+                checkBoxButton(text: "Female", imageName: "female_image"),
+                checkBoxButton(text: "Male", imageName: "male_image"),
+                checkBoxButton(text: "Other", imageName: "other_image"),
+              ],
+            ),
+            decoration: pageDecoration,
+          ),
+        ],
+        onDone: () => _onIntroEnd(context),
+        //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+        showSkipButton: false,
+        isProgress: true,
+        skipFlex: 0,
+        nextFlex: 0,
+        //rtl: true, // Display as right-to-left
+        skip: const Text('Skip'),
+        next: const Icon(Icons.arrow_forward),
+
+        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+        curve: Curves.fastLinearToSlowEaseIn,
+        dotsDecorator: const DotsDecorator(
+          size: Size(10.0, 10.0),
+          color: Color(0xFFBDBDBD),
+          activeColor: Color.fromARGB(255, 131, 232, 228),
+          activeSize: Size(22.0, 10.0),
+          activeShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+        ),
       ),
-    ));
+    );
   }
 
   // Widget _submitButton() {

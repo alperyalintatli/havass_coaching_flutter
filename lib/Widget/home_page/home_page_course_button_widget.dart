@@ -33,7 +33,10 @@ class CourseButtonWidget extends StatelessWidget {
                     builder: (context) => CourseInfoScreen28())));
           }
         },
-        child: Text(_buttonName),
+        child: Text(
+          _buttonName,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }

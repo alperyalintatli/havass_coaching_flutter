@@ -156,7 +156,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                   child: Row(
                                     children: <Widget>[
                                       Container(
-                                        width: 70,
+                                        width: 75,
                                         child: PopupMenuButton(
                                             onCanceled: () {
                                               NotificationWidget.showNotification(

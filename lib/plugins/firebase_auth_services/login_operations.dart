@@ -203,12 +203,24 @@ class LoginOperations implements ILoginOperations {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      HvsUser _hvsUser = HvsUser();
+      _hvsUser.email = googleUser.email;
       DatabaseOperation _databaseOperation = DatabaseOperation.getInstance();
-      var user = await _databaseOperation.getUser();
+      var user = await _databaseOperation.getUser(hvsUser: _hvsUser);
       if (user != null) {
         HvsUser hvsUser = HvsUser();
         hvsUser.role = "Student";
+        hvsUser.course = user.course;
+
+        hvsUser.email = googleUser.email;
+        hvsUser.name = googleUser.email.split('@')[0];
+        _databaseOperation.saveUserCreate(hvsUser);
+      } else {
+        HvsUser hvsUser = HvsUser();
+        hvsUser.role = "Student";
+
         hvsUser.course = [];
+
         hvsUser.email = googleUser.email;
         hvsUser.name = googleUser.email.split('@')[0];
         _databaseOperation.saveUserCreate(hvsUser);

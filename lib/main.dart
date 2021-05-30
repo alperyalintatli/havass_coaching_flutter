@@ -17,6 +17,7 @@ import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.da
 import 'package:ntp/ntp.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/splash_page.dart';
 import 'plugins/bloc/bloc_localization.dart';
 import 'plugins/provider_services/quat_of_day_provider.dart';
@@ -34,8 +35,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     secureScreen();
+    setFirebaseMessagingSubscirbe();
     flutterDownloaderInitialize();
     super.initState();
+  }
+
+  void setFirebaseMessagingSubscirbe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("isSubscribed") == null) {
+      prefs.setString("isSubscribed", 'en');
+      FirebaseMessaging _f = FirebaseMessaging();
+      await _f.subscribeToTopic("en");
+      await _f.unsubscribeFromTopic("de");
+    }
   }
 
   DateTime _ntpTime;
@@ -72,6 +84,7 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider(create: (context) => CartProvider()),
             ],
             child: MaterialApp(
+              theme: ThemeData(fontFamily: 'Montserrat'),
               routes: {
                 // When navigating to the "/second" route, build the SecondScreen widget.
                 '/loginPage': (context) => LoginPage(),

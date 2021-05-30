@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:havass_coaching_flutter/model/constans/constants.dart';
+import 'package:havass_coaching_flutter/pages/faq_page.dart';
 import 'package:havass_coaching_flutter/pages/past_courses_list_page.dart';
+import 'package:havass_coaching_flutter/pages/privacy_policy_page.dart';
 import 'package:havass_coaching_flutter/pages/welcome_page.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
@@ -141,6 +144,7 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                     children: <Widget>[
                       Theme(
                         data: ThemeData(
+                            fontFamily: 'Montserrat',
                             accentColor: Colors.white,
                             cursorColor: Colors.white),
                         child: ExpansionTile(
@@ -186,7 +190,9 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                         ),
                       ),
                       Theme(
-                        data: ThemeData(accentColor: Colors.white),
+                        data: ThemeData(
+                            accentColor: Colors.white,
+                            fontFamily: 'Montserrat'),
                         child: ExpansionTile(
                           title: Text(
                             AppLocalizations.getString("change_password_title"),
@@ -236,7 +242,9 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                         ),
                       ),
                       Theme(
-                        data: ThemeData(accentColor: Colors.white),
+                        data: ThemeData(
+                            accentColor: Colors.white,
+                            fontFamily: 'Montserrat'),
                         child: ExpansionTile(
                           title: Text(
                             AppLocalizations.getString("language_title"),
@@ -248,21 +256,28 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
-                                    icon: Image.asset(
-                                        'images/english-flag-icon.png'),
-                                    onPressed: () {
-                                      setState(() {
-                                        BlocProvider.of<BlocLocalization>(
-                                                context)
-                                            .add(LocaleEvent.EN);
-                                        Future.delayed(Duration(seconds: 1),
-                                            () => _aimsProvider.getLang());
-                                      });
-                                    }),
+                                  icon: Image.asset(
+                                      'images/english-flag-icon.png'),
+                                  onPressed: () async {
+                                    FirebaseMessaging _f = FirebaseMessaging();
+                                    await _f.subscribeToTopic("en");
+                                    await _f.unsubscribeFromTopic("de");
+                                    setState(() {
+                                      BlocProvider.of<BlocLocalization>(context)
+                                          .add(LocaleEvent.EN);
+                                      Future.delayed(Duration(seconds: 1),
+                                          () => _aimsProvider.getLang());
+                                    });
+                                  },
+                                ),
                                 IconButton(
                                     icon: Image.asset(
                                         'images/german-flag-icon.png'),
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      FirebaseMessaging _f =
+                                          FirebaseMessaging();
+                                      await _f.subscribeToTopic("de");
+                                      await _f.unsubscribeFromTopic("en");
                                       setState(() {
                                         BlocProvider.of<BlocLocalization>(
                                                 context)
@@ -278,7 +293,9 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                       ),
                       _userProvider.getIsAdmin
                           ? Theme(
-                              data: ThemeData(accentColor: Colors.white),
+                              data: ThemeData(
+                                  accentColor: Colors.white,
+                                  fontFamily: 'Montserrat'),
                               child: ExpansionTile(
                                 title: Text(
                                   AppLocalizations.getString(
@@ -371,7 +388,10 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                       Align(
                         alignment: Alignment.center,
                         child: TextButton(
-                            onPressed: null,
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PrivacyPolicyPage()));
+                            },
                             child: Text(
                               AppLocalizations.getString(
                                   "privacy_policy_title"),
@@ -384,7 +404,10 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
                       Align(
                         alignment: Alignment.center,
                         child: TextButton(
-                            onPressed: null,
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => FaqPage()));
+                            },
                             child: Text(
                               AppLocalizations.getString("faq_title"),
                               style: TextStyle(

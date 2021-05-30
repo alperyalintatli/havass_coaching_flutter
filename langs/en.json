@@ -1,9 +1,9 @@
 {
-    "login": "Login",
-    "register_now": "Register now",
+    "login": "Sign in with Email",
+    "register_now": "Sign up",
     "back": "Back",
-    "or": "or connect using",
-    "forgot_password": "Forgot Password",
+    "or": "OR",
+    "forgot_password": "I forgot my password",
     "email": "Email",
     "password": "Password",
     "dont_have_an _account": "Don't have an account",
@@ -85,5 +85,10 @@
     "course_16_description": "Does one or more of these sound familiar?\nSense of being lost, Confusion, Unwillingness, Anxiety\nEverything you need is in this program!\nWe have a wonderful journey full of adventure!\tModule 1: Roadmap\nModule 2: Obstacles are no longer obstacles\nModule 3: Our motivation is very high\nAn enjoyable and determined journey!\nWrite-draw-tear&throw!\nThe power of affirmation. New friends walking the same road. Detailed and understandable narration.\nAt the end of this program:\nKnowing the right path to the goal. Waking up every day full of inspiration and excitement. Overcoming fears and limiting beliefs.",
     "course_28_description": "Daily Challenge\nWorking Agenda\nAudio File\nCompanions\nYou will rediscover who you really are, remember that magnificent potential you have, and take control of your life and your own power with this program.\nThis program is for you:\nIf you want to take control of your life\nIf you are willing to transform\nIf you are ready to take responsibility\nIf you are aware of the necessity of working for big changes\nIf you can create time to work on yourself every day\nAt the end of this program:\nUnhesitating self-confidence, Social Success, Your ideal version, Exit from your comfort zone, Self-love & admission, Affectionately guarded borders",
     "privacy_policy_title": "Privacy Policy",
-    "faq_title": "FAQ"
+    "faq_title": "FAQ",
+    "sign_up_google": "Sign up with Google",
+    "sign_in_google": "Sign in with Google",
+    "save_preferences_text": "Save your preferences and get your coaching plan",
+    "nothing_is_shared_text": "Nothing is shared without your permission",
+    "nazim_hikmet_word_text": "You are what you repeatedly do."
 }

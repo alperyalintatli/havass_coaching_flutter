@@ -10,11 +10,13 @@ class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
   _AppBarWidgetState createState() => _AppBarWidgetState();
   final bool isPopup;
   final bool isCoursePage;
+  //final bool isCartIcon;
   @override
   final Size preferredSize;
   AppBarWidget({
     this.isPopup = true,
     this.isCoursePage = false,
+    //this.isCartIcon = true,
     Key key,
   })  : preferredSize = Size.fromHeight(50.0),
         super(key: key);
@@ -61,6 +63,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               ),
             ],
           ),
+          // widget.isCartIcon
+          //     ?
           _cartProvider.items.length > 0
               ? Badge(
                   position: BadgePosition.topEnd(top: 0, end: 0),
@@ -87,7 +91,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     color: Colors.white,
                   ),
                   iconSize: 32,
-                ),
+                )
+          // : Container(),
         ],
       ),
     );

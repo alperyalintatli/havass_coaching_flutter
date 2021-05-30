@@ -1,9 +1,9 @@
 {
-    "login": "Anmeldung",
-    "register_now": "Jetzt Registrieren",
+    "login": "Sign in with Email",
+    "register_now": "Sign up",
     "back": "Zurück",
-    "or": "oder",
-    "forgot_password": "Passwort Vergessen",
+    "or": "ODER",
+    "forgot_password": "I forgot my password",
     "email": "Email",
     "password": "Passwort",
     "dont_have_an _account": "Ich habe kein Konto",
@@ -85,5 +85,10 @@
     "course_16_description": "Kommt dir eines oder mehreres davon bekannt vor?\nVerlorenheit, Verwirrtheit, Unwilligkeit, Besorgnis\nAlles was du benötigst ist in diesem Programm!\nWir haben eine wundervolle Reise voller Abenteuer vor uns!\n1.Modul: Road Map\n2.Modul: Hindernisse sind keine Hindernisse mehr\n3.Modul: Unsere Motivation ist sehr hoch.\nEine angenehme und entschlossene Reise!\nSchreibe-zeichne-zerreiße und werfe weg. Die Kraft der Affirmation. Neue Freunde, die den gleichen Weg gehen. Detaillierte und verständliche Erzählung.\nAm Ende dieses Programms:\nDen richtigen Weg zum Ziel kennen. Jeden Tag voller Inspiration und Aufregung aufwachen. Ängste und einschränkende Überzeugungen überwinden.",
     "course_28_description": "Tägliche Herausforderung\nArbeitsagenda\nAudiodatei\nBegleiter\nMit diesem Programm entdeckst du wieder, wer du wirklich bist, erinnerst dich an dein hervorragendes Potenzial und übernimmst die Kontrolle über dein Leben und deine eigene Kraft.\nDieses Programm ist für dich:\nWenn du die Kontrolle über dein Leben übernehmen möchtest\nWenn du bereit bist, dich zu verwandeln\nWenn du bereit bist, Verantwortung zu übernehmen\nWenn du dir der Notwendigkeit bewusst bist, für große Veränderungen zu arbeiten\nWenn du Zeit schaffen kannst, jeden Tag an dir selbst zu arbeiten\nAm Ende dieses Programms:\nUnerschütterliches Selbstbewusstsein, Erfolg im Sozialleben, Deine ideale Version, Raus aus der Komfortzone, Selbstliebe & Selbstakzeptanz, Liebevoll bewachte Grenzen",
     "privacy_policy_title": "Privacy Policy",
-    "faq_title": "FAQ"
+    "faq_title": "FAQ",
+    "sign_up_google": "Sign up with Google",
+    "sign_in_google": "Sign in with Google",
+    "save_preferences_text": "Save your preferences and get your coaching plan",
+    "nothing_is_shared_text": "Nothing is shared without your permission",
+    "nazim_hikmet_word_text": "You are what you repeatedly do."
 }

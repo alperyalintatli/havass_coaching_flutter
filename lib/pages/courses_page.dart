@@ -306,7 +306,10 @@ class _CoursesPageState extends State<CoursesPage> {
               child: CalendarTimeline(
                 initialDate: _dateProvider.dateTime,
                 firstDate: _dateProvider.startDate,
-                lastDate: _dateProvider.finishDate,
+                lastDate: (_dateProvider.dateTime.millisecondsSinceEpoch >
+                        _dateProvider.finishDate.millisecondsSinceEpoch)
+                    ? _dateProvider.dateTime
+                    : _dateProvider.finishDate,
                 onDateSelected: (date) {
                   _dateProvider.setDate(
                       date, _hvsUserProvider.selectedUserCourse.courseIdName);
