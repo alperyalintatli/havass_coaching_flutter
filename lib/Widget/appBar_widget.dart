@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/pages/cart_page.dart';
+import 'package:havass_coaching_flutter/pages/home_page.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -10,13 +11,15 @@ class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
   _AppBarWidgetState createState() => _AppBarWidgetState();
   final bool isPopup;
   final bool isCoursePage;
-  //final bool isCartIcon;
+  final bool isCartIcon;
+  final bool isSettingPage;
   @override
   final Size preferredSize;
   AppBarWidget({
     this.isPopup = true,
     this.isCoursePage = false,
-    //this.isCartIcon = true,
+    this.isCartIcon = true,
+    this.isSettingPage = false,
     Key key,
   })  : preferredSize = Size.fromHeight(50.0),
         super(key: key);
@@ -31,7 +34,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       leading: widget.isPopup
           ? IconButton(
               icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                if (widget.isSettingPage) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/homePage', (route) => false);
+                } else {
+                  Navigator.of(context).pop();
+                }
+              },
             )
           : null,
       toolbarHeight: 70,
@@ -63,36 +73,36 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               ),
             ],
           ),
-          // widget.isCartIcon
-          //     ?
-          _cartProvider.items.length > 0
-              ? Badge(
-                  position: BadgePosition.topEnd(top: 0, end: 0),
-                  animationType: BadgeAnimationType.slide,
-                  badgeContent: Text(
-                    cartItemCount(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => CartPage())),
-                    icon: Icon(
-                      Icons.shopping_cart_sharp,
-                      color: Colors.white,
-                    ),
-                    iconSize: 32,
-                  ),
-                )
-              : IconButton(
-                  onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => CartPage())),
-                  icon: Icon(
-                    Icons.shopping_cart_sharp,
-                    color: Colors.white,
-                  ),
-                  iconSize: 32,
-                )
-          // : Container(),
+          widget.isCartIcon
+              ? _cartProvider.items.length > 0
+                  ? Badge(
+                      position: BadgePosition.topEnd(top: 0, end: 0),
+                      animationType: BadgeAnimationType.slide,
+                      badgeContent: Text(
+                        cartItemCount(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => CartPage())),
+                        icon: Icon(
+                          Icons.shopping_cart_sharp,
+                          color: Colors.white,
+                        ),
+                        iconSize: 32,
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => CartPage())),
+                      icon: Icon(
+                        Icons.shopping_cart_sharp,
+                        color: Colors.white,
+                      ),
+                      iconSize: 32,
+                    )
+              : Container(),
         ],
       ),
     );

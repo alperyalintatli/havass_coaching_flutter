@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/pages/cart_page.dart';
 import 'package:havass_coaching_flutter/pages/courses_page.dart';
@@ -10,10 +11,13 @@ import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:ntp/ntp.dart';
 
 class CourseInfoScreen16 extends StatefulWidget {
+  final bool likeIcon;
+  CourseInfoScreen16({this.likeIcon});
   @override
   _CourseInfoScreen16State createState() => _CourseInfoScreen16State();
 }
@@ -26,6 +30,8 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
   double opacity1 = 0.0;
   double opacity2 = 0.0;
   double opacity3 = 0.0;
+  bool likeIcon;
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -34,6 +40,8 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
         parent: animationController,
         curve: Interval(0, 1.0, curve: Curves.fastOutSlowIn)));
     setData();
+
+    likeIcon = widget.likeIcon;
     super.initState();
   }
 
@@ -53,6 +61,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
     });
   }
 
+  final Color _checkIconColor = Color.fromARGB(255, 0, 243, 245);
   CartProvider _cartProvider;
   HvsUserProvider _hvsUserProvider;
   DateAndNoteProvider _dateAndNoteProvider;
@@ -79,10 +88,13 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
             Column(
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: 1.5,
-                  child: Image.asset('images/' +
-                      _hvsUserProvider.course16.courseIdName +
-                      '_photo.jpg'),
+                  aspectRatio: 1.4,
+                  child: Image.asset(
+                    'images/' +
+                        _hvsUserProvider.course16.courseIdName +
+                        '_image.png',
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ],
             ),
@@ -139,90 +151,125 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Text(
-                                  '€ ' + _hvsUserProvider.course16.coursePrice,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 22,
-                                    letterSpacing: 0.27,
-                                    color: Color.fromRGBO(154, 206, 207, 1),
-                                  ),
-                                ),
+                                // Text(
+                                //   '€ ' + _hvsUserProvider.course16.coursePrice,
+                                //   textAlign: TextAlign.left,
+                                //   style: TextStyle(
+                                //     fontWeight: FontWeight.w600,
+                                //     fontSize: 22,
+                                //     letterSpacing: 0.27,
+                                //     color: Color.fromRGBO(154, 206, 207, 1),
+                                //   ),
+                                // ),
                                 getTimeBoxUI(
                                     _hvsUserProvider.course16.courseDay,
                                     AppLocalizations.getString("days")),
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: 75,
-                                        child: PopupMenuButton(
-                                            onCanceled: () {
-                                              NotificationWidget.showNotification(
-                                                  context,
-                                                  AppLocalizations.getString(
-                                                      "star_rating_notification"));
-                                            },
-                                            elevation: 8,
-                                            offset: Offset.lerp(Offset(30, 0),
-                                                Offset(0, 4), 8.5),
-                                            captureInheritedThemes: true,
-                                            color: Color.fromRGBO(
-                                                154, 206, 207, 1),
-                                            icon: Row(
-                                              children: [
-                                                Text(
-                                                  '4.8',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontSize: 22,
-                                                    letterSpacing: 0.27,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.star,
-                                                  color: Color.fromRGBO(
-                                                      154, 206, 207, 1),
-                                                  size: 24,
-                                                ),
-                                              ],
-                                            ),
-                                            itemBuilder: (context) => [
-                                                  PopupMenuItem(
-                                                      child: Container(
-                                                          child:
-                                                              SmoothStarRating(
-                                                                  allowHalfRating:
-                                                                      true,
-                                                                  onRated: (v) {
-                                                                    setState(
-                                                                        () {
-                                                                      _starValue =
-                                                                          v;
-                                                                    });
-                                                                  },
-                                                                  starCount: 5,
-                                                                  rating:
-                                                                      _starValue,
-                                                                  size: 40.0,
-                                                                  isReadOnly:
-                                                                      false,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  spacing:
-                                                                      0.0)),
-                                                      value: "/newchat"),
-                                                ]),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                IconButton(
+                                    icon: likeIcon
+                                        ? FaIcon(
+                                            FontAwesomeIcons.solidHeart,
+                                            color: Color.fromARGB(
+                                                255, 255, 132, 0),
+                                          )
+                                        : FaIcon(
+                                            FontAwesomeIcons.heart,
+                                            color: Color.fromARGB(
+                                                255, 255, 132, 0),
+                                          ),
+                                    onPressed: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      setState(() {
+                                        if (!prefs
+                                            .containsKey("Course_of_16_like")) {
+                                          prefs.setBool(
+                                              "Course_of_16_like", true);
+                                          likeIcon = true;
+                                        } else if (prefs
+                                                .getBool("Course_of_16_like") ==
+                                            false) {
+                                          prefs.setBool(
+                                              "Course_of_16_like", true);
+                                          likeIcon = true;
+                                        } else {
+                                          prefs.setBool(
+                                              "Course_of_16_like", false);
+                                          likeIcon = false;
+                                        }
+                                      });
+                                    }),
+
+                                // Container(
+                                //   child: Row(
+                                //     children: <Widget>[
+                                //       Container(
+                                //         width: 75,
+                                //         child: PopupMenuButton(
+                                //             onCanceled: () {
+                                //               NotificationWidget.showNotification(
+                                //                   context,
+                                //                   AppLocalizations.getString(
+                                //                       "star_rating_notification"));
+                                //             },
+                                //             elevation: 8,
+                                //             offset: Offset.lerp(Offset(30, 0),
+                                //                 Offset(0, 4), 8.5),
+                                //             captureInheritedThemes: true,
+                                //             color: Color.fromRGBO(
+                                //                 154, 206, 207, 1),
+                                //             icon: Row(
+                                //               children: [
+                                //                 Text(
+                                //                   '4.8',
+                                //                   textAlign: TextAlign.left,
+                                //                   style: TextStyle(
+                                //                     fontWeight: FontWeight.w200,
+                                //                     fontSize: 22,
+                                //                     letterSpacing: 0.27,
+                                //                     color: Colors.grey,
+                                //                   ),
+                                //                 ),
+                                //                 Icon(
+                                //                   Icons.star,
+                                //                   color: Color.fromRGBO(
+                                //                       154, 206, 207, 1),
+                                //                   size: 24,
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //             itemBuilder: (context) => [
+                                //                   PopupMenuItem(
+                                //                       child: Container(
+                                //                           child:
+                                //                               SmoothStarRating(
+                                //                                   allowHalfRating:
+                                //                                       true,
+                                //                                   onRated: (v) {
+                                //                                     setState(
+                                //                                         () {
+                                //                                       _starValue =
+                                //                                           v;
+                                //                                     });
+                                //                                   },
+                                //                                   starCount: 5,
+                                //                                   rating:
+                                //                                       _starValue,
+                                //                                   size: 40.0,
+                                //                                   isReadOnly:
+                                //                                       false,
+                                //                                   color: Colors
+                                //                                       .white,
+                                //                                   borderColor:
+                                //                                       Colors
+                                //                                           .white,
+                                //                                   spacing:
+                                //                                       0.0)),
+                                //                       value: "/newchat"),
+                                //                 ]),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // )
                               ],
                             ),
                           ),
@@ -235,17 +282,286 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                     left: 16, right: 16, top: 5, bottom: 15),
                                 child: SingleChildScrollView(
                                   child: Container(
-                                    child: Text(
-                                      AppLocalizations.getString(
-                                          "course_16_description"),
-                                      textAlign: TextAlign.justify,
-                                      style: TextStyle(
-                                        height: 1.4,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 14,
-                                        letterSpacing: 0.75,
-                                        color: Colors.grey,
-                                      ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.getString(
+                                              "course_16_description_1"),
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            height: 1.4,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            letterSpacing: 0.75,
+                                            color: Colors.grey.shade800,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_2"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_3"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_4"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_5"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          AppLocalizations.getString(
+                                              "course_16_description_6"),
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            height: 1.4,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            letterSpacing: 0.75,
+                                            color: Colors.grey.shade800,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_7"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_8"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            FaIcon(
+                                              FontAwesomeIcons.solidCheckCircle,
+                                              color: _checkIconColor,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 15),
+                                                  child: Text(
+                                                    AppLocalizations.getString(
+                                                        "course_16_description_9"),
+                                                    style: TextStyle(
+                                                      height: 1.4,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                      letterSpacing: 0.75,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          AppLocalizations.getString(
+                                              "course_16_description_10"),
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            height: 1.4,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            letterSpacing: 0.75,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.getString(
+                                                "course_16_description_11"),
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              height: 1.4,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              letterSpacing: 0.75,
+                                              color: Colors.grey.shade800,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          AppLocalizations.getString(
+                                              "course_16_description_12"),
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            height: 1.4,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            letterSpacing: 0.75,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -351,7 +667,7 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
                                                   "images/" +
                                                       _hvsUserProvider.course16
                                                           .courseIdName +
-                                                      "_photo.jpg");
+                                                      "_image.png");
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>

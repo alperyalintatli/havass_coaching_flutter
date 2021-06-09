@@ -25,12 +25,13 @@ class CourseInfoViewWidget extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     AspectRatio(
-                      aspectRatio: 2,
+                      aspectRatio: 1.8,
                       child: Image.asset(
                         imagePath,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Container(

@@ -104,7 +104,7 @@ class _PastCoursesListPageState extends State<PastCoursesListPage> {
                                   day:
                                       "${courseList[index].getRegisterDate} - ${courseList[index].getTerminationDate}",
                                   imagePath:
-                                      "images/${courseList[index].courseIdName}_photo.jpg",
+                                      "images/${courseList[index].courseIdName}_image.png",
                                   price: "",
                                 ),
                               ),

@@ -33,13 +33,13 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total',
+                    'Total: ',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\$${_cartProvider.totalAmount.toStringAsFixed(2)}',
+                      '\€ ${_cartProvider.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color:
                             Theme.of(context).primaryTextTheme.headline6.color,

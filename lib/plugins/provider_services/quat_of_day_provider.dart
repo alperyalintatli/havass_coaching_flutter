@@ -46,7 +46,7 @@ class QuatOfDayProvider extends ChangeNotifier {
             _ntpTime.day.toString();
         _mapOfQuatOfDayNumbers[
             PrefUtils.PREFS_NUMBEROFMANDALA] = _createRandomNumber(
-                15,
+                10,
                 int.parse(
                     _mapOfQuatOfDayNumbers[PrefUtils.PREFS_NUMBEROFMANDALA]))
             .toString();

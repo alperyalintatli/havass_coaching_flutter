@@ -85,7 +85,7 @@ class CartItem extends StatelessWidget {
               // ),
             ),
             title: Text(title, style: TextStyle(color: Colors.white)),
-            subtitle: Text('Total: €${price * quantity}',
+            subtitle: Text('Total: € ${price * quantity}',
                 style: TextStyle(color: Colors.white)),
             trailing:
                 Text('$quantity x', style: TextStyle(color: Colors.white)),

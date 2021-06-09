@@ -179,7 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
         margin: EdgeInsets.symmetric(vertical: 0),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -190,7 +190,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   color: Color.fromRGBO(72, 72, 72, 1)),
             ),
             SizedBox(
-              width: 10,
+              height: 5,
             ),
             Text(
               AppLocalizations.getString("login"),
@@ -370,7 +370,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             }),
                       ],
                     ),
-                    SizedBox(height: height * .020),
                     _loginAccountLabel(),
                   ],
                 ),

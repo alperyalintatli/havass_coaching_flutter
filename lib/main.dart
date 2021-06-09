@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:havass_coaching_flutter/pages/home_page.dart';
 import 'package:havass_coaching_flutter/pages/login_page.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.dart';
@@ -48,6 +49,11 @@ class _MyAppState extends State<MyApp> {
       await _f.subscribeToTopic("en");
       await _f.unsubscribeFromTopic("de");
     }
+    if (!prefs.containsKey("Course_of_16_like") &&
+        !prefs.containsKey("Course_of_28_like")) {
+      await prefs.setBool("Course_of_16_like", false);
+      await prefs.setBool("Course_of_28_like", false);
+    }
   }
 
   DateTime _ntpTime;
@@ -88,6 +94,7 @@ class _MyAppState extends State<MyApp> {
               routes: {
                 // When navigating to the "/second" route, build the SecondScreen widget.
                 '/loginPage': (context) => LoginPage(),
+                '/homePage': (context) => HomePage(),
               },
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,

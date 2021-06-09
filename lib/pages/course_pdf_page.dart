@@ -25,7 +25,6 @@ class CoursePdfPage extends StatefulWidget {
 }
 
 class _CoursePdfPageState extends State<CoursePdfPage> {
-  final assetsAudioPlayer = AssetsAudioPlayer();
   final String pdfName;
   final int numberofDay;
   _CoursePdfPageState(this.pdfName, this.numberofDay);
@@ -35,20 +34,13 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
   @override
   void initState() {
     super.initState();
-    final String audioName =
-        pdfName.split("_")[2] == '16' ? "course_16" : "course_28";
-    assetsAudioPlayer.open(
-      Audio("images/$audioName.mp3"),
-      autoStart: false,
-      showNotification: true,
-    );
     loadDocument();
   }
 
   HvsUserProvider _hvsUserProvider;
   loadDocument() async {
     try {
-      document = await PDFDocument.fromAsset('images/$pdfName.pdf');
+      document = await PDFDocument.fromAsset('images/pdf/$pdfName.pdf');
       setState(() => _isLoading = false);
     } catch (e) {
       NotificationWidget.showNotification(
@@ -67,8 +59,6 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  bool _isPaused = true;
-
   @override
   Widget build(BuildContext context) {
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
@@ -80,15 +70,6 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            IconButton(
-              icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause_rounded),
-              onPressed: () {
-                setState(() async {
-                  _isPaused == true ? _isPaused = false : _isPaused = true;
-                  assetsAudioPlayer.playOrPause();
-                });
-              },
-            ),
             (numberofDay == 7 ||
                     (numberofDay == 12 && downloadCourseName == "16") ||
                     (numberofDay == 14 && downloadCourseName == "28") ||
@@ -228,7 +209,6 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
 
   @override
   void dispose() {
-    assetsAudioPlayer.dispose();
     super.dispose();
   }
 }

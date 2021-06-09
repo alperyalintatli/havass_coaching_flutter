@@ -33,52 +33,53 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-              onSaved: (value) {
-                if (isPassword) {
-                  _hvsUser.password = value;
-                } else if (isEmail) {
-                  _hvsUser.email = value;
-                }
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*' +
-                      AppLocalizations.getString(
-                          "register_page_validation_empty_field");
-                }
-                if (isEmail) {
-                  bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value);
+          Theme(
+            data: ThemeData(
+                primaryColor: Color.fromARGB(255, 0, 129, 150),
+                hintColor: Colors.grey),
+            child: TextFormField(
+                cursorColor: Color.fromARGB(255, 0, 129, 150),
+                onSaved: (value) {
+                  if (isPassword) {
+                    _hvsUser.password = value;
+                  } else if (isEmail) {
+                    _hvsUser.email = value;
+                  }
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return '*' +
+                        AppLocalizations.getString(
+                            "register_page_validation_empty_field");
+                  }
+                  if (isEmail) {
+                    bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value);
 
-                  if (!emailValid) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_email_field");
+                    if (!emailValid) {
+                      return '*' +
+                          AppLocalizations.getString(
+                              "register_page_validation_email_field");
+                    }
                   }
-                }
-                if (isPassword) {
-                  if (value.length < 6) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_password_field");
+                  if (isPassword) {
+                    if (value.length < 6) {
+                      return '*' +
+                          AppLocalizations.getString(
+                              "register_page_validation_password_field");
+                    }
                   }
-                }
-                return null;
-              },
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true)),
+                  return null;
+                },
+                obscureText: isPassword,
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.getString(
+                        "forgot_password_sendEmail_button"),
+                    border: OutlineInputBorder(),
+                    fillColor: Color(0xfff3f3f4),
+                    filled: true)),
+          ),
         ],
       ),
     );
@@ -86,30 +87,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Widget _submitButton() {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color.fromARGB(0, 121, 250, 0),
-                  Color.fromRGBO(164, 233, 232, 1),
-                ])),
-        child: TextButton(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 60.0,
+        child: RaisedButton(
+          disabledColor: Color.fromARGB(255, 0, 129, 150),
+          color: Color.fromARGB(255, 0, 129, 150),
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0)),
           child: Text(
             AppLocalizations.getString("forgot_password_sendEmail_button"),
-            style:
-                TextStyle(fontSize: 20, color: Color.fromRGBO(72, 72, 72, 1)),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           onPressed: () {
             if (_formKey.currentState.validate()) {
@@ -166,10 +154,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       height: height,
       child: Stack(
         children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -178,7 +162,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: height * .2),
-                  _title(),
                   SizedBox(height: 50),
                   _emailWidget(),
                   SizedBox(height: 20),
@@ -200,7 +183,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   void _forgotPassword(HvsUser _hvsuser) async {
     if (_hvsUser.email.isNotEmpty) {
-      var result = await _loginOperation.forgotPassword(_hvsUser.email);
+      var result = await _loginOperation.forgotPassword(_hvsUser.email.trim());
       if (result.isError) {
         NotificationWidget.showNotification(context,
             AppLocalizations.getString("forgot_pasword_notification_error"));

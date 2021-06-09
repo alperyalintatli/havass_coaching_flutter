@@ -101,6 +101,9 @@ flutter:
     - langs/
     - images/
     - images/mandala_images/
+    - images/home/
+    - images/audio/
+    - images/pdf/
   #   - images/a_dot_ham.jpeg
 
 
