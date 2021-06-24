@@ -102,7 +102,7 @@ class _IntroPageState extends State<IntroPage> {
         globalBackgroundColor: Colors.white,
         pages: [
           PageViewModel(
-              title: "What main goal do you want to achieve wtih Havass MeApp",
+              title: "What main goal do you want to achieve with Havass MeApp",
               body:
                   "Optionally, you can select your preferences for a personalised experience",
               // image: _buildImage('img1.jpg'),

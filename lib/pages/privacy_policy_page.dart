@@ -98,9 +98,9 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                       height: 5,
                     ),
                     Text(
-                      "\t\t" +
-                          AppLocalizations.getString(_privacyPolicyBody[index]),
-                      textAlign: TextAlign.justify,
+                      //"\t\t" +
+                      AppLocalizations.getString(_privacyPolicyBody[index]),
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                           fontSize: 14, color: Colors.blueGrey.shade500),
                     ),

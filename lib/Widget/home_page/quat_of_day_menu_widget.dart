@@ -37,10 +37,10 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
 
   final List<String> playList = ["audio_1", "audio_2", "audio_3", "audio_4"];
   final List<String> playListName = [
-    "Liebe",
-    "Selbstbewusstsein",
-    "Selbstvertrauen",
-    "Motivation"
+    AppLocalizations.getString("love"),
+    AppLocalizations.getString("self-awareness"),
+    AppLocalizations.getString("self-confidence"),
+    AppLocalizations.getString("motivation")
   ];
   int playListIndex;
   void changePlayListIndex(int index) {

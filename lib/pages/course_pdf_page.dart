@@ -41,6 +41,7 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
   loadDocument() async {
     try {
       document = await PDFDocument.fromAsset('images/pdf/$pdfName.pdf');
+      //document = await PDFDocument.fromAsset('images/deneme123.pdf');
       setState(() => _isLoading = false);
     } catch (e) {
       NotificationWidget.showNotification(

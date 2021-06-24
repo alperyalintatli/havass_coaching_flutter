@@ -89,7 +89,7 @@
   "save_preferences_text": "Save your preferences and get your coaching plan",
   "nothing_is_shared_text": "Nothing is shared without your permission",
   "nazim_hikmet_word_text": "You are what you repeatedly do.",
-  "program_name": "Coaching Programme",
+  "program_name": "Coaching Programs",
   "home_first_paragraph_title": "Do you know that, too…?",
   "home_first_paragraph_1": "• … Are you afraid and negative thoughts burden you?",
   "home_first_paragraph_2": "• … you are in a deep depression and want to start over?",
@@ -183,5 +183,9 @@
   "privacy_policy_body_4": "The application shares collected data with third-party services, which are in accordance with GDPR and provide the highest level of PII protection, in order to maintain the best possible service and user experience.",
   "privacy_policy_body_5": "Third-party services (Play Store, Firebase) use a secure connection to transfer PII. Since the privacy of our users is very important we are using only reliable and verified services of the highest standard which in our opinion are not going to misuse your data.",
   "privacy_policy_body_6": "The privacy policy can be read prior to app download. The user of the application accepts the terms and conditions of this Privacy policy by using the app. In case you do not agree, please uninstall the app.",
-  "privacy_policy_body_7": "In case you have any questions regarding privacy policy we are at your disposal at havassacademy@gmail.com"
+  "privacy_policy_body_7": "In case you have any questions regarding privacy policy we are at your disposal at havassacademy@gmail.com",
+  "love": "Love",
+  "self-awareness": "Self-awareness",
+  "self-confidence": "Self-confidence",
+  "motivation": "Motivation"
 }

@@ -183,5 +183,9 @@
     "privacy_policy_body_4": "Die Anwendung sammelt Daten mit Diensten Dritter, welche gemäß der GDPR sind und das höchste Maß an PII-Schutz bieten, um den bestmöglichen Service und die bestmögliche Nutzerfreundlichkeit zu erhalten.\nDaten wie die Android Advertising ID werden zum Zeigen von Anzeigen genutzt.\nDaten wie die IP-Adresse, der Gerätename und der Betriebssystemname werden vom Play Store und Firebase (Google)  genutzt.\nMithilfe dieser Dienste Dritter ist es uns möglich, die Anzahl der Downloads nachzuverfolgen, Statistiken zu erstellen und Fehler in der App zu protokollieren.",
     "privacy_policy_body_5": "Die Dienste Dritter (Play Store, Firebase) nutzen eine sichere Verbindung, um die PII zu übertragen. Da uns die Privatsphäre unserer Nutzer sehr wichtig ist, nutzen wir nur zuverlässige und geprüfte Dienstleistungen gemäß dem höchsten Standard, welche deine Daten unserer Meinung nach nicht zweckentfremden werden.",
     "privacy_policy_body_6": "Die Datenschutzbestimmungen können vor dem Download der App gelesen werden. Der Nutzer der Anwendung akzeptiert mit dem Nutzen der App die Geschäftsbedingungen dieser Datenschutzbestimmungen. Falls du nicht zustimmst, deinstalliere bitte die App.",
-    "privacy_policy_body_7": "Falls du Fragen zu den Datenschutzbestimmungen hast, stehen wir dir unter havassacademy@gmail.com zur Verfügung."
+    "privacy_policy_body_7": "Falls du Fragen zu den Datenschutzbestimmungen hast, stehen wir dir unter havassacademy@gmail.com zur Verfügung.",
+    "love": "Liebe",
+    "self-awareness": "Selbstbewusstsein",
+    "self-confidence": "Selbstvertrauen",
+    "motivation": "Motivation"
 }

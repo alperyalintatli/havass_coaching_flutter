@@ -120,7 +120,10 @@ class _CoursesPageState extends State<CoursesPage> {
             ),
           );
     return Scaffold(
-      appBar: AppBarWidget(isCoursePage: true),
+      appBar: AppBarWidget(
+        isCoursePage: true,
+        isCartIcon: false,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
