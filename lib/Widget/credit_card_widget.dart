@@ -22,8 +22,10 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
   @override
   void initState() {
     StripePayment.setOptions(StripeOptions(
+        //publishableKey:
+        //"pk_test_51IDE6aBqOxVQ2IQT2d6cFzQOL5apDfoRSRtO8wJSyh3LE5w3hMIiajG4tqo6cNsSy55YYBdhWPBxHYa9jU1bIm7n006LmyOJWY",
         publishableKey:
-            "pk_test_51IDE6aBqOxVQ2IQT2d6cFzQOL5apDfoRSRtO8wJSyh3LE5w3hMIiajG4tqo6cNsSy55YYBdhWPBxHYa9jU1bIm7n006LmyOJWY",
+            "pk_live_51IDE6aBqOxVQ2IQT3VtsW50FMCv6tNhrLCNL4nJOy2CIi6ci3Ds53hYrOiXUsgXOdxh1ouFqL5v47fi1uukhWBxf00PFPXXk0C",
         merchantId: "Test",
         androidPayMode: 'test'));
     super.initState();

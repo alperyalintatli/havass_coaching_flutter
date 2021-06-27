@@ -15,8 +15,10 @@ class StripeTransactionResponse {
 class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
   static String paymentApiUrl = '${StripeService.apiBase}/payment_intents';
+  //static String secret =
+  //'sk_test_51IDE6aBqOxVQ2IQTBndyrEFbaGXFTnVdvDfNUFpSqlvBpCPG33CMhViDOtiKGi97cIz86hhhGOdWE4NebP0VPVLR00CeMst1EE';
   static String secret =
-      'sk_test_51IDE6aBqOxVQ2IQTBndyrEFbaGXFTnVdvDfNUFpSqlvBpCPG33CMhViDOtiKGi97cIz86hhhGOdWE4NebP0VPVLR00CeMst1EE';
+      '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';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
