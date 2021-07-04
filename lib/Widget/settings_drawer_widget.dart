@@ -1,20 +1,14 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/pages/faq_page.dart';
 import 'package:havass_coaching_flutter/pages/past_courses_list_page.dart';
 import 'package:havass_coaching_flutter/pages/privacy_policy_page.dart';
 import 'package:havass_coaching_flutter/pages/setting_page.dart';
 import 'package:havass_coaching_flutter/pages/welcome_page.dart';
-import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
-import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
-import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:provider/provider.dart';
 
 class SettingsDrawerWidget extends StatefulWidget {
@@ -25,87 +19,87 @@ class SettingsDrawerWidget extends StatefulWidget {
 class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
   LoginOperations _loginOperation = LoginOperations.getInstance();
   HvsUserProvider _userProvider;
-  AimsProvider _aimsProvider;
+  // AimsProvider _aimsProvider;
   NavBottombarProvider _navBottombarProvider;
 
-  final _passwordChangeFormKey = GlobalKey<FormState>();
-  final _userNameChangeFormKey = GlobalKey<FormState>();
-  final _manuelStudentAddFormKey = GlobalKey<FormState>();
+  // final _passwordChangeFormKey = GlobalKey<FormState>();
+  // final _userNameChangeFormKey = GlobalKey<FormState>();
+  // final _manuelStudentAddFormKey = GlobalKey<FormState>();
 
-  String _newPassword;
-  String _oldPassword;
-  String _userName;
-  String _email;
-  Widget _entryField(String title,
-      {bool isNewPassword = false,
-      bool isOldPassword = false,
-      bool isUserName = false,
-      bool isEmail = false}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-              onSaved: (value) {
-                if (isNewPassword) {
-                  _newPassword = value;
-                } else if (isOldPassword) {
-                  _oldPassword = value;
-                } else if (isUserName) {
-                  _userName = value;
-                } else if (isEmail) {
-                  _email = value;
-                }
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '*' +
-                      AppLocalizations.getString(
-                          "register_page_validation_empty_field");
-                }
-                if (isNewPassword || isOldPassword) {
-                  if (value.length < 6) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_password_field");
-                  }
-                }
-                if (isEmail) {
-                  bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value);
+  // String _newPassword;
+  // String _oldPassword;
+  // String _userName;
+  // String _email;
+  // Widget _entryField(String title,
+  //     {bool isNewPassword = false,
+  //     bool isOldPassword = false,
+  //     bool isUserName = false,
+  //     bool isEmail = false}) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: 10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         TextFormField(
+  //             onSaved: (value) {
+  //               if (isNewPassword) {
+  //                 _newPassword = value;
+  //               } else if (isOldPassword) {
+  //                 _oldPassword = value;
+  //               } else if (isUserName) {
+  //                 _userName = value;
+  //               } else if (isEmail) {
+  //                 _email = value;
+  //               }
+  //             },
+  //             validator: (value) {
+  //               if (value.isEmpty) {
+  //                 return '*' +
+  //                     AppLocalizations.getString(
+  //                         "register_page_validation_empty_field");
+  //               }
+  //               if (isNewPassword || isOldPassword) {
+  //                 if (value.length < 6) {
+  //                   return '*' +
+  //                       AppLocalizations.getString(
+  //                           "register_page_validation_password_field");
+  //                 }
+  //               }
+  //               if (isEmail) {
+  //                 bool emailValid = RegExp(
+  //                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+  //                     .hasMatch(value);
 
-                  if (!emailValid) {
-                    return '*' +
-                        AppLocalizations.getString(
-                            "register_page_validation_email_field");
-                  }
-                }
-                return null;
-              },
-              cursorColor: Colors.blue,
-              obscureText: isNewPassword || isOldPassword,
-              decoration: InputDecoration(
-                labelText: isUserName == true
-                    ? (_userProvider.getHvsUser.name ?? null)
-                    : null,
-                hintText: title,
-                border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                fillColor: Color.fromRGBO(164, 233, 232, 1),
-                filled: true,
-              )),
-        ],
-      ),
-    );
-  }
+  //                 if (!emailValid) {
+  //                   return '*' +
+  //                       AppLocalizations.getString(
+  //                           "register_page_validation_email_field");
+  //                 }
+  //               }
+  //               return null;
+  //             },
+  //             cursorColor: Colors.blue,
+  //             obscureText: isNewPassword || isOldPassword,
+  //             decoration: InputDecoration(
+  //               labelText: isUserName == true
+  //                   ? (_userProvider.getHvsUser.name ?? null)
+  //                   : null,
+  //               hintText: title,
+  //               border: UnderlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(5.0)),
+  //               fillColor: Color.fromRGBO(164, 233, 232, 1),
+  //               filled: true,
+  //             )),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  String _courseName = Constants.COURSE_OF_16;
+  // String _courseName = Constants.COURSE_OF_16;
   @override
   Widget build(BuildContext context) {
     _userProvider = Provider.of<HvsUserProvider>(context);
-    _aimsProvider = Provider.of<AimsProvider>(context);
+    // _aimsProvider = Provider.of<AimsProvider>(context);
     _navBottombarProvider =
         Provider.of<NavBottombarProvider>(context, listen: false);
     double height = MediaQuery.of(context).size.height;
@@ -536,59 +530,59 @@ class _SettingsDrawerWidgetState extends State<SettingsDrawerWidget> {
     );
   }
 
-  void _changeUserName(String userName) async {
-    bool _isChangeUserName = await _userProvider.changeUserName(userName);
-    if (_isChangeUserName) {
-      NotificationWidget.showNotification(
-          context,
-          AppLocalizations.getString(
-              "userName_change_notification_success_title"));
-    } else {
-      NotificationWidget.showNotification(
-          context,
-          AppLocalizations.getString(
-              "userName_change_notification_error_title"));
-    }
-  }
+  // void _changeUserName(String userName) async {
+  //   bool _isChangeUserName = await _userProvider.changeUserName(userName);
+  //   if (_isChangeUserName) {
+  //     NotificationWidget.showNotification(
+  //         context,
+  //         AppLocalizations.getString(
+  //             "userName_change_notification_success_title"));
+  //   } else {
+  //     NotificationWidget.showNotification(
+  //         context,
+  //         AppLocalizations.getString(
+  //             "userName_change_notification_error_title"));
+  //   }
+  // }
 
-  void _addManuelStudent(String email, String courseName) async {
-    try {
-      bool _isChangeUserName =
-          await _userProvider.addManuelStudent(email, courseName);
-      if (_isChangeUserName) {
-        NotificationWidget.showNotification(
-            context, AppLocalizations.getString("manuel_course_add_success"));
-      } else {
-        NotificationWidget.showNotification(
-            context, AppLocalizations.getString("manuel_course_add_error"));
-      }
-    } catch (e) {}
-  }
+  // void _addManuelStudent(String email, String courseName) async {
+  //   try {
+  //     bool _isChangeUserName =
+  //         await _userProvider.addManuelStudent(email, courseName);
+  //     if (_isChangeUserName) {
+  //       NotificationWidget.showNotification(
+  //           context, AppLocalizations.getString("manuel_course_add_success"));
+  //     } else {
+  //       NotificationWidget.showNotification(
+  //           context, AppLocalizations.getString("manuel_course_add_error"));
+  //     }
+  //   } catch (e) {}
+  // }
 
-  void _changePassword({String oldPassword, String newPassword}) async {
-    var result = await _loginOperation.changePassword(oldPassword, newPassword);
-    if (result != null) {
-      if (result.isChangePasswordSuccess) {
-        NotificationWidget.showNotification(
-            context,
-            AppLocalizations.getString(
-                "password_change_notification_success_title"));
-      } else if (result.isValidatePassword) {
-        NotificationWidget.showNotification(
-            context,
-            AppLocalizations.getString(
-                "password_change_notification_old_password_title"));
-      } else if (result.isError) {
-        NotificationWidget.showNotification(
-            context,
-            AppLocalizations.getString(
-                "password_change_notification_error_title"));
-      }
-    } else {
-      NotificationWidget.showNotification(
-          context,
-          AppLocalizations.getString(
-              "password_change_notification_error_title"));
-    }
-  }
+  // void _changePassword({String oldPassword, String newPassword}) async {
+  //   var result = await _loginOperation.changePassword(oldPassword, newPassword);
+  //   if (result != null) {
+  //     if (result.isChangePasswordSuccess) {
+  //       NotificationWidget.showNotification(
+  //           context,
+  //           AppLocalizations.getString(
+  //               "password_change_notification_success_title"));
+  //     } else if (result.isValidatePassword) {
+  //       NotificationWidget.showNotification(
+  //           context,
+  //           AppLocalizations.getString(
+  //               "password_change_notification_old_password_title"));
+  //     } else if (result.isError) {
+  //       NotificationWidget.showNotification(
+  //           context,
+  //           AppLocalizations.getString(
+  //               "password_change_notification_error_title"));
+  //     }
+  //   } else {
+  //     NotificationWidget.showNotification(
+  //         context,
+  //         AppLocalizations.getString(
+  //             "password_change_notification_error_title"));
+  //   }
+  // }
 }

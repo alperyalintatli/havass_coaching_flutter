@@ -1,14 +1,9 @@
-import 'dart:async';
-import 'dart:math';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/pages/course_detail_page_16.dart';
 import 'package:havass_coaching_flutter/pages/course_detail_page_28.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_firestore_services/firestore_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
-import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/home_page/container_title_body_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/home_minshine_info_widget.dart';

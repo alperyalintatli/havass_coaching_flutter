@@ -8,7 +8,6 @@ import 'package:havass_coaching_flutter/widget/home_page/bottom_navigation_bar_w
 import 'package:havass_coaching_flutter/widget/home_page/course_menu_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/main_menu_widget.dart';
 import 'package:havass_coaching_flutter/widget/home_page/quat_of_day_menu_widget.dart';
-import 'package:havass_coaching_flutter/widget/home_page/video_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:provider/provider.dart';
 

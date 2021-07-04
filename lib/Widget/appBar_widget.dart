@@ -2,7 +2,6 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/pages/cart_page.dart';
-import 'package:havass_coaching_flutter/pages/home_page.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.dart';
 import 'package:provider/provider.dart';
 

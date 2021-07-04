@@ -3,7 +3,6 @@ import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_ope
 import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/widget/back_button_widget.dart';
-import 'package:havass_coaching_flutter/widget/login_register_page/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'login_page.dart';
 
@@ -108,31 +107,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             }
           },
         ));
-  }
-
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'Ha',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color.fromRGBO(164, 233, 232, 1),
-          ),
-          children: [
-            TextSpan(
-              text: 'va',
-              style:
-                  TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
-            ),
-            TextSpan(
-              text: 'ss',
-              style: TextStyle(
-                  color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
-            ),
-          ]),
-    );
   }
 
   Widget _emailWidget() {

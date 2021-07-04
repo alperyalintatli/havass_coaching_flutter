@@ -1,11 +1,5 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:havass_coaching_flutter/pages/intro_page.dart';
-import 'package:havass_coaching_flutter/pages/register_page.dart';
-import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
-import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {

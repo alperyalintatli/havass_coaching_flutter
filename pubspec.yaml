@@ -53,7 +53,6 @@ dependencies:
   share: 0.6.5+4
   video_player: ^1.0.1
   badges: ^1.2.0
-  intl: ^0.16.1
   url_launcher: ^5.7.10
   font_awesome_flutter: ^8.10.0
   permission_handler: ^5.1.0+2
@@ -66,7 +65,6 @@ dependencies:
   mailer: ^3.3.0
   flutter_mailer: ^1.0.1
   cached_network_image: ^2.5.0
-  smooth_star_rating: ^1.1.1
   introduction_screen: ^1.0.9
 
   # The following adds the Cupertino Icons font to your application.

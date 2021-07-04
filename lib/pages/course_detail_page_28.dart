@@ -8,12 +8,9 @@ import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
-import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:ntp/ntp.dart';
 
 class CourseInfoScreen28 extends StatefulWidget {
@@ -71,7 +68,6 @@ class _CourseInfoScreen28State extends State<CourseInfoScreen28>
     _cartProvider = Provider.of<CartProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context);
     _dateAndNoteProvider = Provider.of<DateAndNoteProvider>(context);
-    double _starValue = 1.0;
     isGetCourse();
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width) +

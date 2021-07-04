@@ -55,7 +55,7 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
     });
   }
 
-  bool _isPaused = true;
+  // bool _isPaused = true;
   @override
   Widget build(BuildContext context) {
     _quatOfDayProvider = Provider.of<QuatOfDayProvider>(context);

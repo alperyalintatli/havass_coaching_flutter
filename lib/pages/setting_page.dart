@@ -1,13 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:havass_coaching_flutter/model/constans/constants.dart';
 import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
 import 'package:havass_coaching_flutter/plugins/firebase_auth_services/login_operations.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/aims_provider.dart';
-import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
@@ -63,7 +61,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   LoginOperations _loginOperation = LoginOperations.getInstance();
   HvsUserProvider _userProvider;
   AimsProvider _aimsProvider;
-  NavBottombarProvider _navBottombarProvider;
+  // NavBottombarProvider _navBottombarProvider;
   final _passwordChangeFormKey = GlobalKey<FormState>();
   final _userNameChangeFormKey = GlobalKey<FormState>();
   final _manuelStudentAddFormKey = GlobalKey<FormState>();
@@ -150,8 +148,8 @@ class _SettingWidgetState extends State<SettingWidget> {
   Widget build(BuildContext context) {
     _userProvider = Provider.of<HvsUserProvider>(context);
     _aimsProvider = Provider.of<AimsProvider>(context);
-    _navBottombarProvider =
-        Provider.of<NavBottombarProvider>(context, listen: false);
+    // _navBottombarProvider =
+    //     Provider.of<NavBottombarProvider>(context, listen: false);
     _userProvider.checkRole();
     return Theme(
       data: ThemeData(

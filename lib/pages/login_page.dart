@@ -14,7 +14,6 @@ import 'package:havass_coaching_flutter/plugins/localization_services/app_locali
 import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/back_button_widget.dart';
-import 'package:havass_coaching_flutter/widget/login_register_page/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';

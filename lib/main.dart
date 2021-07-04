@@ -14,7 +14,6 @@ import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_
 import 'package:havass_coaching_flutter/plugins/provider_services/firestore_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/navigation_bottom_bar_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
-import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:ntp/ntp.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';

@@ -1,11 +1,6 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:havass_coaching_flutter/pages/register_page.dart';
-import 'package:havass_coaching_flutter/plugins/bloc/bloc_localization.dart';
-import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'login_page.dart';
 
 class IntroPage extends StatefulWidget {
   IntroPage({Key key, this.title}) : super(key: key);
@@ -24,19 +19,19 @@ class _IntroPageState extends State<IntroPage> {
     );
   }
 
-  Widget _buildFullscrenImage() {
-    return Image.asset(
-      'images/back_0.png',
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-    );
-  }
+  // Widget _buildFullscrenImage() {
+  //   return Image.asset(
+  //     'images/back_0.png',
+  //     fit: BoxFit.cover,
+  //     height: double.infinity,
+  //     width: double.infinity,
+  //     alignment: Alignment.center,
+  //   );
+  // }
 
-  Widget _buildImage(String assetName, [double width = 350]) {
-    return Image.asset('assets/$assetName', width: width);
-  }
+  // Widget _buildImage(String assetName, [double width = 350]) {
+  //   return Image.asset('assets/$assetName', width: width);
+  // }
 
   Widget checkBoxButton({@required String text, @required String imageName}) {
     return Container(

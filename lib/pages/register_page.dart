@@ -11,7 +11,6 @@ import 'package:havass_coaching_flutter/model/users.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/back_button_widget.dart';
-import 'package:havass_coaching_flutter/widget/login_register_page/bezier_container.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:provider/provider.dart';
 import 'login_page.dart';
@@ -231,31 +230,31 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _title2() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: '- Aristotle',
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w300,
-          color: Colors.grey.shade800,
-        ),
-        // children: [
-        //   TextSpan(
-        //     text: 'va',
-        //     style:
-        //         TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
-        //   ),
-        //   TextSpan(
-        //     text: 'ss',
-        //     style: TextStyle(
-        //         color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
-        //   ),
-        // ]
-      ),
-    );
-  }
+  // Widget _title2() {
+  //   return RichText(
+  //     textAlign: TextAlign.center,
+  //     text: TextSpan(
+  //       text: '- Aristotle',
+  //       style: TextStyle(
+  //         fontSize: 15,
+  //         fontWeight: FontWeight.w300,
+  //         color: Colors.grey.shade800,
+  //       ),
+  //       // children: [
+  //       //   TextSpan(
+  //       //     text: 'va',
+  //       //     style:
+  //       //         TextStyle(color: Color.fromRGBO(72, 72, 72, 1), fontSize: 30),
+  //       //   ),
+  //       //   TextSpan(
+  //       //     text: 'ss',
+  //       //     style: TextStyle(
+  //       //         color: Color.fromRGBO(164, 233, 232, 1), fontSize: 30),
+  //       //   ),
+  //       // ]
+  //     ),
+  //   );
+  // }
 
   Widget _title3() {
     return RichText(

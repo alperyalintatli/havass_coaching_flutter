@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:badges/badges.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:ext_storage/ext_storage.dart';

@@ -8,11 +8,9 @@ import 'package:havass_coaching_flutter/plugins/provider_services/cart_provider.
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:havass_coaching_flutter/widget/appBar_widget.dart';
-import 'package:havass_coaching_flutter/widget/notification_widget.dart';
 import 'package:havass_coaching_flutter/widget/settings_drawer_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:ntp/ntp.dart';
 
 class CourseInfoScreen16 extends StatefulWidget {
@@ -65,7 +63,6 @@ class _CourseInfoScreen16State extends State<CourseInfoScreen16>
   CartProvider _cartProvider;
   HvsUserProvider _hvsUserProvider;
   DateAndNoteProvider _dateAndNoteProvider;
-  double _starValue = 1.0;
   bool _isCourse = false;
   @override
   Widget build(BuildContext context) {
