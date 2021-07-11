@@ -367,7 +367,7 @@ class _LoginPageState extends State<LoginPage> {
                       IconButton(
                           icon: Image.asset('images/english-flag-icon.png'),
                           onPressed: () async {
-                            FirebaseMessaging _f = FirebaseMessaging();
+                            FirebaseMessaging _f = FirebaseMessaging.instance;
                             await _f.subscribeToTopic("en");
                             await _f.unsubscribeFromTopic("de");
                             setState(() {
@@ -378,7 +378,7 @@ class _LoginPageState extends State<LoginPage> {
                       IconButton(
                           icon: Image.asset('images/german-flag-icon.png'),
                           onPressed: () async {
-                            FirebaseMessaging _f = FirebaseMessaging();
+                            FirebaseMessaging _f = FirebaseMessaging.instance;
                             await _f.subscribeToTopic("de");
                             await _f.unsubscribeFromTopic("en");
                             setState(() {

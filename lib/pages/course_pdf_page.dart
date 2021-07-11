@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:badges/badges.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:ext_storage/ext_storage.dart';
+//import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -86,18 +86,16 @@ class _CoursePdfPageState extends State<CoursePdfPage> {
                         try {
                           var permission = await Permission.storage.request();
                           if (!permission.isDenied) {
-                            var path;
+                            Directory path;
                             if (Platform.isAndroid) {
-                              path = await ExtStorage
-                                  .getExternalStoragePublicDirectory(
-                                      ExtStorage.DIRECTORY_DOWNLOADS);
-                              path = Directory(path);
+                              path = await getExternalStorageDirectory();
                               //path = await getExternalStorageDirectory();
                             } else if (Platform.isIOS) {
                               path = await getLibraryDirectory();
                             }
-                            if (await path.exists()) {
+                            if (path != null) {
                               var locale = await PrefUtils.getLanguage();
+
                               final taskId = await FlutterDownloader.enqueue(
                                   url: (downloadCourseName == "16")
                                       ? (locale == 'en')

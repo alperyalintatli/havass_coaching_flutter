@@ -28,7 +28,8 @@ class _LoadingPageState extends State<LoadingPage> {
     );
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => SplashScreenView(
-        home: page ?? HomePage(),
+        navigateRoute:  page ?? HomePage(),
+        //home: page ?? HomePage(),
         duration: 1000,
         imageSize: 300,
         imageSrc: "images/havass_logo.jpeg",

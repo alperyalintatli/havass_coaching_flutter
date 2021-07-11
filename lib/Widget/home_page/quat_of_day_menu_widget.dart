@@ -106,7 +106,7 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                   margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   child: PopupMenuButton(
                       elevation: 8,
-                      offset: Offset.lerp(Offset(30, 0), Offset(0, 30), 2),
+                      offset: Offset.lerp(Offset(30, 0), Offset(0, 30), 1.5),
                       //captureInheritedThemes: true,
                       color: Color.fromRGBO(154, 206, 207, 1),
                       icon: FaIcon(FontAwesomeIcons.info, color: Colors.white),
@@ -209,17 +209,19 @@ class _QuateOfDayWidgetState extends State<QuateOfDayWidget> {
                             : CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     Colors.white)),
+
                         onPressed: _quatOfDayProvider.isScratchQuat
                             ? () async {
                                 try {
                                   setState(() {
                                     _isShare = true;
                                   });
+
                                   http.Response response = await http.get(
-                                    _quatOfDayProvider.getQuatMap[
-                                        _quatOfDayProvider
-                                                .mapOfQuatOfDayNumbers[
-                                            PrefUtils.PREFS_NUMBEROFQUAT]],
+                                      Uri.parse(_quatOfDayProvider.getQuatMap[
+                                      _quatOfDayProvider
+                                          .mapOfQuatOfDayNumbers[
+                                      PrefUtils.PREFS_NUMBEROFQUAT]])
                                   );
 
                                   if (response != null) {

@@ -97,11 +97,13 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
       height: 50.0,
-      child: RaisedButton(
-        color: Color.fromARGB(255, 0, 129, 150),
+      child: ElevatedButton(
+        style:  ElevatedButton.styleFrom(primary:Color.fromARGB(255, 0, 129, 150),shape:new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0))),
+        /*color: Color.fromARGB(255, 0, 129, 150),
         disabledColor: Color.fromARGB(255, 0, 129, 150),
         shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0)),
+            borderRadius: new BorderRadius.circular(30.0)),*/
         onPressed: !_isOnTapButton
             ? () {
                 if (_formKey.currentState.validate()) {
@@ -129,12 +131,15 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
       height: 50.0,
-      child: RaisedButton(
-        color: Colors.white,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(primary:Colors.white,shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0),
+            side: BorderSide(color: Colors.black))),
+        /*color: Colors.white,
         disabledColor: Colors.white,
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(30.0),
-            side: BorderSide(color: Colors.black)),
+            side: BorderSide(color: Colors.black)),*/
         onPressed: !_isOnTapButton
             ? () {
                 setState(() {
@@ -348,7 +353,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         IconButton(
                             icon: Image.asset('images/english-flag-icon.png'),
                             onPressed: () async {
-                              FirebaseMessaging _f = FirebaseMessaging();
+                              FirebaseMessaging _f = FirebaseMessaging.instance;
                               await _f.subscribeToTopic("en");
                               await _f.unsubscribeFromTopic("de");
                               setState(() {
@@ -359,7 +364,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         IconButton(
                             icon: Image.asset('images/german-flag-icon.png'),
                             onPressed: () async {
-                              FirebaseMessaging _f = FirebaseMessaging();
+                              FirebaseMessaging _f = FirebaseMessaging.instance;
                               await _f.subscribeToTopic("de");
                               await _f.unsubscribeFromTopic("en");
                               setState(() {

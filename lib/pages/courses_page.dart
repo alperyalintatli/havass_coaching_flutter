@@ -1,6 +1,6 @@
-import 'package:flutter_html/flutter_html.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:havass_coaching_flutter/pages/note_page.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
@@ -51,7 +51,7 @@ class _CoursesPageState extends State<CoursesPage> {
     _dateProvider = Provider.of<DateAndNoteProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context, listen: false);
     setNoteOfHtml();
-    final Widget zefryNote = (_dateProvider.htmlNote == null)
+    final Widget zefryNote = (_dateProvider.quillController == null)
         ? SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -69,16 +69,23 @@ class _CoursesPageState extends State<CoursesPage> {
                     FontAwesomeIcons.handPointUp,
                     color: Colors.grey,
                   ),
-                  onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => NotePage())),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => NotePage()));
+    }
                 ),
               ],
             ),
           )
         : Container(
+            margin: EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Html(data: _dateProvider.htmlNote),
+                quill.QuillEditor.basic(
+                  controller: _dateProvider.quillController,
+                  readOnly: true,// true for view only mode
+                ),
+                //Html(data: _dateProvider.htmlNote),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -158,7 +165,7 @@ class _CoursesPageState extends State<CoursesPage> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: () async {
-                  const url = 'https://t.me/TurkiyeSonDakika/';
+                  const url = '';
                   if (await canLaunch(url)) {
                     await launch(url);
                   } else {

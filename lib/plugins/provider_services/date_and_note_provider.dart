@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:ext_storage/ext_storage.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/shared_Preferences/pref_utils.dart';
 import 'package:havass_coaching_flutter/widget/notification_widget.dart';
-import 'package:notustohtml/notustohtml.dart';
 import 'package:ntp/ntp.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quill_delta/quill_delta.dart';
 import 'package:flutter/material.dart';
-import 'package:zefyr/zefyr.dart';
+import 'package:pdf/pdf.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class DateAndNoteProvider with ChangeNotifier {
   DateAndNoteProvider(this._dateTime);
@@ -73,11 +73,19 @@ class DateAndNoteProvider with ChangeNotifier {
     }
   }
 
-  ZefyrController _zefryController;
+  /*ZefyrController _zefryController;
   ZefyrController get zefryController => _zefryController;
   set zefryController(ZefyrController value) {
     if (value != null) {
       _zefryController = value;
+    }
+  }*/
+
+  QuillController _quillController;
+  QuillController get quillController => _quillController;
+  set quillController(QuillController value) {
+    if (value != null) {
+      _quillController = value;
     }
   }
 
@@ -116,12 +124,17 @@ class DateAndNoteProvider with ChangeNotifier {
 
   void setZefryController(String courseName) async {
     var document = await _loadDocument(courseName);
-    _zefryController = ZefyrController(document);
-    notifyListeners();
+    if(document != null){
+      _quillController = QuillController(
+          document: document,
+          selection: const TextSelection.collapsed(offset: 0)
+      );
+      notifyListeners();
+    }
   }
 
   bool _isDocumentCreate = false;
-  Future<NotusDocument> _loadDocument(String courseName) async {
+  Future<Document> _loadDocument(String courseName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File(directory.path +
@@ -129,11 +142,11 @@ class DateAndNoteProvider with ChangeNotifier {
       if (await file.exists()) {
         final contents = await file.readAsString();
         _isDocumentCreate = true;
-        return NotusDocument.fromJson(jsonDecode(contents));
+        return Document.fromJson(jsonDecode(contents));
       }
-      final Delta delta = Delta()..insert("\n");
+      //final Delta delta = Delta()..insert("\n");
       _isDocumentCreate = false;
-      return NotusDocument.fromDelta(delta);
+      return Document();
     } catch (e) {
       print(e.toString());
       return null;
@@ -141,7 +154,7 @@ class DateAndNoteProvider with ChangeNotifier {
   }
 
   bool _isOldDocumentCreate = false;
-  Future<NotusDocument> _loadOldDocument(
+  Future<Document> _loadOldDocument(
       DateTime date, String courseName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -150,22 +163,20 @@ class DateAndNoteProvider with ChangeNotifier {
       if (await file.exists()) {
         final contents = await file.readAsString();
         _isOldDocumentCreate = true;
-        return NotusDocument.fromJson(jsonDecode(contents));
+        return Document.fromJson(jsonDecode(contents));
       }
-      final Delta delta = Delta()..insert("\n");
-      _isOldDocumentCreate = false;
-      return NotusDocument.fromDelta(delta);
+      return null;
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  void saveNote(BuildContext context, ZefyrController _controller,
+  void saveNote(BuildContext context, /*ZefyrController _controller,*/QuillController _controller,
       String courseName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final contents = jsonEncode(_controller.document);
+      var contents = jsonEncode(_controller.document.toDelta().toJson());
       final file = File(directory.path +
           "/note_${courseName}_${_dateTime.day.toString() + _dateTime.month.toString() + _dateTime.year.toString()}.json");
       file.writeAsString(contents).then((_) {
@@ -178,12 +189,18 @@ class DateAndNoteProvider with ChangeNotifier {
   }
 
   void setStringHtmlFromNote(String courseName) async {
-    var document = await _loadDocument(courseName);
+    var document  = await _loadDocument(courseName);
     if (document != null && _isDocumentCreate == true) {
-      var _converter = NotusHtmlCodec();
-      _htmlNote = _converter.encode(document.toDelta());
+      //var _converter /*= NotusHtmlCodec()*/;
+      //_htmlNote = _converter.encode(document.toDelta());
+      _quillController = QuillController(
+          document: document,
+          selection: const TextSelection.collapsed(offset: 0)
+      );
+
     } else if (document != null && _isDocumentCreate == false) {
-      _htmlNote = null;
+      _quillController = null;
+      //_htmlNote = null;
     }
     getLanguage();
     notifyListeners();
@@ -192,10 +209,15 @@ class DateAndNoteProvider with ChangeNotifier {
   void setOldStringHtmlFromNote(DateTime date, String courseName) async {
     var document = await _loadOldDocument(date, courseName);
     if (document != null && _isOldDocumentCreate == true) {
-      var _converter = NotusHtmlCodec();
-      _htmlOldNote = _converter.encode(document.toDelta());
+      //var _converter /*= NotusHtmlCodec()*/;
+      //_htmlOldNote = _converter.encode(document.toDelta());
+      _quillController = QuillController(
+          document: document,
+          selection: const TextSelection.collapsed(offset: 0)
+      );
     } else if (document != null && _isOldDocumentCreate == false) {
-      _htmlOldNote = null;
+      //_htmlOldNote = null;
+      _quillController = null;
     }
     getLanguage();
     notifyListeners();
@@ -210,43 +232,106 @@ class DateAndNoteProvider with ChangeNotifier {
   }
 
   Future<bool> downloadPdfDocument(String courseName) async {
-    String path = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
+    //String path = await ExtStorage.getExternalStoragePublicDirectory(
+    //ExtStorage.DIRECTORY_DOWNLOADS);
+    var permission = await Permission.storage.request();
+    if (!permission.isDenied) {
+      Directory path;
+      if (Platform.isAndroid) {
+        path = await getApplicationDocumentsDirectory();
+        //path = await getExternalStorageDirectory();
+      } else if (Platform.isIOS) {
+        path = await getLibraryDirectory();
+      }
+      var document = await _loadDocument(courseName);
+      if (document != null && _isDocumentCreate == true) {
+        _quillController = QuillController(
+            document: document,
+            selection: const TextSelection.collapsed(offset: 0)
+        );
+        var value = quillController.plainTextEditingValue.text;
+        final pdf = pw.Document();
+        pdf.addPage(pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Container(
+                child:pw.Text(value)
+              ); // Center
+            }));
+        var file = File(path.path+"/Note ${AppLocalizations.getString(courseName)}_${_dateTime.day
+            .toString() + _dateTime.month.toString() +
+            _dateTime.year.toString()}.pdf");
+        try{
+          await file.writeAsBytes(await pdf.save());
+          OpenFile.open(file.path);
+        }
+        catch(ex){
+          print(ex);
+        }
 
-    var document = await _loadDocument(courseName);
-    if (document != null && _isDocumentCreate == true) {
-      var _converter = NotusHtmlCodec();
-      _htmlNote = _converter.encode(document.toDelta());
-      var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-          _htmlNote,
-          path,
-          "Note ${AppLocalizations.getString(courseName)}_${_dateTime.day.toString() + _dateTime.month.toString() + _dateTime.year.toString()}");
-      return generatedPdfFile.exists();
+        //_htmlNote = _converter.encode(document.toDelta());
+        /*var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+            _htmlNote,
+            path.path,
+            "Note ${AppLocalizations.getString(courseName)}_${_dateTime.day
+                .toString() + _dateTime.month.toString() +
+                _dateTime.year.toString()}");
+        return generatedPdfFile.exists();*/
+        return true;
+      }
+      return false;
     }
-    return false;
   }
 
-  Future<bool> downloadOldPdfDocument(
-      DateTime oldDateTime, String courseName) async {
-    String path = "";
-    if (Platform.isAndroid) {
-      path = await ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS);
-    } else if (Platform.isIOS) {
-      var directory = await getLibraryDirectory();
-      path = directory.path;
-    }
+    Future<bool> downloadOldPdfDocument(DateTime oldDateTime,
+        String courseName) async {
+      var permission = await Permission.storage.request();
+      if (!permission.isDenied) {
+        Directory path;
+        if (Platform.isAndroid) {
+          path = await getApplicationDocumentsDirectory();
+          //path = await getExternalStorageDirectory();
+        } else if (Platform.isIOS) {
+          path = await getLibraryDirectory();
+        }
 
-    var document = await _loadOldDocument(oldDateTime, courseName);
-    if (document != null && _isOldDocumentCreate == true && path != "") {
-      var _converter = NotusHtmlCodec();
-      _htmlNote = _converter.encode(document.toDelta());
-      var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-          _htmlNote,
-          path,
-          "Note ${AppLocalizations.getString(courseName)}_${oldDateTime.day.toString() + oldDateTime.month.toString() + oldDateTime.year.toString()}");
-      return generatedPdfFile.exists();
+      var document = await _loadOldDocument(oldDateTime, courseName);
+      if (document != null && _isOldDocumentCreate == true && path != "") {
+
+        _quillController = QuillController(
+            document: document,
+            selection: const TextSelection.collapsed(offset: 0)
+        );
+        var value = quillController.plainTextEditingValue.text;
+        final pdf = pw.Document();
+        pdf.addPage(pw.Page(
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Container(
+                  child:pw.Text(value)
+              ); // Center
+            }));
+        var file = File(path.path+"/Note ${AppLocalizations.getString(courseName)}_${_oldDateTime.day
+            .toString() + _oldDateTime.month.toString() +
+            _oldDateTime.year.toString()}.pdf");
+        try{
+          await file.writeAsBytes(await pdf.save());
+          OpenFile.open(file.path);
+        }
+        catch(ex){
+          print(ex);
+        }
+        /*var _converter /*= NotusHtmlCodec()*/;
+        _htmlNote = _converter.encode(document.toDelta());
+        var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+            _htmlNote,
+            path,
+            "Note ${AppLocalizations.getString(courseName)}_${oldDateTime.day
+                .toString() + oldDateTime.month.toString() +
+                oldDateTime.year.toString()}");
+        return generatedPdfFile.exists();*/
+      }
+      return false;
     }
-    return false;
   }
 }

@@ -3,7 +3,7 @@ import 'package:havass_coaching_flutter/plugins/localization_services/app_locali
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:zefyr/zefyr.dart';
+//import 'package:zefyr/zefyr.dart';
 
 class NotePageOld extends StatefulWidget {
   @override
@@ -20,16 +20,17 @@ class NotePageOldState extends State<NotePageOld> {
     _noteProvider = Provider.of<DateAndNoteProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context, listen: false);
     setZefryController();
-    final Widget zefryEditor = (_noteProvider.zefryController == null)
+    final Widget zefryEditor = (/*_noteProvider.zefryController*/_noteProvider.dateTime == null)
         ? Center(child: CircularProgressIndicator())
-        : ZefyrScaffold(
+        :Center(child: CircularProgressIndicator())
+    /*ZefyrScaffold(
             child: ZefyrEditor(
               padding: EdgeInsets.all(16),
               autofocus: false,
               controller: _noteProvider.zefryController,
               focusNode: _noteProvider.setZefryFocusNode(),
             ),
-          );
+          )*/;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.getString("editor_page_text")),
@@ -38,7 +39,7 @@ class NotePageOldState extends State<NotePageOld> {
             builder: (context) => IconButton(
                 icon: Icon(Icons.save),
                 onPressed: () {
-                  _noteProvider.saveNote(context, _noteProvider.zefryController,
+                  _noteProvider.saveNote(context, /*_noteProvider.zefryController,*/_noteProvider.quillController,
                       _hvsUserProvider.selectedUserCourse.courseIdName);
                   _noteProvider.setOldStringHtmlFromNote(
                       _noteProvider.oldDateTime,

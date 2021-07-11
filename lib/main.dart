@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString("isSubscribed") == null) {
       prefs.setString("isSubscribed", 'en');
-      FirebaseMessaging _f = FirebaseMessaging();
+      FirebaseMessaging _f = FirebaseMessaging.instance;
       await _f.subscribeToTopic("en");
       await _f.unsubscribeFromTopic("de");
     }
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         localTime: _myTime, lookUpAddress: 'time.google.com');
     _ntpTime = _myTime.add(Duration(milliseconds: offset));
     WidgetsFlutterBinding.ensureInitialized();
-    await FlutterDownloader.initialize(debug: true);
+    await FlutterDownloader.initialize();
   }
 
   @override

@@ -64,8 +64,7 @@ class StripeService {
         'payment_method_types[]': 'card',
         'description': description
       };
-      var response = await http.post(StripeService.paymentApiUrl,
-          body: body, headers: headers);
+      var response = await http.post( new Uri(path:paymentApiUrl ),body: body, headers: headers);
       return Map<String, dynamic>.from(jsonDecode(response.body));
     } catch (err) {
       print("err charing user:${err.toString()}");

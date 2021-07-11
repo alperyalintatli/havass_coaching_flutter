@@ -29,7 +29,8 @@ class _PageSplashState extends State<PageSplash> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => SplashScreenView(
-            home: _loginOperation.isLoggedIn() ? HomePage() : WelcomePage(),
+            navigateRoute:  _loginOperation.isLoggedIn() ? HomePage() : WelcomePage(),
+            //home: _loginOperation.isLoggedIn() ? HomePage() : WelcomePage(),
             duration: _loginOperation.isLoggedIn() ? 3000 : 1000,
             imageSize: 300,
             imageSrc: "images/havass_logo.jpeg",

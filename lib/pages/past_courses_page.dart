@@ -1,8 +1,5 @@
-import 'package:flutter_html/flutter_html.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:havass_coaching_flutter/pages/note_page.dart';
-import 'package:havass_coaching_flutter/pages/note_page_old.dart';
 import 'package:havass_coaching_flutter/plugins/localization_services/app_localizations.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/date_and_note_provider.dart';
 import 'package:havass_coaching_flutter/plugins/provider_services/user_provider.dart';
@@ -15,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class PastCoursePage extends StatefulWidget {
   @override
@@ -44,9 +42,10 @@ class _PastCoursePageState extends State<PastCoursePage> {
     _dateProvider = Provider.of<DateAndNoteProvider>(context);
     _hvsUserProvider = Provider.of<HvsUserProvider>(context, listen: false);
     setNoteOfHtml();
-    final Widget zefryNote = (_dateProvider.htmlOldNote == null)
+    final Widget zefryNote = (_dateProvider.quillController == null)
         ? SingleChildScrollView(
-            child: Column(
+            child: Center(child:  Image.asset("images/havass_logo.jpeg",height: 250,),)
+            /*Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 TextButton(
@@ -66,23 +65,27 @@ class _PastCoursePageState extends State<PastCoursePage> {
                       MaterialPageRoute(builder: (context) => NotePage())),
                 ),
               ],
-            ),
+            ),*/
           )
         : Container(
             child: Column(
               children: [
-                Html(data: _dateProvider.htmlOldNote),
+                quill.QuillEditor.basic(
+                  controller: _dateProvider.quillController,
+                  readOnly: true,// true for view only mode
+                ),
+                //Html(data: _dateProvider.htmlOldNote),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
+                    /*IconButton(
                         onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) => NotePageOld())),
                         icon: Icon(
                           Icons.edit,
                           color: Color.fromRGBO(164, 233, 232, 1),
-                        )),
+                        )),*/
                     IconButton(
                         onPressed: () async {
                           var permission = await Permission.storage.request();
@@ -149,7 +152,7 @@ class _PastCoursePageState extends State<PastCoursePage> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: () async {
-                  const url = 'https://t.me/TurkiyeSonDakika/';
+                  const url = "" ;
                   if (await canLaunch(url)) {
                     await launch(url);
                   } else {
